@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Insight is a **personal metrics platform** — currently in the **discovery phase** with no code written yet. Only planning documents exist. The project follows a phased process defined in `Project Documents/process-doc.md`:
 
-- **Phase 1** (complete): Anthropological research + PRD v1
+- **Phase 1** (complete): Anthropological research (2 sessions) + PRD v2
 - **Phase 2** (not started): UX/UI design
 - **Phase 3** (not started): Software architecture validation
 - **Phase 4** (not started): Product manager build plan
@@ -17,8 +17,10 @@ Each phase builds on the outputs of the previous one. Do not skip ahead to imple
 
 ## Key Documents
 
-- `Project Documents/metrics-dashboard-prd-v1.md` — The complete PRD: data models, calculations, UI structure, acceptance criteria. **This is the source of truth for what to build.**
-- `Project Documents/anthropologist-findings.md` — User research: behavioral patterns, motivations, and design principles. Read this to understand *why* decisions were made.
+- `Project Documents/metrics-dashboard-prd-v2.md` — The complete PRD (v2): data models, calculations, UI structure, acceptance criteria. **This is the source of truth for what to build.**
+- `Project Documents/metrics-dashboard-prd-v1.md` — Original PRD (v1), superseded by v2. Kept for reference.
+- `Project Documents/anthropologist-findings.md` — User research session 1: behavioral patterns, motivations, and design principles.
+- `Project Documents/anthropologist-findings-session-2.md` — User research session 2: multi-currency, platform types, lifecycle states, locale preferences, and priority mapping.
 - `Project Documents/process-doc.md` — Development methodology and phase definitions.
 
 ## Planned Tech Stack
@@ -44,13 +46,15 @@ All PocketBase calls go through a `services/` layer — UI components never call
 
 ## Critical Calculation Details
 
-These are easy to get wrong — refer to PRD §5.2 and §6.2 for full specs:
+These are easy to get wrong — refer to PRD v2 §6.2 and §7.2 for full specs:
 
-- **XIRR**: Newton-Raphson solver on cash flows. Starting value is negative cash flow; deposits are negative; withdrawals and ending value are positive. Return `null` for <2 cash flows or non-convergence.
+- **XIRR**: Newton-Raphson solver on cash flows. Starting value is negative cash flow; deposits are negative; withdrawals and ending value are positive. Return `null` for <2 cash flows or non-convergence. Per-platform XIRR uses native currency; portfolio-level XIRR uses DKK.
+- **Monthly XIRR**: XIRR for a single month in isolation — a first-class metric alongside monthly earnings.
 - **Gain/Loss**: `gain = endingValue - startingValue - netDeposits`. Percent uses `startingValue + Σdeposits` as denominator.
-- **Fuel efficiency**: Always **weighted average** (total km ÷ total liters), never arithmetic mean of per-refueling ratios.
+- **Fuel efficiency**: Always **weighted average** (total km ÷ total fuel), never arithmetic mean of per-refueling ratios. Unit depends on fuel type (km/l or km/kWh).
 - **Bill amortization**: Multi-month bills distributed equally across covered months.
-- **Meter reading interpolation**: Readings don't align to month boundaries — use linear interpolation for monthly consumption.
+- **Meter reading interpolation**: Readings don't align to month boundaries — use linear interpolation for monthly consumption. Multiple readings per month are aggregated.
+- **Currency**: Non-DKK platforms display values as native currency with DKK equivalent. Exchange rates auto-fetched, visible, and overridable.
 
 ## Design Principles
 

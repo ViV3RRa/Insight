@@ -10,13 +10,15 @@ This document describes the expert-driven discovery and design process used to t
 
 **Purpose**: Understand the human context — who the user is, what they do today, why they do it, what frustrates them, and what the tool means in their life. Establish design principles grounded in observed behavior rather than assumed requirements.
 
-**Method**: Iterative conversational inquiry. No feature lists or wireframes. The anthropologist asks open-ended questions about rituals, motivations, emotional relationships with data, and social context. Findings are synthesized into patterns and principles.
+**Method**: Iterative conversational inquiry across two sessions. No feature lists or wireframes. The anthropologist asks open-ended questions about rituals, motivations, emotional relationships with data, and social context. Findings are synthesized into patterns and principles.
 
-**Inputs**: The user's initial idea and a rough feature spec from a prior design session (Figma Make).
+**Inputs**: The user's initial idea, a rough feature spec from a prior design session (Figma Make), and spreadsheet artifacts from the user's existing tracking system.
 
 **Outputs**:
-- `anthropologist.md` — Detailed research findings, behavioral patterns, and derived design principles. Written for a fellow researcher who needs to understand the *why* behind every product decision.
-- `PRD.md` (v1) — Product Requirements Document translated from the findings. Covers data models, calculations, UI structure, and acceptance criteria.
+- `anthropologist-findings.md` — Session 1: Detailed research findings, behavioral patterns, and derived design principles.
+- `anthropologist-findings-session-2.md` — Session 2: Deeper investigation using spreadsheet artifacts. Uncovered multi-currency requirements, platform types (investment/cash), lifecycle states (closed platforms, sold vehicles), monthly earnings as a first-class metric, EV support, locale preferences, and build priorities.
+- `metrics-dashboard-prd-v1.md` — Original PRD from Session 1 findings. Superseded by v2.
+- `metrics-dashboard-prd-v2.md` — Updated PRD incorporating all findings from both sessions. **This is the current source of truth.**
 
 **Key findings that shaped the project**:
 - The core gesture across all domains is identical: observe a real-world value at a point in time and record it.
@@ -24,6 +26,10 @@ This document describes the expert-driven discovery and design process used to t
 - The tool is a personal observatory, not a decision engine. Awareness is the value.
 - Transparency and sovereignty matter more than convenience. No black-box calculations.
 - Progressive disclosure: clean surfaces with full data accessible underneath.
+- Multi-currency is a core requirement, not a future enhancement. DKK is the home currency; EUR platforms need automatic exchange rate handling.
+- Investment platforms and cash platforms are structurally distinct and need different UI treatment.
+- Platforms and vehicles have lifecycles (closed/sold) that must be tracked with historical data preserved.
+- Investment portfolio is the highest-priority section to build first.
 
 ---
 
@@ -123,9 +129,11 @@ This document describes the expert-driven discovery and design process used to t
 
 | Document | Purpose | Status |
 |---|---|---|
-| `process.md` | This file — the overall development process | ✅ Active |
-| `anthropologist.md` | Research findings and design principles | ✅ Complete |
-| `PRD.md` | Product requirements document | ✅ Complete (will evolve) |
+| `process-doc.md` | This file — the overall development process | ✅ Active |
+| `anthropologist-findings.md` | Session 1 research findings and design principles | ✅ Complete |
+| `anthropologist-findings-session-2.md` | Session 2 research findings — currency, platform types, lifecycles, priorities | ✅ Complete |
+| `metrics-dashboard-prd-v1.md` | Original PRD from Session 1 | ✅ Superseded by v2 |
+| `metrics-dashboard-prd-v2.md` | Current PRD — source of truth for what to build | ✅ Complete (will evolve) |
 | Design mockups | Visual and interaction design | ⬜ Not started |
 | Architecture decisions | Technical validation and refinements | ⬜ Not started |
 | Build plan | Phased implementation roadmap | ⬜ Not started |
