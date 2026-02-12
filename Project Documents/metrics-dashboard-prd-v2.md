@@ -154,8 +154,22 @@ A settings page accessible from the main navigation, providing:
 - **Date format**: Toggle between `YYYY-MM-DD` and `DD/MM/YYYY`.
 - **Theme**: Toggle between light mode and dark mode.
 - **Home currency**: DKK (displayed for reference; drives portfolio aggregation currency).
+- **Demo mode**: Toggle on/off. See §3.9.
 
 Settings are stored per user in PocketBase.
+
+### 3.9 Demo Mode
+
+A toggle in settings that switches the entire platform to display **mock data** instead of the user's real data. This allows the user to demonstrate the platform to others without disclosing personal financial, utility, or vehicle information.
+
+When demo mode is enabled:
+
+- All sections (Home, Portfolio, Vehicles) display realistic but synthetic data — fake platform names, values, transactions, meter readings, vehicles, etc.
+- The mock data should be comprehensive enough to demonstrate all features: multiple platforms (investment and cash, DKK and EUR), multiple utilities, active and sold vehicles, interpolated data points, YoY comparisons, etc.
+- A visible indicator (e.g. a banner or badge) makes it clear that demo mode is active, so the user doesn't accidentally think they're looking at real data.
+- No real data is accessible or visible while demo mode is on.
+- Toggling demo mode off returns to the user's real data immediately.
+- Demo mode is a **display-layer switch** — it does not modify, delete, or interfere with the user's actual data in any way.
 
 ---
 
@@ -785,7 +799,7 @@ All dialogs are modal overlays with backdrop blur. Forms validate before submiss
 | Collection | Fields | Notes |
 |---|---|---|
 | `users` | Built-in PocketBase auth | Email/password |
-| `settings` | userId (relation), dateFormat, theme | Per-user settings |
+| `settings` | userId (relation), dateFormat, theme, demoMode | Per-user settings |
 | `exchange_rates` | fromCurrency, toCurrency, rate, date, source | Historical exchange rates |
 | `portfolios` | name, ownerName, isDefault | One default per user |
 | `platforms` | portfolio (relation), name, type, currency, status, closedDate, closureNote | Investment or cash, active or closed |
@@ -966,3 +980,4 @@ These are acknowledged directions but are **not** part of the initial build:
 47. Danish locale formatting is applied throughout (numbers, currency, percentages).
 48. Date format is configurable between YYYY-MM-DD and DD/MM/YYYY.
 49. EV home-charging kWh can be excluded from electricity utility consumption via toggle.
+50. Demo mode displays realistic mock data across all sections and hides all real data. A visible indicator shows when demo mode is active.
