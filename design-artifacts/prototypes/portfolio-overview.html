@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Portfolio — Insight</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'DM Sans', system-ui, sans-serif; }
+        .font-mono-data { font-family: 'DM Mono', monospace; font-variant-numeric: tabular-nums; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #c4c4c4; border-radius: 3px; }
+        .dark ::-webkit-scrollbar-thumb { background: #525252; }
+        /* Dialog animations */
+        @media (min-width: 640px) {
+            .dialog-panel.dialog-open { transform: scale(1); opacity: 1; }
+        }
+        @media (max-width: 639px) {
+            .dialog-panel.dialog-open { transform: translateY(0); opacity: 1; }
+        }
+        /* Custom select arrow */
+        select.form-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%238a8a8a' viewBox='0 0 24 24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-position: right 1rem center;
+            background-repeat: no-repeat;
+            background-size: 1rem;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: {
+                colors: {
+                    'accent': { 50:'#f0fdf4',100:'#dcfce7',200:'#bbf7d0',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d' },
+                    'white': '#fafcfa',
+                    'base': { 50:'#f7f9f7',100:'#f0f2f0',150:'#e7e9e7',200:'#d3d5d3',300:'#afb1af',400:'#898b89',500:'#6a6c6a',600:'#515351',700:'#3c3e3c',800:'#252725',900:'#161816' }
+                },
+                boxShadow: {
+                    'card':'0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04)',
+                    'card-dark':'0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2)'
+                }
+            }}
+        }
+    </script>
+</head>
+<body class="bg-base-100 dark:bg-base-900 text-base-900 dark:text-base-100 antialiased transition-colors duration-200">
+
+    <!-- Nav -->
+    <nav class="bg-white dark:bg-base-800 shadow-card dark:shadow-card-dark sticky top-0 z-30 relative">
+        <div class="max-w-[1440px] mx-auto px-3 lg:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-10">
+                    <!-- Desktop: Brand + section nav -->
+                    <div class="hidden lg:block text-xl font-bold tracking-tight">Insight</div>
+                    <div class="hidden lg:flex gap-1">
+                        <a href="#" class="px-4 py-2 text-sm rounded-lg text-base-400 dark:text-base-400 hover:text-base-600 dark:hover:text-base-200 transition-colors">Home</a>
+                        <a href="#" class="px-4 py-2 text-sm rounded-lg font-medium text-accent-700 dark:text-accent-400 bg-accent-50 dark:bg-accent-700/20">Investment</a>
+                        <a href="#" class="px-4 py-2 text-sm rounded-lg text-base-400 dark:text-base-400 hover:text-base-600 dark:hover:text-base-200 transition-colors">Vehicles</a>
+                    </div>
+                    <!-- Mobile/Tablet: Page title + portfolio switcher in nav -->
+                    <div class="flex lg:hidden items-center gap-2.5">
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2">
+                                <div class="text-sm font-bold tracking-tight truncate">Investment Portfolio</div>
+                                <button onclick="document.getElementById('portfolio-dropdown-mobile').classList.toggle('hidden')" class="flex items-center gap-1.5 px-2 py-1 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg text-xs font-medium shadow-sm shrink-0">
+                                    My Portfolio
+                                    <svg class="w-3 h-3 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                </button>
+                            </div>
+                            <div class="text-[11px] text-base-400 mt-0.5">4 active platforms · 1 cash account · 1 closed</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Settings (desktop only — on mobile/tablet it's in the bottom tab bar) -->
+                <div class="hidden lg:flex items-center">
+                    <button class="w-9 h-9 rounded-xl bg-base-150 dark:bg-base-700 flex items-center justify-center text-base-500 dark:text-base-300 hover:bg-base-200 dark:hover:bg-base-600 transition-colors" title="Settings">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Portfolio Dropdown (slides below nav, like platform switcher) -->
+        <div id="portfolio-dropdown-mobile" class="hidden lg:hidden absolute left-0 right-0 top-full bg-white dark:bg-base-800 border-t border-base-150 dark:border-base-700 shadow-lg z-40">
+            <div class="max-w-[1440px] mx-auto py-1">
+                <!-- Active portfolio -->
+                <div class="flex items-center gap-3 px-4 py-2.5 bg-accent-50/50 dark:bg-accent-900/15 border-l-2 border-accent-600 dark:border-accent-400">
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium">My Portfolio</div>
+                        <div class="text-xs text-base-400">4 platforms · Default</div>
+                    </div>
+                    <button onclick="event.stopPropagation(); document.getElementById('portfolio-dropdown-mobile').classList.add('hidden'); showDialog('edit-portfolio-dialog')" class="p-1.5 text-base-400 hover:text-base-600 dark:hover:text-base-300 rounded-lg hover:bg-white/50 dark:hover:bg-base-700 transition-colors" title="Edit portfolio">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                    </button>
+                </div>
+                <!-- Other portfolio -->
+                <div class="flex items-center gap-3 px-4 py-2.5 hover:bg-base-50 dark:hover:bg-base-700 transition-colors cursor-pointer">
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium">Son's Portfolio</div>
+                        <div class="text-xs text-base-400">2 platforms</div>
+                    </div>
+                    <button onclick="event.stopPropagation(); document.getElementById('portfolio-dropdown-mobile').classList.add('hidden'); editPortfolio('Son\x27s Portfolio', 'Oliver')" class="p-1.5 text-base-400 hover:text-base-600 dark:hover:text-base-300 rounded-lg hover:bg-base-100 dark:hover:bg-base-700 transition-colors" title="Edit portfolio">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                    </button>
+                </div>
+                <!-- Divider + Add Portfolio -->
+                <div class="border-t border-base-100 dark:border-base-700 mt-1 pt-1">
+                    <button onclick="document.getElementById('portfolio-dropdown-mobile').classList.add('hidden'); showDialog('add-portfolio-dialog')" class="w-full px-4 py-2.5 flex items-center gap-2 text-sm text-base-400 hover:text-base-600 dark:hover:text-base-300 hover:bg-base-50 dark:hover:bg-base-700/50 transition-colors">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add Portfolio
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-[1440px] mx-auto px-3 lg:px-6 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+
+        <!-- Page Header + Portfolio Switcher (desktop only — on mobile/tablet this is in the nav) -->
+        <div class="hidden lg:flex items-center justify-between mb-8">
+            <div>
+                <div class="flex items-center gap-3 mb-1">
+                    <h1 class="text-2xl font-bold tracking-tight">Investment Portfolio</h1>
+                    <!-- Portfolio Switcher -->
+                    <div class="relative">
+                        <button onclick="togglePortfolioDropdown()" class="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg text-sm font-medium shadow-sm hover:border-base-300 dark:hover:border-base-500 transition-colors">
+                            My Portfolio
+                            <svg class="w-3.5 h-3.5 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <!-- Dropdown -->
+                        <div id="portfolio-dropdown" class="hidden absolute top-full left-0 mt-1.5 w-64 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-xl shadow-lg z-40 py-1.5 overflow-hidden">
+                            <div class="px-3 py-2 flex items-center justify-between bg-accent-50/50 dark:bg-accent-900/20">
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-3.5 h-3.5 text-accent-600 dark:text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    <span class="text-sm font-medium">My Portfolio</span>
+                                </div>
+                                <button onclick="event.stopPropagation(); togglePortfolioDropdown(); showDialog('edit-portfolio-dialog')" class="p-1 text-base-400 hover:text-base-600 dark:hover:text-base-300 rounded transition-colors" title="Edit portfolio">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                </button>
+                            </div>
+                            <div class="px-3 py-2 flex items-center justify-between hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer">
+                                <span class="text-sm">Son's Portfolio</span>
+                                <button onclick="event.stopPropagation(); togglePortfolioDropdown(); editPortfolio('Son\x27s Portfolio', 'Oliver')" class="p-1 text-base-400 hover:text-base-600 dark:hover:text-base-300 rounded transition-colors" title="Edit portfolio">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                </button>
+                            </div>
+                            <div class="border-t border-base-100 dark:border-base-700 mt-1.5 pt-1.5">
+                                <button onclick="togglePortfolioDropdown(); showDialog('add-portfolio-dialog')" class="w-full px-3 py-2 flex items-center gap-2 text-sm text-base-400 hover:text-base-600 dark:hover:text-base-300 hover:bg-base-50 dark:hover:bg-base-700/50 transition-colors">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                    Add Portfolio
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sm text-base-400">4 active platforms · 1 cash account · 1 closed</p>
+            </div>
+        </div>
+
+        <!-- Summary Cards (6 KPIs) -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 lg:gap-4 mb-6 lg:mb-10">
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">Total Value</div>
+                <div class="font-mono-data text-xl font-medium">1.582.914 <span class="text-xs text-base-300">DKK</span></div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">As of Feb 14, 2026</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">All-Time Gain/Loss</div>
+                <div class="font-mono-data text-xl font-medium text-emerald-600 dark:text-emerald-400">+182.914</div>
+                <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-md inline-block mt-1.5">+13,1%</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">All-Time XIRR</div>
+                <div class="font-mono-data text-xl font-medium">9,8<span class="text-xs text-base-300">%</span></div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">Annualized return</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">YTD Gain/Loss</div>
+                <div class="font-mono-data text-xl font-medium text-emerald-600 dark:text-emerald-400">+47.280</div>
+                <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-md inline-block mt-1.5">+3,1%</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">YTD XIRR</div>
+                <div class="font-mono-data text-xl font-medium">8,4<span class="text-xs text-base-300">%</span></div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">Annualized YTD</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">Month Earnings</div>
+                <div class="font-mono-data text-xl font-medium text-emerald-600 dark:text-emerald-400">+14.738</div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">Feb 2026</div>
+            </div>
+        </div>
+
+        <!-- Allocation + Charts Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5 mb-6 lg:mb-10">
+            <!-- Portfolio Allocation -->
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-4 sm:p-6 shadow-card dark:shadow-card-dark">
+                <h3 class="text-sm font-semibold mb-5">Portfolio Allocation</h3>
+                <!-- Proportional bar -->
+                <div class="flex rounded-lg overflow-hidden h-8 mb-5">
+                    <div class="bg-blue-500" style="width:53.2%" title="Nordnet (ASK)"></div>
+                    <div class="bg-red-400" style="width:25.6%" title="Mintos"></div>
+                    <div class="bg-violet-500" style="width:3.9%" title="Kameo"></div>
+                    <div class="bg-base-300 dark:bg-base-500" style="width:17.3%" title="Revolut"></div>
+                </div>
+                <!-- Legend -->
+                <div class="space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2.5 h-2.5 rounded-sm bg-blue-500"></div>
+                            <span class="text-sm">Nordnet (ASK)</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="font-mono-data text-sm">842.391</span>
+                            <span class="font-mono-data text-xs text-base-400 w-12 text-right">53,2%</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2.5 h-2.5 rounded-sm bg-red-400"></div>
+                            <span class="text-sm">Mintos</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="font-mono-data text-sm">405.192</span>
+                            <span class="font-mono-data text-xs text-base-400 w-12 text-right">25,6%</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2.5 h-2.5 rounded-sm bg-violet-500"></div>
+                            <span class="text-sm">Kameo</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="font-mono-data text-sm">61.358</span>
+                            <span class="font-mono-data text-xs text-base-400 w-12 text-right">3,9%</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2.5 h-2.5 rounded-sm bg-base-300 dark:bg-base-500"></div>
+                            <span class="text-sm text-base-500 dark:text-base-400">Revolut</span>
+                            <span class="text-xs text-base-300 dark:text-base-500 bg-base-100 dark:bg-base-700 px-1.5 py-0.5 rounded">Cash</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="font-mono-data text-sm">273.973</span>
+                            <span class="font-mono-data text-xs text-base-400 w-12 text-right">17,3%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts (2 col span) -->
+            <div class="lg:col-span-2 bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark p-4 sm:p-6">
+                <!-- Header: Period selector -->
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-5">
+                    <h3 class="text-sm font-semibold">Portfolio Value Over Time</h3>
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <div class="flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5">
+                            <button class="px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm">Earnings</button>
+                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400">XIRR</button>
+                        </div>
+                        <div class="flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5">
+                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200">1M</button>
+                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200">3M</button>
+                            <button class="px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm">YTD</button>
+                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200">1Y</button>
+                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200">All</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Two charts side by side -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                    <div>
+                        <div class="text-xs text-base-400 font-medium mb-3">Value</div>
+                        <div class="h-44 flex items-center justify-center text-sm text-base-200 dark:text-base-600 border border-dashed border-base-150 dark:border-base-700 rounded-xl bg-base-50/30 dark:bg-base-900/30">
+                            <div class="text-center">
+                                <div class="text-base-300 dark:text-base-500 mb-1">[Stacked Area Chart]</div>
+                                <div class="text-xs text-base-200 dark:text-base-600">Each platform's value contribution over time</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-base-400 font-medium mb-3">Performance</div>
+                        <div class="h-44 flex items-center justify-center text-sm text-base-200 dark:text-base-600 border border-dashed border-base-150 dark:border-base-700 rounded-xl bg-base-50/30 dark:bg-base-900/30">
+                            <div class="text-center">
+                                <div class="text-base-300 dark:text-base-500 mb-1">[Bar Chart]</div>
+                                <div class="text-xs text-base-200 dark:text-base-600">Green/red bars per month · Values on bars</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Investment Platforms -->
+        <div id="platforms-table" class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6">
+            <div class="px-3 lg:px-6 py-5 flex items-center justify-between border-b border-base-100 dark:border-base-700">
+                <div class="flex flex-col gap-1">
+                    <h2 class="font-semibold">Investment Platforms</h2>
+                    <span class="text-xs text-base-400 bg-base-100 dark:bg-base-700 px-2 py-0.5 rounded-lg w-fit">3 platforms</span>
+                </div>
+                <button onclick="showDialog('add-transaction-dialog')" class="px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">+ Add Transaction</button>
+            </div>
+            <div class="overflow-x-auto">
+            <table class="w-full text-sm sm:min-w-[700px]">
+                <thead>
+                    <tr class="border-b border-base-150 dark:border-base-700 bg-base-50/40 dark:bg-base-900/30">
+                        <th class="w-8"></th>
+                        <th class="text-left font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Platform</th>
+                        <th class="text-right font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Value</th>
+                        <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Month Earnings</th>
+                        <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">All-Time Gain/Loss</th>
+                        <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">XIRR</th>
+                        <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Updated</th>
+                        <!-- Mobile: cycling column -->
+                        <th class="sm:hidden text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">
+                            <button onclick="cycleColumn(event, 'platforms-table')" class="inline-flex flex-col items-end gap-1">
+                                <span class="inline-flex items-center gap-1 text-accent-600 dark:text-accent-400">
+                                    <span class="grid justify-items-end">
+                                        <span class="cycle-header [grid-area:1/1]" data-col="xirr">XIRR</span>
+                                        <span class="cycle-header [grid-area:1/1] invisible" data-col="earnings">Earnings</span>
+                                        <span class="cycle-header [grid-area:1/1] invisible" data-col="gain">Gain/Loss</span>
+                                        <span class="cycle-header [grid-area:1/1] invisible" data-col="updated">Updated</span>
+                                    </span>
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                </span>
+                                <span class="flex gap-0.5 cycle-dots">
+                                    <span class="w-1 h-1 rounded-full bg-accent-500"></span>
+                                    <span class="w-1 h-1 rounded-full bg-base-300 dark:bg-base-500"></span>
+                                    <span class="w-1 h-1 rounded-full bg-base-300 dark:bg-base-500"></span>
+                                    <span class="w-1 h-1 rounded-full bg-base-300 dark:bg-base-500"></span>
+                                </span>
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Nordnet -->
+                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/30 dark:hover:bg-accent-900/10 cursor-pointer transition-colors" onclick="window.location='platform-detail.html'">
+                        <td class="pl-3 lg:pl-5 pr-0 py-4 text-base-300 dark:text-base-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></td>
+                        <td class="pl-1 pr-3 lg:pl-2 lg:pr-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <img src="icons/icon_nordnet.webp" alt="" class="w-5 min-w-5 h-5 rounded-full object-cover shrink-0 shadow ring-1 ring-black/10">
+                                <span class="font-medium">Nordnet (ASK)</span>
+                            </div>
+                        </td>
+                        <td class="px-3 lg:px-6 py-4 text-right font-mono-data">842.391 <span class="text-base-300 dark:text-base-500 text-xs">DKK</span></td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right font-mono-data text-emerald-600 dark:text-emerald-400">+12.480</td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right">
+                            <div class="font-mono-data text-emerald-600 dark:text-emerald-400">+89.241</div>
+                            <div class="font-mono-data text-xs text-emerald-500/80 dark:text-emerald-400/70">+11,8%</div>
+                        </td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right font-mono-data font-medium">9,2%</td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right text-xs text-base-400">Feb 14</td>
+                        <!-- Mobile: cycling values -->
+                        <td class="sm:hidden px-4 py-4 text-right">
+                            <div class="grid">
+                                <div class="cycle-val [grid-area:1/1]" data-col="xirr"><span class="font-mono-data font-medium">9,2%</span></div>
+                                <div class="cycle-val [grid-area:1/1] invisible" data-col="earnings"><span class="font-mono-data text-emerald-600 dark:text-emerald-400">+12.480</span></div>
+                                <div class="cycle-val [grid-area:1/1] invisible" data-col="gain">
+                                    <div class="font-mono-data text-emerald-600 dark:text-emerald-400">+89.241</div>
+                                    <div class="font-mono-data text-xs text-emerald-500/80 dark:text-emerald-400/70">+11,8%</div>
+                                </div>
+                                <div class="cycle-val [grid-area:1/1] invisible" data-col="updated"><span class="text-xs text-base-400">Feb 14</span></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Mintos -->
+                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/30 dark:hover:bg-accent-900/10 cursor-pointer transition-colors">
+                        <td class="pl-3 lg:pl-5 pr-0 py-4 text-base-300 dark:text-base-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></td>
+                        <td class="pl-1 pr-3 lg:pl-2 lg:pr-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <img src="icons/icon_mintos.webp" alt="" class="w-5 min-w-5 h-5 rounded-full object-cover shrink-0 shadow ring-1 ring-black/10">
+                                <span class="font-medium">Mintos</span>
+                            </div>
+                        </td>
+                        <td class="px-3 lg:px-6 py-4 text-right">
+                            <div class="font-mono-data">58.924 <span class="text-base-300 dark:text-base-500 text-xs">USD</span></div>
+                            <div class="text-xs text-base-300 dark:text-base-500">≈ 405.192 DKK</div>
+                        </td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right font-mono-data text-emerald-600 dark:text-emerald-400">+3.102</td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right">
+                            <div class="font-mono-data text-emerald-600 dark:text-emerald-400">+5.284</div>
+                            <div class="font-mono-data text-xs text-emerald-500/80 dark:text-emerald-400/70">+9,8%</div>
+                        </td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right font-mono-data font-medium">7,1%</td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right">
+                            <div class="text-xs text-base-400">Feb 11</div>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs font-medium rounded-full mt-0.5">
+                                <span class="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></span>Stale
+                            </span>
+                        </td>
+                        <!-- Mobile: cycling values -->
+                        <td class="sm:hidden px-4 py-4 text-right">
+                            <div class="grid">
+                                <div class="cycle-val [grid-area:1/1]" data-col="xirr"><span class="font-mono-data font-medium">7,1%</span></div>
+                                <div class="cycle-val [grid-area:1/1] invisible" data-col="earnings"><span class="font-mono-data text-emerald-600 dark:text-emerald-400">+3.102</span></div>
+                                <div class="cycle-val [grid-area:1/1] invisible" data-col="gain">
+                                    <div class="font-mono-data text-emerald-600 dark:text-emerald-400">+5.284</div>
+                                    <div class="font-mono-data text-xs text-emerald-500/80 dark:text-emerald-400/70">+9,8%</div>
+                                </div>
+                                <div class="cycle-val [grid-area:1/1] invisible" data-col="updated">
+                                    <div class="text-xs text-base-400">Feb 11</div>
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs font-medium rounded-full mt-0.5">
+                                        <span class="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></span>Stale
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Kameo -->
+                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/30 dark:hover:bg-accent-900/10 cursor-pointer transition-colors">
+                        <td class="pl-3 lg:pl-5 pr-0 py-4 text-base-300 dark:text-base-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></td>
+                        <td class="pl-1 pr-3 lg:pl-2 lg:pr-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <img src="icons/icon_kameo.png" alt="" class="w-5 min-w-5 h-5 rounded-full object-cover shrink-0 shadow ring-1 ring-black/10">
+                                <span class="font-medium">Kameo</span>
+                            </div>
+                        </td>
+                        <td class="px-3 lg:px-6 py-4 text-right">
+                            <div class="font-mono-data">8.234 <span class="text-base-300 dark:text-base-500 text-xs">EUR</span></div>
+                            <div class="text-xs text-base-300 dark:text-base-500">≈ 61.358 DKK</div>
+                        </td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right font-mono-data text-rose-500 dark:text-rose-400">-842</td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right">
+                            <div class="font-mono-data text-rose-500 dark:text-rose-400">-1.842</div>
+                            <div class="font-mono-data text-xs text-rose-400 dark:text-rose-400/70">-18,3%</div>
+                        </td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right font-mono-data font-medium text-rose-500 dark:text-rose-400">-24,1%</td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right text-xs text-base-400">Feb 14</td>
+                        <!-- Mobile: cycling values -->
+                        <td class="sm:hidden px-4 py-4 text-right">
+                            <div class="grid">
+                                <div class="cycle-val [grid-area:1/1]" data-col="xirr"><span class="font-mono-data font-medium text-rose-500 dark:text-rose-400">-24,1%</span></div>
+                                <div class="cycle-val [grid-area:1/1] invisible" data-col="earnings"><span class="font-mono-data text-rose-500 dark:text-rose-400">-842</span></div>
+                                <div class="cycle-val [grid-area:1/1] invisible" data-col="gain">
+                                    <div class="font-mono-data text-rose-500 dark:text-rose-400">-1.842</div>
+                                    <div class="font-mono-data text-xs text-rose-400 dark:text-rose-400/70">-18,3%</div>
+                                </div>
+                                <div class="cycle-val [grid-area:1/1] invisible" data-col="updated"><span class="text-xs text-base-400">Feb 14</span></div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- Cash Platforms -->
+        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6">
+            <div class="px-3 lg:px-6 py-5 flex items-center justify-between border-b border-base-100 dark:border-base-700">
+                <div class="flex items-center gap-3">
+                    <h2 class="font-semibold">Cash Accounts</h2>
+                    <span class="text-xs text-base-400 bg-base-100 dark:bg-base-700 px-2 py-0.5 rounded-lg">1 account</span>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+            <table class="w-full text-sm sm:min-w-[500px]">
+                <thead>
+                    <tr class="border-b border-base-150 dark:border-base-700 bg-base-50/40 dark:bg-base-900/30">
+                        <th class="w-8"></th>
+                        <th class="text-left font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Account</th>
+                        <th class="text-right font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Current Balance</th>
+                        <th class="text-right font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Updated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/30 dark:hover:bg-accent-900/10 cursor-pointer transition-colors">
+                        <td class="pl-3 lg:pl-5 pr-0 py-4 text-base-300 dark:text-base-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></td>
+                        <td class="pl-1 pr-3 lg:pl-2 lg:pr-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <img src="icons/icon_revolut.webp" alt="" class="w-5 min-w-5 h-5 rounded-full object-cover shrink-0 shadow ring-1 ring-black/10">
+                                <span class="font-medium">Revolut</span>
+                            </div>
+                        </td>
+                        <td class="px-3 lg:px-6 py-4 text-right">
+                            <div class="font-mono-data">36.750 <span class="text-base-300 dark:text-base-500 text-xs">EUR</span></div>
+                            <div class="text-xs text-base-300 dark:text-base-500">≈ 273.973 DKK</div>
+                        </td>
+                        <td class="px-3 lg:px-6 py-4 text-right text-xs text-base-400">Feb 14</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- Closed Platforms -->
+        <div id="closed-table" class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden">
+            <div class="px-3 lg:px-6 py-5 flex items-center justify-between border-b border-base-100 dark:border-base-700">
+                <div class="flex items-center gap-3">
+                    <h2 class="font-semibold text-base-400">Closed Platforms</h2>
+                    <span class="text-xs text-base-400 bg-base-100 dark:bg-base-700 px-2 py-0.5 rounded-lg">1 platform</span>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+            <table class="w-full text-sm sm:min-w-[550px]">
+                <thead>
+                    <tr class="border-b border-base-150 dark:border-base-700 bg-base-50/40 dark:bg-base-900/30">
+                        <th class="w-8"></th>
+                        <th class="text-left font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Platform</th>
+                        <th class="text-right font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Final Value</th>
+                        <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">All-Time Gain/Loss</th>
+                        <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Closed</th>
+                        <!-- Mobile: cycling column -->
+                        <th class="sm:hidden text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">
+                            <button onclick="cycleColumn(event, 'closed-table')" class="inline-flex flex-col items-end gap-1">
+                                <span class="inline-flex items-center gap-1 text-accent-600 dark:text-accent-400">
+                                    <span class="grid justify-items-end">
+                                        <span class="cycle-header [grid-area:1/1]" data-col="gain">Gain/Loss</span>
+                                        <span class="cycle-header [grid-area:1/1] invisible" data-col="closed">Closed</span>
+                                    </span>
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                </span>
+                                <span class="flex gap-0.5 cycle-dots">
+                                    <span class="w-1 h-1 rounded-full bg-accent-500"></span>
+                                    <span class="w-1 h-1 rounded-full bg-base-300 dark:bg-base-500"></span>
+                                </span>
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-base-50/50 dark:hover:bg-base-700/30 cursor-pointer transition-colors opacity-60">
+                        <td class="pl-3 lg:pl-5 pr-0 py-4 text-base-300 dark:text-base-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></td>
+                        <td class="pl-1 pr-3 lg:pl-2 lg:pr-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <img src="icons/icon_saxo.png" alt="" class="w-5 min-w-5 h-5 rounded-full object-cover shrink-0 shadow ring-1 ring-black/10">
+                                <span class="font-medium">Saxo Investor</span>
+                            </div>
+                        </td>
+                        <td class="px-3 lg:px-6 py-4 text-right font-mono-data text-base-500">0 <span class="text-base-300 text-xs">DKK</span></td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right">
+                            <div class="font-mono-data text-emerald-600/60 dark:text-emerald-400/60">+12.340</div>
+                            <div class="font-mono-data text-xs text-emerald-500/50">+6,2%</div>
+                        </td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right text-xs text-base-400">Sep 2025</td>
+                        <!-- Mobile: cycling values -->
+                        <td class="sm:hidden px-4 py-4 text-right">
+                            <div class="grid">
+                                <div class="cycle-val [grid-area:1/1]" data-col="gain">
+                                    <div class="font-mono-data text-emerald-600/60 dark:text-emerald-400/60">+12.340</div>
+                                    <div class="font-mono-data text-xs text-emerald-500/50">+6,2%</div>
+                                </div>
+                                <div class="cycle-val [grid-area:1/1] invisible" data-col="closed"><span class="text-xs text-base-400">Sep 2025</span></div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- Add Platform -->
+        <button onclick="showDialog('add-platform-dialog')" class="w-full py-3 text-sm font-medium text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors flex items-center justify-center gap-1.5 mt-2 mb-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Add Platform
+        </button>
+
+    </main>
+    <script>
+        const tableConfigs = {
+            'platforms-table': {
+                metrics: ['xirr', 'earnings', 'gain', 'updated'],
+                labels: { xirr: 'XIRR', earnings: 'Earnings', gain: 'Gain/Loss', updated: 'Updated' },
+                current: 0
+            },
+            'closed-table': {
+                metrics: ['gain', 'closed'],
+                labels: { gain: 'Gain/Loss', closed: 'Closed' },
+                current: 0
+            }
+        };
+
+        function cycleColumn(e, tableId) {
+            e.stopPropagation();
+            const config = tableConfigs[tableId];
+            if (!config) return;
+            const container = document.getElementById(tableId);
+            if (!container) return;
+
+            config.current = (config.current + 1) % config.metrics.length;
+            const col = config.metrics[config.current];
+
+            container.querySelectorAll('.cycle-header').forEach(el => {
+                el.classList.toggle('invisible', el.dataset.col !== col);
+            });
+            container.querySelectorAll('.cycle-val').forEach(el => {
+                el.classList.toggle('invisible', el.dataset.col !== col);
+            });
+            container.querySelectorAll('.cycle-dots span').forEach((dot, i) => {
+                dot.className = i === config.current
+                    ? 'w-1 h-1 rounded-full bg-accent-500'
+                    : 'w-1 h-1 rounded-full bg-base-300 dark:bg-base-500';
+            });
+        }
+        /* Dialog system */
+        function showDialog(dialogId) {
+            const dialog = document.getElementById(dialogId);
+            if (!dialog) return;
+            dialog.classList.remove('hidden');
+            const dtInput = dialog.querySelector('input[type="datetime-local"]');
+            if (dtInput && !dtInput.value) {
+                dtInput.value = new Date().toISOString().slice(0, 16);
+            }
+            requestAnimationFrame(() => {
+                const panel = dialog.querySelector('.dialog-panel');
+                if (panel) panel.classList.add('dialog-open');
+            });
+            document.addEventListener('keydown', handleDialogEscape);
+        }
+
+        function closeDialog(dialogId) {
+            const dialog = document.getElementById(dialogId);
+            if (!dialog) return;
+            const panel = dialog.querySelector('.dialog-panel');
+            if (panel) panel.classList.remove('dialog-open');
+            setTimeout(() => { dialog.classList.add('hidden'); }, 300);
+        }
+
+        function handleDialogEscape(e) {
+            if (e.key === 'Escape') {
+                const dialogs = document.querySelectorAll('[role="dialog"]:not(.hidden)');
+                if (dialogs.length > 0) {
+                    const last = dialogs[dialogs.length - 1];
+                    closeDialog(last.id);
+                }
+                if (document.querySelectorAll('[role="dialog"]:not(.hidden)').length === 0) {
+                    document.removeEventListener('keydown', handleDialogEscape);
+                }
+            }
+        }
+
+        /* Portfolio dropdown */
+        function togglePortfolioDropdown() {
+            const dd = document.getElementById('portfolio-dropdown');
+            dd.classList.toggle('hidden');
+            if (!dd.classList.contains('hidden')) {
+                setTimeout(() => {
+                    document.addEventListener('click', closePortfolioDropdown, { once: true });
+                }, 0);
+            }
+        }
+
+        function closePortfolioDropdown(e) {
+            const dd = document.getElementById('portfolio-dropdown');
+            if (dd && !dd.contains(e.target)) {
+                dd.classList.add('hidden');
+            }
+        }
+
+        /* Edit portfolio helper */
+        function editPortfolio(name, owner) {
+            document.getElementById('edit-portfolio-name').value = name;
+            document.getElementById('edit-portfolio-owner').value = owner;
+            document.getElementById('edit-portfolio-default').checked = false;
+            showDialog('edit-portfolio-dialog');
+        }
+
+        /* Transaction dialog: update currency based on platform */
+        function updateTransactionCurrency() {
+            const select = document.getElementById('tx-platform-select');
+            const currency = select.value;
+            document.getElementById('tx-currency-suffix').textContent = currency;
+            const exchangeSection = document.getElementById('tx-exchange-rate-section');
+            if (currency !== 'DKK') {
+                exchangeSection.classList.remove('hidden');
+                document.getElementById('tx-rate-currency').textContent = currency;
+                document.getElementById('tx-exchange-rate').value = currency === 'EUR' ? '7.4600' : '6.8800';
+                document.getElementById('tx-rate-source').textContent = 'Auto-fetched';
+                updateDkkEquivalent();
+            } else {
+                exchangeSection.classList.add('hidden');
+            }
+        }
+
+        function updateDkkEquivalent() {
+            const amount = parseFloat(document.getElementById('tx-amount-input').value) || 0;
+            const rate = parseFloat(document.getElementById('tx-exchange-rate').value) || 0;
+            const dkk = (amount * rate).toLocaleString('da-DK', { maximumFractionDigits: 0 });
+            document.getElementById('tx-dkk-equivalent').textContent = '= ' + dkk + ' DKK';
+        }
+
+        /* Delete confirmation */
+        function confirmDelete(entityType, summaryHTML) {
+            document.getElementById('delete-confirm-title').textContent = 'Delete ' + entityType + '?';
+            document.getElementById('delete-confirm-summary').innerHTML = summaryHTML;
+            showDialog('delete-confirm-dialog');
+        }
+    </script>
+
+    <!-- ======== DIALOGS ======== -->
+
+    <!-- Add Platform Dialog -->
+    <div id="add-platform-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-platform-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto translate-y-full sm:translate-y-0 sm:scale-95 sm:opacity-0 transition-all duration-300">
+                <!-- Mobile drag handle -->
+                <div class="flex justify-center pt-3 pb-1 sm:hidden"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <!-- Header -->
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5 flex items-center justify-between">
+                    <h3 class="text-base font-semibold">Add Platform</h3>
+                    <button onclick="closeDialog('add-platform-dialog')" class="p-1 -mr-1 text-base-400 hover:text-base-600 dark:hover:text-base-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <!-- Form -->
+                <div class="px-5 sm:px-6 py-4 space-y-4 border-t border-base-100 dark:border-base-700">
+                    <div class="flex items-start gap-3">
+                        <div class="shrink-0">
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Icon <span class="text-rose-500">*</span></label>
+                            <label class="group relative flex items-center justify-center w-[42px] h-[42px] rounded-full border-2 border-dashed border-base-300 dark:border-base-500 hover:border-accent-500 dark:hover:border-accent-400 bg-base-50 dark:bg-base-900 cursor-pointer transition-colors overflow-hidden">
+                                <svg class="w-5 h-5 text-base-300 dark:text-base-500 group-hover:text-accent-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                <input type="file" accept="image/*" class="hidden">
+                            </label>
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Name <span class="text-rose-500">*</span></label>
+                            <input type="text" placeholder="e.g. Nordnet, Mintos" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Type <span class="text-rose-500">*</span></label>
+                            <select class="form-select w-full px-3 py-2.5 pr-10 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                                <option>Investment</option>
+                                <option>Cash</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Currency <span class="text-rose-500">*</span></label>
+                            <select class="form-select w-full px-3 py-2.5 pr-10 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                                <option>DKK</option>
+                                <option>EUR</option>
+                                <option>USD</option>
+                                <option>GBP</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- Footer -->
+                <div class="px-5 sm:px-6 py-4 border-t border-base-100 dark:border-base-700 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('add-platform-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-platform-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 hover:bg-base-800 dark:hover:bg-accent-700 rounded-lg transition-colors">Add Platform</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Transaction Dialog (with platform selector) -->
+    <div id="add-transaction-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-transaction-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto translate-y-full sm:translate-y-0 sm:scale-95 sm:opacity-0 transition-all duration-300">
+                <!-- Mobile drag handle -->
+                <div class="flex justify-center pt-3 pb-1 sm:hidden"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <!-- Header -->
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5 flex items-center justify-between">
+                    <h3 class="text-base font-semibold">Add Transaction</h3>
+                    <button onclick="closeDialog('add-transaction-dialog')" class="p-1 -mr-1 text-base-400 hover:text-base-600 dark:hover:text-base-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <!-- Form -->
+                <div class="px-5 sm:px-6 py-4 space-y-4 border-t border-base-100 dark:border-base-700">
+                    <!-- Platform selector (overview-specific) -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Platform <span class="text-rose-500">*</span></label>
+                        <select id="tx-platform-select" onchange="updateTransactionCurrency()" class="form-select w-full px-3 py-2.5 pr-10 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                            <option value="DKK">Nordnet (ASK) · DKK</option>
+                            <option value="USD">Mintos · USD</option>
+                            <option value="EUR">Kameo · EUR</option>
+                            <option value="EUR">Revolut · EUR</option>
+                        </select>
+                    </div>
+                    <!-- Type -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Type <span class="text-rose-500">*</span></label>
+                        <div class="flex gap-2">
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="overview-tx-type" value="deposit" checked class="peer sr-only">
+                                <div class="text-center py-2.5 text-sm font-medium border-2 border-base-200 dark:border-base-600 rounded-lg peer-checked:border-emerald-500 peer-checked:bg-emerald-50 dark:peer-checked:bg-emerald-900/20 peer-checked:text-emerald-700 dark:peer-checked:text-emerald-400 transition-all">Deposit</div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="overview-tx-type" value="withdrawal" class="peer sr-only">
+                                <div class="text-center py-2.5 text-sm font-medium border-2 border-base-200 dark:border-base-600 rounded-lg peer-checked:border-rose-500 peer-checked:bg-rose-50 dark:peer-checked:bg-rose-900/20 peer-checked:text-rose-700 dark:peer-checked:text-rose-400 transition-all">Withdrawal</div>
+                            </label>
+                        </div>
+                    </div>
+                    <!-- Amount -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Amount <span class="text-rose-500">*</span></label>
+                        <div class="relative">
+                            <input id="tx-amount-input" type="number" step="0.01" placeholder="0,00" class="w-full px-3 py-2.5 pr-14 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                            <span id="tx-currency-suffix" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-base-300 dark:text-base-500 font-mono-data">DKK</span>
+                        </div>
+                    </div>
+                    <!-- Exchange Rate (conditional — non-DKK platforms) -->
+                    <div id="tx-exchange-rate-section" class="hidden">
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Exchange Rate <span class="text-rose-500">*</span></label>
+                        <div class="relative">
+                            <input id="tx-exchange-rate" type="number" step="0.0001" placeholder="7,4600" oninput="updateDkkEquivalent()" class="w-full px-3 py-2.5 pr-24 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-base-300 dark:text-base-500 font-mono-data">DKK/<span id="tx-rate-currency">EUR</span></span>
+                        </div>
+                        <div class="flex items-center justify-between mt-1.5">
+                            <span id="tx-rate-source" class="text-xs text-base-400 italic">Auto-fetched</span>
+                            <span id="tx-dkk-equivalent" class="text-xs font-mono-data text-base-400">= 0 DKK</span>
+                        </div>
+                    </div>
+                    <!-- Date & Time -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Date & Time <span class="text-rose-500">*</span></label>
+                        <input type="datetime-local" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                    </div>
+                    <!-- Note -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label>
+                        <input type="text" placeholder="Optional note..." class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                    </div>
+                    <!-- Attachment -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Attachment</label>
+                        <label class="flex items-center gap-2 px-3 py-2.5 border border-dashed border-base-200 dark:border-base-600 rounded-lg cursor-pointer hover:border-base-300 dark:hover:border-base-500 transition-colors">
+                            <svg class="w-4 h-4 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                            <span class="text-sm text-base-400 dark:text-base-500">Choose file...</span>
+                            <input type="file" class="hidden">
+                        </label>
+                    </div>
+                </div>
+                <!-- Footer -->
+                <div class="px-5 sm:px-6 py-4 border-t border-base-100 dark:border-base-700 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('add-transaction-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button class="px-4 py-2.5 text-sm font-medium text-base-900 dark:text-base-100 bg-white dark:bg-base-700 border border-base-200 dark:border-base-600 rounded-lg hover:bg-base-50 dark:hover:bg-base-600 transition-colors">Save & Add Another</button>
+                    <button onclick="closeDialog('add-transaction-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 hover:bg-base-800 dark:hover:bg-accent-700 rounded-lg transition-colors">Add Transaction</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Portfolio Dialog -->
+    <div id="add-portfolio-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-portfolio-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto translate-y-full sm:translate-y-0 sm:scale-95 sm:opacity-0 transition-all duration-300">
+                <div class="flex justify-center pt-3 pb-1 sm:hidden"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5 flex items-center justify-between">
+                    <h3 class="text-base font-semibold">Add Portfolio</h3>
+                    <button onclick="closeDialog('add-portfolio-dialog')" class="p-1 -mr-1 text-base-400 hover:text-base-600 dark:hover:text-base-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div class="px-5 sm:px-6 py-4 space-y-4 border-t border-base-100 dark:border-base-700">
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Portfolio Name <span class="text-rose-500">*</span></label>
+                        <input type="text" placeholder="e.g. Son's Portfolio" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Owner <span class="text-rose-500">*</span></label>
+                        <input type="text" placeholder="Who is this portfolio for?" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                    </div>
+                </div>
+                <div class="px-5 sm:px-6 py-4 border-t border-base-100 dark:border-base-700 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('add-portfolio-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-portfolio-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 hover:bg-base-800 dark:hover:bg-accent-700 rounded-lg transition-colors">Add Portfolio</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Portfolio Dialog -->
+    <div id="edit-portfolio-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('edit-portfolio-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto translate-y-full sm:translate-y-0 sm:scale-95 sm:opacity-0 transition-all duration-300">
+                <div class="flex justify-center pt-3 pb-1 sm:hidden"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5 flex items-center justify-between">
+                    <h3 class="text-base font-semibold">Edit Portfolio</h3>
+                    <button onclick="closeDialog('edit-portfolio-dialog')" class="p-1 -mr-1 text-base-400 hover:text-base-600 dark:hover:text-base-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div class="px-5 sm:px-6 py-4 space-y-4 border-t border-base-100 dark:border-base-700">
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Portfolio Name <span class="text-rose-500">*</span></label>
+                        <input id="edit-portfolio-name" type="text" value="My Portfolio" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Owner <span class="text-rose-500">*</span></label>
+                        <input id="edit-portfolio-owner" type="text" value="Me" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <input id="edit-portfolio-default" type="checkbox" checked class="w-4 h-4 rounded border-base-300 text-accent-600 focus:ring-accent-500/30">
+                        <label for="edit-portfolio-default" class="text-sm text-base-600 dark:text-base-300">Set as default portfolio</label>
+                    </div>
+                </div>
+                <div class="px-5 sm:px-6 py-4 border-t border-base-100 dark:border-base-700 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('edit-portfolio-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('edit-portfolio-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 hover:bg-base-800 dark:hover:bg-accent-700 rounded-lg transition-colors">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Dialog (always centered) -->
+    <div id="delete-confirm-dialog" class="fixed inset-0 z-[60] hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('delete-confirm-dialog')"></div>
+        <div class="fixed inset-0 flex items-center justify-center p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-2xl shadow-xl w-full max-w-sm scale-95 opacity-0 transition-all duration-200">
+                <div class="p-5 sm:p-6">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center mb-3">
+                            <svg class="w-5 h-5 text-rose-600 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </div>
+                        <h3 id="delete-confirm-title" class="text-base font-semibold mb-1">Delete?</h3>
+                        <p id="delete-confirm-summary" class="text-sm text-base-500 dark:text-base-400 mb-1"></p>
+                        <p class="text-xs text-base-400 dark:text-base-500">This action cannot be undone.</p>
+                    </div>
+                </div>
+                <div class="px-5 sm:px-6 py-4 border-t border-base-100 dark:border-base-700 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('delete-confirm-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('delete-confirm-dialog')" class="px-4 py-2.5 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-colors">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Tab Bar (mobile/tablet) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-base-800 border-t border-base-150 dark:border-base-700 z-30 lg:hidden">
+        <div class="flex items-center justify-around h-16">
+            <a href="#" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span class="text-[10px] font-medium">Home</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-1 px-4 py-2 text-accent-600 dark:text-accent-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                <span class="text-[10px] font-medium">Investment</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17h2V9l-3-6H6L3 9v8h2m14 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M9 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0"/></svg>
+                <span class="text-[10px] font-medium">Vehicles</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span class="text-[10px] font-medium">Settings</span>
+            </a>
+        </div>
+    </nav>
+
+</body>
+</html>

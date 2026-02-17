@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest",
+        "--caps",
+        "devtools"
+      ]
+    }
+  },
+  "permissions": {
+    "allow": [
+      "mcp__playwright__browser_wait_for"
+    ]
+  }
+}

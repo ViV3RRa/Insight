@@ -137,6 +137,8 @@ Where raw data is relevant (readings, data points, transactions, maintenance eve
 - Sortable by date.
 - Include delete/edit actions per row.
 - Display the note field (if populated) for each row.
+- On mobile, columns that don't fit are replaced by a single **cyclable column** — tap the header to cycle through hidden values (see §8.3 for full pattern).
+- **Mobile row-tap drawers**: On mobile, tapping a table row opens a bottom drawer showing the full record details (all fields that are hidden on mobile) plus Edit and Delete action buttons. This replaces the inline icon buttons used on desktop, giving mobile users full access to record details and actions without cramming icons into narrow rows.
 
 ### 3.7 Locale and Formatting
 
@@ -472,7 +474,7 @@ All summary cards, charts, and platform lists below are scoped to the selected p
    - YoY overlay toggle.
 4. **Platform list** — organized with visual distinction between investment platforms and cash platforms:
    - **Investment platforms** (cards/rows), each showing:
-     - Platform name.
+     - Platform icon and name.
      - Currency indicator (if non-DKK).
      - Current value (native currency + DKK equivalent if applicable).
      - Current month earnings.
@@ -481,13 +483,13 @@ All summary cards, charts, and platform lists below are scoped to the selected p
      - Clickable → platform detail page.
      - Edit/delete actions.
    - **Cash platforms** (cards/rows, visually distinct), each showing:
-     - Platform name.
+     - Platform icon and name.
      - Currency indicator (if non-DKK).
      - Current balance (native currency + DKK equivalent if applicable).
      - Clickable → cash platform detail page.
      - Edit/delete actions.
    - **Closed platforms** (muted), each showing:
-     - Platform name with "Closed" indicator.
+     - Platform icon and name with "Closed" indicator.
      - Final value at closure.
      - All-time gain/loss.
      - Clickable → platform detail page (historical view).
@@ -497,7 +499,7 @@ All summary cards, charts, and platform lists below are scoped to the selected p
 
 Full-width view with back button. The portfolio context (name) is shown in the header for orientation.
 
-**Header:** Platform name (editable), currency badge, summary stat cards:
+**Header:** Platform icon and name (both editable), currency badge, summary stat cards:
 - Current value (native + DKK if applicable).
 - Current month earnings.
 - All-time gain/loss (absolute + %).
@@ -522,7 +524,7 @@ Full-width view with back button. The portfolio context (name) is shown in the h
 
 Simplified version of the investment platform detail. No XIRR, gain/loss, or performance analysis.
 
-**Header:** Platform name (editable), currency badge.
+**Header:** Platform icon and name (both editable), currency badge.
 
 **Content:**
 - Current balance (native + DKK if applicable).
@@ -692,8 +694,8 @@ Full-width view with back button.
 
 ### 8.1 Top-Level Structure
 
-- **Tab bar / sidebar** with sections: **Home**, **Portfolio**, **Vehicles**.
-- **Settings** accessible from the navigation (gear icon or similar).
+- **Desktop**: Horizontal top navigation bar with section links (**Home**, **Portfolio**, **Vehicles**) and a settings icon.
+- **Mobile**: Fixed **bottom tab bar** with section icons and labels (Home, Investment, Vehicles, Settings). The bottom tab bar is always visible for one-thumb navigation and replaces the top nav links on small screens.
 - Additional sections can be added in the future (Subscriptions, Budget, Shared Expenses).
 - Each section has its own overview page as the landing view for that tab.
 - **Home is the default section after login.**
@@ -702,6 +704,7 @@ Full-width view with back button.
 
 - Section tabs → section overview page.
 - Clicking an entity card (utility, platform, vehicle) → full-width detail page with back button.
+- **Detail page platform switcher**: On detail pages, the entity name acts as a dropdown selector. Tapping it reveals a list of all sibling entities (e.g. all platforms in the portfolio) allowing direct switching without navigating back to the overview. The dropdown also includes a link back to the overview page.
 - Dialogs/modals for create/edit actions (not full page navigations).
 
 ### 8.3 Responsive Design
@@ -709,6 +712,26 @@ Full-width view with back button.
 - **Desktop**: Primary target. Information-dense layouts, multi-column grids.
 - **Mobile**: Fully functional. Single-column layouts, touch-friendly inputs, collapsible sections. Charts scale down gracefully. **Especially important for refueling entry at the pump** — fast forms with camera access.
 - **Pure web** — no native app. PWA-capable for future push notifications.
+
+#### Mobile Column Cycling for Tables
+
+Data tables often have more columns than fit on a mobile screen. Rather than horizontal scrolling (which obscures data and feels clumsy), the mobile layout keeps the most important columns always visible and replaces the remaining columns with a single **cyclable column**.
+
+**Pattern:**
+- The table always shows primary columns (e.g. name, value) at all breakpoints.
+- Secondary columns (e.g. XIRR, earnings, gain/loss, updated) are visible on desktop but hidden on mobile.
+- On mobile, a single rightmost column replaces all hidden columns. Tapping the column header cycles through the hidden values one at a time.
+- A **dot indicator** below the header shows which value is currently displayed and how many are available (e.g. 4 dots for 4 cyclable values).
+- All rows update simultaneously when the user cycles — the entire column switches together.
+- The header label updates to reflect the currently visible metric.
+
+**Where this applies:**
+- Portfolio overview: platform table cycles through XIRR, Month Earnings, All-Time Gain/Loss, and Updated.
+- Platform detail: yearly summary table cycles through Earnings %, XIRR, Starting Value, Ending Value, and Net Deposits.
+- Platform detail: monthly summary table cycles through Monthly XIRR, Start Value, End Value, and Net Deposits.
+- Any future data-dense table that has more columns than mobile can display.
+
+This pattern preserves information density without sacrificing the clean mobile layout — the user gets access to all data with a single tap, rather than awkward horizontal scrolling.
 
 ### 8.4 Theme
 
@@ -718,7 +741,11 @@ The platform supports **light mode** and **dark mode**, toggled via a setting. T
 
 ## 9. Dialogs / Forms
 
-All dialogs are modal overlays with backdrop blur. Forms validate before submission.
+All dialogs are modal overlays with backdrop blur. Forms validate before submission. Dialogs are responsive:
+
+- **Desktop**: Centered modal with backdrop blur, max-width constrained (e.g. `max-w-md`), rounded corners.
+- **Mobile**: Bottom sheet anchored to the bottom of the screen, sliding up with a drag handle at the top. Rounded top corners only. Max height ~85vh with scroll for overflow.
+- **Delete confirmations** are always small centered modals on both desktop and mobile (too compact for a bottom sheet).
 
 ### 9.1 Portfolio Dialog (Add / Edit)
 - Name (text, required).
@@ -726,6 +753,7 @@ All dialogs are modal overlays with backdrop blur. Forms validate before submiss
 - Is default (checkbox — only when editing; at least one must remain default).
 
 ### 9.2 Platform Dialog (Add / Edit)
+- Icon (image upload, required — circular preview, clickable to replace).
 - Name (text, required).
 - Type (select: Investment / Cash, required — only on creation, not editable after).
 - Currency (select: DKK, EUR, etc., required — only on creation, not editable after).
@@ -802,7 +830,7 @@ All dialogs are modal overlays with backdrop blur. Forms validate before submiss
 | `settings` | userId (relation), dateFormat, theme, demoMode | Per-user settings |
 | `exchange_rates` | fromCurrency, toCurrency, rate, date, source | Historical exchange rates |
 | `portfolios` | name, ownerName, isDefault | One default per user |
-| `platforms` | portfolio (relation), name, type, currency, status, closedDate, closureNote | Investment or cash, active or closed |
+| `platforms` | portfolio (relation), name, icon, type, currency, status, closedDate, closureNote | Investment or cash, active or closed. Icon is a required image file (displayed as circular thumbnail). |
 | `data_points` | platform (relation), value, timestamp, isInterpolated, note | Value in platform's native currency. isInterpolated marks system-generated month-end values. |
 | `transactions` | platform (relation), type, amount, exchangeRate, timestamp, note, attachment | Amount in platform's native currency |
 | `utilities` | name, unit | |
@@ -938,7 +966,7 @@ These are acknowledged directions but are **not** part of the initial build:
 ### Investment Portfolio
 10. User can create, edit, and delete portfolios with name and owner.
 11. Default portfolio is pre-selected; user can switch between portfolios.
-12. User can create investment and cash platforms with name, type, and currency.
+12. User can create investment and cash platforms with icon, name, type, and currency.
 13. User can close a platform with a closure date and optional note.
 14. Closed platforms appear muted and are excluded from current portfolio totals.
 15. User can register data points (value + timestamp + optional note) in platform's native currency.

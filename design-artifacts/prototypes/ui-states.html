@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI States Reference — Insight</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'DM Sans', system-ui, sans-serif; }
+        .font-mono-data { font-family: 'DM Mono', monospace; font-variant-numeric: tabular-nums; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #c4c4c4; border-radius: 3px; }
+        .dark ::-webkit-scrollbar-thumb { background: #525252; }
+
+        /* Skeleton pulse animation */
+        @keyframes shimmer {
+            0% { background-position: -400px 0; }
+            100% { background-position: 400px 0; }
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #e8e8e8 25%, #f1f1f1 50%, #e8e8e8 75%);
+            background-size: 400px 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
+            border-radius: 6px;
+        }
+        .dark .skeleton {
+            background: linear-gradient(90deg, #3d3d3d 25%, #525252 50%, #3d3d3d 75%);
+            background-size: 400px 100%;
+        }
+
+        /* Toast slide-in */
+        @keyframes toast-in {
+            0% { transform: translateY(16px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        .toast-animate { animation: toast-in 0.25s ease-out forwards; }
+
+        /* Spinner */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner { animation: spin 0.7s linear infinite; }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: {
+                colors: {
+                    'accent': { 50:'#f0fdf4',100:'#dcfce7',200:'#bbf7d0',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d' },
+                    'base': { 50:'#f8f8f8',100:'#f1f1f1',150:'#e8e8e8',200:'#d4d4d4',300:'#b0b0b0',400:'#8a8a8a',500:'#6b6b6b',600:'#525252',700:'#3d3d3d',800:'#262626',900:'#171717' }
+                },
+                boxShadow: {
+                    'card':'0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04)',
+                    'card-dark':'0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2)'
+                }
+            }}
+        }
+    </script>
+</head>
+<body class="bg-base-100 dark:bg-base-900 text-base-900 dark:text-base-100 antialiased transition-colors duration-200">
+
+    <!-- Nav -->
+    <nav class="bg-white dark:bg-base-800 shadow-card dark:shadow-card-dark sticky top-0 z-30">
+        <div class="max-w-[1440px] mx-auto px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-10">
+                    <div class="text-xl font-bold tracking-tight">Insight</div>
+                    <div class="flex gap-1">
+                        <a href="#" class="px-4 py-2 text-sm rounded-lg font-medium text-accent-700 dark:text-accent-400 bg-accent-50 dark:bg-accent-700/20">UI States</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="document.documentElement.classList.toggle('dark')" class="w-9 h-9 rounded-xl bg-base-150 dark:bg-base-700 flex items-center justify-center text-base-500 dark:text-base-300 hover:bg-base-200 dark:hover:bg-base-600 transition-colors" title="Toggle dark mode">
+                        <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                    </button>
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-br from-accent-400 to-accent-600 flex items-center justify-center text-xs font-semibold text-white">SK</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-[1440px] mx-auto px-8 py-10">
+
+        <div class="mb-10">
+            <h1 class="text-2xl font-bold tracking-tight mb-1">UI States Reference</h1>
+            <p class="text-sm text-base-400">Reusable patterns for loading, error, empty, and feedback states</p>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- SECTION 1: LOADING STATES                                  -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="mb-12">
+            <div class="flex items-center gap-3 mb-6">
+                <h2 class="text-lg font-bold">Loading States</h2>
+                <span class="text-xs font-medium text-base-400 bg-base-150 dark:bg-base-700 px-2.5 py-1 rounded-lg">Skeleton shimmer</span>
+            </div>
+
+            <!-- 1a: KPI Card Skeletons -->
+            <div class="mb-4">
+                <div class="text-xs font-medium text-base-400 uppercase tracking-wider mb-3">KPI Cards — Loading</div>
+            </div>
+            <div class="grid grid-cols-6 gap-4 mb-8">
+                <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                    <div class="skeleton h-3 w-16 mb-3"></div>
+                    <div class="skeleton h-6 w-24 mb-2"></div>
+                    <div class="skeleton h-3 w-12"></div>
+                </div>
+                <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                    <div class="skeleton h-3 w-20 mb-3"></div>
+                    <div class="skeleton h-6 w-20 mb-2"></div>
+                    <div class="skeleton h-3 w-14"></div>
+                </div>
+                <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                    <div class="skeleton h-3 w-24 mb-3"></div>
+                    <div class="skeleton h-6 w-20 mb-2"></div>
+                    <div class="skeleton h-5 w-14 rounded-md"></div>
+                </div>
+                <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                    <div class="skeleton h-3 w-18 mb-3"></div>
+                    <div class="skeleton h-6 w-16 mb-2"></div>
+                    <div class="skeleton h-3 w-16"></div>
+                </div>
+                <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                    <div class="skeleton h-3 w-20 mb-3"></div>
+                    <div class="skeleton h-6 w-20 mb-2"></div>
+                    <div class="skeleton h-5 w-12 rounded-md"></div>
+                </div>
+                <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                    <div class="skeleton h-3 w-14 mb-3"></div>
+                    <div class="skeleton h-6 w-16 mb-2"></div>
+                    <div class="skeleton h-3 w-18"></div>
+                </div>
+            </div>
+
+            <!-- 1b: Chart Card Skeleton -->
+            <div class="mb-4">
+                <div class="text-xs font-medium text-base-400 uppercase tracking-wider mb-3">Chart Card — Loading</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-6 shadow-card dark:shadow-card-dark mb-8">
+                <div class="skeleton h-4 w-40 mb-5"></div>
+                <div class="skeleton h-48 w-full rounded-xl"></div>
+            </div>
+
+            <!-- 1c: Table Card Skeleton -->
+            <div class="mb-4">
+                <div class="text-xs font-medium text-base-400 uppercase tracking-wider mb-3">Table Card — Loading</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-8">
+                <div class="px-6 py-5 flex items-center justify-between border-b border-base-100 dark:border-base-700">
+                    <div class="flex items-center gap-3">
+                        <div class="skeleton h-4 w-32"></div>
+                        <div class="skeleton h-5 w-16 rounded-lg"></div>
+                    </div>
+                    <div class="skeleton h-9 w-32 rounded-lg"></div>
+                </div>
+                <div class="px-6">
+                    <!-- Header row -->
+                    <div class="flex items-center gap-6 py-3 border-b border-base-150 dark:border-base-700">
+                        <div class="skeleton h-3 w-16"></div>
+                        <div class="skeleton h-3 w-12 ml-auto"></div>
+                        <div class="skeleton h-3 w-20"></div>
+                        <div class="skeleton h-3 w-16"></div>
+                        <div class="skeleton h-3 w-14"></div>
+                    </div>
+                    <!-- Row 1 -->
+                    <div class="flex items-center gap-6 py-4 border-b border-base-100 dark:border-base-700/50">
+                        <div class="skeleton h-3.5 w-28"></div>
+                        <div class="skeleton h-3.5 w-16 ml-auto"></div>
+                        <div class="skeleton h-3.5 w-14"></div>
+                        <div class="skeleton h-3.5 w-20"></div>
+                        <div class="skeleton h-3.5 w-10"></div>
+                    </div>
+                    <!-- Row 2 -->
+                    <div class="flex items-center gap-6 py-4 border-b border-base-100 dark:border-base-700/50">
+                        <div class="skeleton h-3.5 w-36"></div>
+                        <div class="skeleton h-3.5 w-20 ml-auto"></div>
+                        <div class="skeleton h-3.5 w-14"></div>
+                        <div class="skeleton h-3.5 w-16"></div>
+                        <div class="skeleton h-3.5 w-10"></div>
+                    </div>
+                    <!-- Row 3 -->
+                    <div class="flex items-center gap-6 py-4">
+                        <div class="skeleton h-3.5 w-20"></div>
+                        <div class="skeleton h-3.5 w-14 ml-auto"></div>
+                        <div class="skeleton h-3.5 w-14"></div>
+                        <div class="skeleton h-3.5 w-18"></div>
+                        <div class="skeleton h-3.5 w-10"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1d: Button Loading States -->
+            <div class="mb-4">
+                <div class="text-xs font-medium text-base-400 uppercase tracking-wider mb-3">Button States — Loading</div>
+            </div>
+            <div class="flex items-center gap-4 mb-8">
+                <!-- Primary button loading -->
+                <button class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm opacity-75 cursor-not-allowed inline-flex items-center gap-2">
+                    <svg class="w-4 h-4 spinner" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg>
+                    Saving...
+                </button>
+                <!-- Secondary button loading -->
+                <button class="px-5 py-2.5 text-sm text-base-400 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg opacity-75 cursor-not-allowed inline-flex items-center gap-2">
+                    <svg class="w-4 h-4 spinner" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg>
+                    Loading...
+                </button>
+                <!-- Normal buttons for comparison -->
+                <span class="text-xs text-base-300 mx-2">vs. normal:</span>
+                <button class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm">+ Add Transaction</button>
+                <button class="px-5 py-2.5 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg">+ Add Data Point</button>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- SECTION 2: ERROR STATES                                    -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="mb-12">
+            <div class="flex items-center gap-3 mb-6">
+                <h2 class="text-lg font-bold">Error States</h2>
+            </div>
+
+            <!-- 2a: Card-level error (failed to load) -->
+            <div class="mb-4">
+                <div class="text-xs font-medium text-base-400 uppercase tracking-wider mb-3">Card — Failed to Load</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-8">
+                <div class="px-6 py-5 flex items-center justify-between border-b border-base-100 dark:border-base-700">
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-sm font-semibold">Transactions</h3>
+                        <span class="text-xs text-base-400 bg-base-100 dark:bg-base-700 px-2 py-0.5 rounded-lg">—</span>
+                    </div>
+                </div>
+                <div class="px-6 py-16 text-center">
+                    <div class="w-10 h-10 mx-auto mb-4 rounded-full bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-rose-500 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    </div>
+                    <div class="text-sm font-medium text-base-600 dark:text-base-300 mb-1">Failed to load transactions</div>
+                    <div class="text-xs text-base-400 mb-4">Something went wrong. Please try again.</div>
+                    <button class="px-4 py-2 text-sm font-medium text-base-600 dark:text-base-300 bg-white dark:bg-base-700 border border-base-200 dark:border-base-600 rounded-lg hover:border-base-300 dark:hover:border-base-500 transition-colors">Retry</button>
+                </div>
+            </div>
+
+            <!-- 2b: Network / Server Error (full page) -->
+            <div class="mb-4">
+                <div class="text-xs font-medium text-base-400 uppercase tracking-wider mb-3">Full Page — Server Unreachable</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-8">
+                <div class="px-6 py-20 text-center">
+                    <div class="w-12 h-12 mx-auto mb-5 rounded-full bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-rose-500 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3"/></svg>
+                    </div>
+                    <div class="text-base font-semibold text-base-700 dark:text-base-200 mb-2">Can't reach the server</div>
+                    <div class="text-sm text-base-400 mb-6 max-w-sm mx-auto">Unable to connect to PocketBase at <span class="font-mono-data text-xs">localhost:8090</span>. Make sure the server is running.</div>
+                    <button class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Retry Connection</button>
+                </div>
+            </div>
+
+            <!-- 2c: Inline Form Validation Errors -->
+            <div class="mb-4">
+                <div class="text-xs font-medium text-base-400 uppercase tracking-wider mb-3">Form — Validation Errors</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark p-6 max-w-md mb-8">
+                <h3 class="text-sm font-semibold mb-5">Add Transaction</h3>
+                <!-- Date field (valid) -->
+                <div class="mb-4">
+                    <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Date</label>
+                    <input type="text" value="2026-02-14" class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500 font-mono-data" />
+                </div>
+                <!-- Type field (valid) -->
+                <div class="mb-4">
+                    <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Type</label>
+                    <select class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none">
+                        <option>Deposit</option>
+                        <option>Withdrawal</option>
+                    </select>
+                </div>
+                <!-- Amount field (error) -->
+                <div class="mb-4">
+                    <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Amount</label>
+                    <input type="text" value="" placeholder="0" class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-base-900 border border-rose-400 dark:border-rose-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 font-mono-data" />
+                    <div class="flex items-center gap-1.5 mt-1.5">
+                        <svg class="w-3.5 h-3.5 text-rose-500 dark:text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01"/></svg>
+                        <span class="text-xs text-rose-500 dark:text-rose-400">Amount is required and must be greater than 0</span>
+                    </div>
+                </div>
+                <!-- Note field (valid) -->
+                <div class="mb-5">
+                    <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Note <span class="text-base-300 dark:text-base-500 font-normal">(optional)</span></label>
+                    <input type="text" value="" placeholder="Add a note..." class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500" />
+                </div>
+                <div class="flex gap-3">
+                    <button class="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm">Save Transaction</button>
+                    <button class="px-4 py-2.5 text-sm text-base-400 bg-white dark:bg-base-700 border border-base-200 dark:border-base-600 rounded-lg">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- SECTION 3: EMPTY STATES                                    -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="mb-12">
+            <div class="flex items-center gap-3 mb-6">
+                <h2 class="text-lg font-bold">Empty States</h2>
+            </div>
+
+            <!-- 3a: No platforms (first run) -->
+            <div class="mb-4">
+                <div class="text-xs font-medium text-base-400 uppercase tracking-wider mb-3">Portfolio — No Platforms Yet (First Run)</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-8">
+                <div class="px-6 py-20 text-center">
+                    <div class="w-12 h-12 mx-auto mb-5 rounded-full bg-accent-50 dark:bg-accent-900/20 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-accent-600 dark:text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                    </div>
+                    <div class="text-base font-semibold text-base-700 dark:text-base-200 mb-2">No investment platforms yet</div>
+                    <div class="text-sm text-base-400 mb-6 max-w-sm mx-auto">Add your first platform to start tracking your portfolio. You can always add more later.</div>
+                    <button class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">+ Add Your First Platform</button>
+                </div>
+            </div>
+
+            <!-- 3b: No transactions for a platform -->
+            <div class="mb-4">
+                <div class="text-xs font-medium text-base-400 uppercase tracking-wider mb-3">Platform Detail — No Transactions</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-8">
+                <div class="px-6 py-5 flex items-center justify-between border-b border-base-100 dark:border-base-700">
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-sm font-semibold">Transactions</h3>
+                        <span class="text-xs text-base-400 bg-base-100 dark:bg-base-700 px-2 py-0.5 rounded-lg">0 transactions</span>
+                    </div>
+                    <button class="px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm">+ Add Transaction</button>
+                </div>
+                <div class="px-6 py-12 text-center">
+                    <div class="w-10 h-10 mx-auto mb-4 rounded-full bg-base-100 dark:bg-base-700 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    </div>
+                    <div class="text-sm text-base-500 dark:text-base-400 mb-1">No transactions recorded</div>
+                    <div class="text-xs text-base-300 dark:text-base-500">Deposits and withdrawals will appear here</div>
+                </div>
+            </div>
+
+            <!-- 3c: No data points for a platform -->
+            <div class="mb-4">
+                <div class="text-xs font-medium text-base-400 uppercase tracking-wider mb-3">Platform Detail — No Data Points</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-8">
+                <div class="px-6 py-5 flex items-center justify-between border-b border-base-100 dark:border-base-700">
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-sm font-semibold">Data Points</h3>
+                        <span class="text-xs text-base-400 bg-base-100 dark:bg-base-700 px-2 py-0.5 rounded-lg">0 data points</span>
+                    </div>
+                    <button class="px-4 py-2 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-700 border border-base-200 dark:border-base-600 rounded-lg">+ Add Data Point</button>
+                </div>
+                <div class="px-6 py-12 text-center">
+                    <div class="w-10 h-10 mx-auto mb-4 rounded-full bg-base-100 dark:bg-base-700 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
+                    </div>
+                    <div class="text-sm text-base-500 dark:text-base-400 mb-1">No data points recorded</div>
+                    <div class="text-xs text-base-300 dark:text-base-500">Add your current balance to start tracking performance</div>
+                </div>
+            </div>
+
+            <!-- 3d: Chart with insufficient data -->
+            <div class="mb-4">
+                <div class="text-xs font-medium text-base-400 uppercase tracking-wider mb-3">Chart — Insufficient Data</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-6 shadow-card dark:shadow-card-dark mb-8">
+                <h3 class="text-sm font-semibold mb-5">XIRR Over Time</h3>
+                <div class="h-48 flex items-center justify-center rounded-xl bg-base-50/50 dark:bg-base-900/30 border border-dashed border-base-150 dark:border-base-700">
+                    <div class="text-center">
+                        <svg class="w-8 h-8 text-base-200 dark:text-base-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 12l3-3 3 3 4-4"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
+                        <div class="text-sm text-base-400 mb-1">Not enough data to display</div>
+                        <div class="text-xs text-base-300 dark:text-base-500">At least 2 data points are needed for this chart</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- SECTION 4: TOAST / FEEDBACK                                -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="mb-12">
+            <div class="flex items-center gap-3 mb-6">
+                <h2 class="text-lg font-bold">Toast Notifications</h2>
+                <span class="text-xs font-medium text-base-400 bg-base-150 dark:bg-base-700 px-2.5 py-1 rounded-lg">Bottom-center, auto-dismiss</span>
+            </div>
+
+            <div class="mb-4">
+                <div class="text-xs font-medium text-base-400 uppercase tracking-wider mb-3">Toast Variants</div>
+            </div>
+
+            <div class="space-y-3 max-w-md mx-auto mb-8">
+                <!-- Success toast -->
+                <div class="toast-animate flex items-center gap-3 px-4 py-3 bg-base-900 dark:bg-base-100 rounded-xl shadow-lg">
+                    <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
+                        <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium text-white dark:text-base-900">Transaction saved</div>
+                        <div class="text-xs text-base-400 dark:text-base-500">Deposit of 25.000 DKK added</div>
+                    </div>
+                    <button class="text-base-400 hover:text-base-200 dark:hover:text-base-700 transition-colors shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+
+                <!-- Info toast -->
+                <div class="toast-animate flex items-center gap-3 px-4 py-3 bg-base-900 dark:bg-base-100 rounded-xl shadow-lg">
+                    <div class="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
+                        <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01"/></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium text-white dark:text-base-900">Data point interpolated</div>
+                        <div class="text-xs text-base-400 dark:text-base-500">Jan 31 value estimated from nearby entries</div>
+                    </div>
+                    <button class="text-base-400 hover:text-base-200 dark:hover:text-base-700 transition-colors shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+
+                <!-- Error toast -->
+                <div class="toast-animate flex items-center gap-3 px-4 py-3 bg-base-900 dark:bg-base-100 rounded-xl shadow-lg">
+                    <div class="w-6 h-6 rounded-full bg-rose-500 flex items-center justify-center shrink-0">
+                        <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium text-white dark:text-base-900">Failed to save</div>
+                        <div class="text-xs text-base-400 dark:text-base-500">Check your connection and try again</div>
+                    </div>
+                    <button class="text-base-400 hover:text-base-200 dark:hover:text-base-700 transition-colors shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+
+                <!-- Undo toast -->
+                <div class="toast-animate flex items-center gap-3 px-4 py-3 bg-base-900 dark:bg-base-100 rounded-xl shadow-lg">
+                    <div class="w-6 h-6 rounded-full bg-base-600 dark:bg-base-400 flex items-center justify-center shrink-0">
+                        <svg class="w-3.5 h-3.5 text-white dark:text-base-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium text-white dark:text-base-900">Transaction deleted</div>
+                    </div>
+                    <button class="text-sm font-medium text-accent-400 dark:text-accent-600 hover:text-accent-300 dark:hover:text-accent-700 transition-colors shrink-0">Undo</button>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <div class="text-xs font-medium text-base-400 uppercase tracking-wider mb-3">Toast Positioning (bottom-center of viewport)</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark p-6 mb-8">
+                <div class="relative h-64 bg-base-50 dark:bg-base-900 rounded-xl border border-base-150 dark:border-base-700 overflow-hidden">
+                    <!-- Mini page mockup -->
+                    <div class="h-8 bg-white dark:bg-base-800 border-b border-base-150 dark:border-base-700 flex items-center px-3">
+                        <div class="skeleton h-2.5 w-12" style="animation:none; background:#e8e8e8;"></div>
+                        <div class="skeleton h-2.5 w-20 ml-4" style="animation:none; background:#e8e8e8;"></div>
+                    </div>
+                    <div class="p-4 space-y-2">
+                        <div class="skeleton h-3 w-3/4" style="animation:none; background:#e8e8e8;"></div>
+                        <div class="skeleton h-3 w-1/2" style="animation:none; background:#e8e8e8;"></div>
+                        <div class="flex gap-2 mt-3">
+                            <div class="skeleton h-12 w-24 rounded-lg" style="animation:none; background:#e8e8e8;"></div>
+                            <div class="skeleton h-12 w-24 rounded-lg" style="animation:none; background:#e8e8e8;"></div>
+                            <div class="skeleton h-12 w-24 rounded-lg" style="animation:none; background:#e8e8e8;"></div>
+                        </div>
+                    </div>
+                    <!-- Toast overlay -->
+                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2">
+                        <div class="flex items-center gap-2 px-3 py-2 bg-base-900 rounded-lg shadow-lg whitespace-nowrap">
+                            <div class="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center">
+                                <svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                            </div>
+                            <span class="text-xs font-medium text-white">Transaction saved</span>
+                            <span class="text-[10px] text-base-400 ml-1">3s</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-xs text-base-400 mt-3">Toast appears at bottom-center, auto-dismisses after 4 seconds. Destructive actions show an "Undo" button.</div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- SECTION 5: CONFIRM DIALOG                                  -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="mb-12">
+            <div class="flex items-center gap-3 mb-6">
+                <h2 class="text-lg font-bold">Confirmation Dialog</h2>
+                <span class="text-xs font-medium text-base-400 bg-base-150 dark:bg-base-700 px-2.5 py-1 rounded-lg">Destructive actions only</span>
+            </div>
+
+            <div class="mb-4">
+                <div class="text-xs font-medium text-base-400 uppercase tracking-wider mb-3">Delete Confirmation</div>
+            </div>
+            <!-- Dialog mockup -->
+            <div class="relative bg-base-900/40 dark:bg-black/50 rounded-2xl p-8 flex items-center justify-center mb-8" style="min-height: 280px;">
+                <div class="bg-white dark:bg-base-800 rounded-2xl shadow-lg max-w-sm w-full p-6">
+                    <div class="w-10 h-10 mx-auto mb-4 rounded-full bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-rose-500 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </div>
+                    <div class="text-center mb-5">
+                        <div class="text-base font-semibold mb-1">Delete transaction?</div>
+                        <div class="text-sm text-base-400">This will permanently remove the deposit of 25.000 DKK from Feb 1, 2026. This action cannot be undone.</div>
+                    </div>
+                    <div class="flex gap-3">
+                        <button class="flex-1 px-4 py-2.5 text-sm text-base-500 bg-white dark:bg-base-700 border border-base-200 dark:border-base-600 rounded-lg hover:bg-base-50 dark:hover:bg-base-600 transition-colors">Cancel</button>
+                        <button class="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-rose-500 rounded-lg shadow-sm hover:bg-rose-600 transition-colors">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</body>
+</html>
