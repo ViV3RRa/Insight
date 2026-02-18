@@ -74,17 +74,16 @@
                             <img src="icons/icon_nordnet.webp" alt="" class="w-6 min-w-6 h-6 rounded-full object-cover shrink-0 shadow ring-1 ring-black/10">
                             <div class="min-w-0 text-left">
                                 <div class="text-sm font-bold tracking-tight truncate">Nordnet (Aktiesparekonto)</div>
-                                <div class="text-[11px] text-base-400 flex items-center gap-1.5">
-                                    <span>Investment · DKK</span>
-                                    <span class="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
-                                        <span class="w-1.5 h-1.5 bg-emerald-500 dark:bg-emerald-400 rounded-full"></span>Active
-                                    </span>
-                                </div>
+                                <div class="text-[11px] text-base-400">Investment · DKK</div>
                             </div>
                             <svg class="w-3.5 h-3.5 text-base-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
                     </div>
                 </div>
+                <!-- Stale badge (mobile/tablet, right-aligned) -->
+                <span class="lg:hidden inline-flex items-center gap-2 px-3.5 py-1.5 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-sm font-semibold rounded-full shrink-0 border border-amber-700 dark:border-amber-400">
+                    <span class="w-2 h-2 bg-amber-500 dark:bg-amber-400 rounded-full animate-pulse"></span>Stale
+                </span>
                 <!-- Settings (desktop only — on mobile/tablet it's in the bottom tab bar) -->
                 <div class="hidden lg:flex items-center">
                     <button onclick="document.documentElement.classList.toggle('dark')" class="w-9 h-9 rounded-xl bg-base-150 dark:bg-base-700 flex items-center justify-center text-base-500 dark:text-base-300 hover:bg-base-200 dark:hover:bg-base-600 transition-colors" title="Settings">
@@ -99,7 +98,7 @@
                 <a href="portfolio-overview.html" class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-base-50 dark:hover:bg-base-700 transition-colors border-b border-base-100 dark:border-base-700">
                     <svg class="w-4 h-4 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                     <span class="font-medium">Portfolio Overview</span>
-                    <span class="ml-auto font-mono-data text-xs text-base-400">1.582.914 DKK</span>
+                    <span class="ml-auto font-mono-data text-xs text-base-400">1.759.504 DKK</span>
                 </a>
                 <div class="py-1">
                     <div class="px-4 py-2 text-xs font-medium text-base-300 dark:text-base-500 uppercase tracking-wider">Investment Platforms</div>
@@ -107,7 +106,12 @@
                         <img src="icons/icon_nordnet.webp" alt="" class="w-5 min-w-5 h-5 rounded-full object-cover shrink-0 shadow ring-1 ring-black/10">
                         <div class="flex-1 min-w-0">
                             <div class="text-sm font-medium">Nordnet (ASK)</div>
-                            <div class="text-xs text-base-400">DKK</div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-xs text-base-400">DKK</span>
+                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] rounded-full border border-amber-600 dark:border-amber-400">
+                                    <span class="w-1 h-1 bg-amber-400 rounded-full animate-pulse"></span>Stale
+                                </span>
+                            </div>
                         </div>
                         <div class="text-right">
                             <div class="font-mono-data text-sm">842.391</div>
@@ -119,14 +123,14 @@
                         <div class="flex-1 min-w-0">
                             <div class="text-sm font-medium">Mintos</div>
                             <div class="flex items-center gap-1.5">
-                                <span class="text-xs text-base-400">USD</span>
-                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] rounded-full">
-                                    <span class="w-1 h-1 bg-amber-400 rounded-full animate-pulse"></span>Stale
+                                <span class="text-xs text-base-400">EUR</span>
+                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 text-[10px] rounded-full border border-rose-600 dark:border-rose-400">
+                                    <span class="w-1 h-1 bg-rose-400 rounded-full animate-pulse"></span>Stale
                                 </span>
                             </div>
                         </div>
                         <div class="text-right">
-                            <div class="font-mono-data text-sm">58.924 <span class="text-xs text-base-300">USD</span></div>
+                            <div class="font-mono-data text-sm">58.924 <span class="text-xs text-base-300">EUR</span></div>
                             <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400">+9,8%</div>
                         </div>
                     </a>
@@ -150,6 +154,16 @@
                         </div>
                         <div class="text-right">
                             <div class="font-mono-data text-sm">36.750 <span class="text-xs text-base-300">EUR</span></div>
+                        </div>
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-base-50 dark:hover:bg-base-700 transition-colors cursor-pointer">
+                        <img src="icons/icon_danske-bank.png" alt="" class="w-5 min-w-5 h-5 rounded-full object-cover shrink-0 shadow ring-1 ring-black/10">
+                        <div class="flex-1 min-w-0">
+                            <div class="text-sm font-medium">Danske Bank</div>
+                            <div class="text-xs text-base-400">DKK</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-mono-data text-sm">142.500 <span class="text-xs text-base-300">DKK</span></div>
                         </div>
                     </a>
                     <!-- Edit Platform action -->
@@ -181,10 +195,10 @@
                         <img src="icons/icon_nordnet.webp" alt="" class="w-7 min-w-7 h-7 rounded-full object-cover shrink-0 shadow ring-1 ring-black/10">
                         <div class="text-left">
                             <div class="text-lg font-bold tracking-tight leading-tight">Nordnet (Aktiesparekonto)</div>
-                            <div class="text-xs text-base-400">Investment · DKK · Updated Feb 14, 2026</div>
+                            <div class="text-xs text-base-400">Investment · DKK · Updated Jan 31, 2026</div>
                         </div>
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-medium rounded-full">
-                            <span class="w-1.5 h-1.5 bg-emerald-500 dark:bg-emerald-400 rounded-full"></span>Active
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-medium rounded-full border border-amber-700 dark:border-amber-400">
+                            <span class="w-1.5 h-1.5 bg-amber-500 dark:bg-amber-400 rounded-full animate-pulse"></span>Stale
                         </span>
                         <svg class="w-4 h-4 text-base-300 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </button>
@@ -194,7 +208,7 @@
                         <a href="portfolio-overview.html" class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-base-50 dark:hover:bg-base-700 transition-colors border-b border-base-100 dark:border-base-700">
                             <svg class="w-4 h-4 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                             <span class="font-medium">Portfolio Overview</span>
-                            <span class="ml-auto font-mono-data text-xs text-base-400">1.582.914 DKK</span>
+                            <span class="ml-auto font-mono-data text-xs text-base-400">1.759.504 DKK</span>
                         </a>
                         <div class="py-1">
                             <div class="px-4 py-2 text-xs font-medium text-base-300 dark:text-base-500 uppercase tracking-wider">Investment Platforms</div>
@@ -202,7 +216,12 @@
                                 <img src="icons/icon_nordnet.webp" alt="" class="w-5 min-w-5 h-5 rounded-full object-cover shrink-0 shadow ring-1 ring-black/10">
                                 <div class="flex-1 min-w-0">
                                     <div class="text-sm font-medium">Nordnet (ASK)</div>
-                                    <div class="text-xs text-base-400">DKK</div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-xs text-base-400">DKK</span>
+                                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] rounded-full border border-amber-600 dark:border-amber-400">
+                                            <span class="w-1 h-1 bg-amber-400 rounded-full animate-pulse"></span>Stale
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="text-right">
                                     <div class="font-mono-data text-sm">842.391</div>
@@ -214,14 +233,14 @@
                                 <div class="flex-1 min-w-0">
                                     <div class="text-sm font-medium">Mintos</div>
                                     <div class="flex items-center gap-1.5">
-                                        <span class="text-xs text-base-400">USD</span>
-                                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] rounded-full">
-                                            <span class="w-1 h-1 bg-amber-400 rounded-full animate-pulse"></span>Stale
+                                        <span class="text-xs text-base-400">EUR</span>
+                                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 text-[10px] rounded-full border border-rose-600 dark:border-rose-400">
+                                            <span class="w-1 h-1 bg-rose-400 rounded-full animate-pulse"></span>Stale
                                         </span>
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <div class="font-mono-data text-sm">58.924 <span class="text-xs text-base-300">USD</span></div>
+                                    <div class="font-mono-data text-sm">58.924 <span class="text-xs text-base-300">EUR</span></div>
                                     <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400">+9,8%</div>
                                 </div>
                             </a>
@@ -245,6 +264,16 @@
                                 </div>
                                 <div class="text-right">
                                     <div class="font-mono-data text-sm">36.750 <span class="text-xs text-base-300">EUR</span></div>
+                                </div>
+                            </a>
+                            <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-base-50 dark:hover:bg-base-700 transition-colors cursor-pointer">
+                                <img src="icons/icon_danske-bank.png" alt="" class="w-5 min-w-5 h-5 rounded-full object-cover shrink-0 shadow ring-1 ring-black/10">
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-sm font-medium">Danske Bank</div>
+                                    <div class="text-xs text-base-400">DKK</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-mono-data text-sm">142.500 <span class="text-xs text-base-300">DKK</span></div>
                                 </div>
                             </a>
                         </div>
@@ -305,28 +334,45 @@
         <!-- ═══════════════════════════════════════════════════════════ -->
         <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6">
             <div class="p-4 sm:p-6">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-5">
-                    <h3 class="text-sm font-semibold">Performance Overview</h3>
-                    <div class="flex items-center gap-2 sm:gap-3">
-                        <!-- Earnings / XIRR toggle -->
+                <div class="flex flex-col gap-3 mb-4 sm:mb-5">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-semibold">Performance Overview</h3>
                         <div class="flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5">
                             <button class="px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm">Earnings</button>
                             <button class="px-2.5 py-1 text-xs rounded-md text-base-400">XIRR %</button>
                         </div>
-                        <!-- Period selector -->
-                        <div class="flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5">
-                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400">1M</button>
-                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400">3M</button>
-                            <button class="px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm">YTD</button>
-                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400">1Y</button>
-                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400">All</button>
+                    </div>
+                    <div class="sm:flex sm:justify-end">
+                        <!-- Dropdown for narrow screens (<410px) -->
+                        <select class="min-[410px]:hidden w-full px-3 py-2 text-sm bg-base-100 dark:bg-base-700 border border-base-200 dark:border-base-600 rounded-lg text-base-900 dark:text-base-100 focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500">
+                            <option>1M</option>
+                            <option>3M</option>
+                            <option>6M</option>
+                            <option>MTD</option>
+                            <option selected>YTD</option>
+                            <option>1Y</option>
+                            <option>3Y</option>
+                            <option>5Y</option>
+                            <option>All</option>
+                        </select>
+                        <!-- Pills for wider screens (≥410px) -->
+                        <div class="hidden min-[410px]:flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5 w-full sm:w-fit">
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 text-center">1M</button>
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 text-center">3M</button>
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 text-center">6M</button>
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 text-center">MTD</button>
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm text-center">YTD</button>
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 text-center">1Y</button>
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 text-center">3Y</button>
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 text-center">5Y</button>
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 text-center">All</button>
                         </div>
                     </div>
                 </div>
                 <div class="h-56 flex items-center justify-center text-sm text-base-200 dark:text-base-600 border border-dashed border-base-150 dark:border-base-700 rounded-xl bg-base-50/30 dark:bg-base-900/30">
                     <div class="text-center">
                         <div class="text-base-300 dark:text-base-500 mb-1">[Earnings Line/Area Chart — YTD]</div>
-                        <div class="text-xs text-base-200 dark:text-base-600">Monthly earnings over selected period · Toggle to XIRR % for annualized return</div>
+                        <div class="text-xs text-base-200 dark:text-base-600">Earnings over selected period · Toggle to XIRR % for cumulative XIRR</div>
                     </div>
                 </div>
             </div>

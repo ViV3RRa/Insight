@@ -19,6 +19,11 @@
         @media (max-width: 639px) {
             .dialog-panel.dialog-open { transform: translateY(0); opacity: 1; }
         }
+        /* Tab content */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .tab-btn { border-bottom: 2px solid transparent; }
+        .tab-btn.active { border-bottom-color: currentColor; }
         /* Custom select arrow */
         select.form-select {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%238a8a8a' viewBox='0 0 24 24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
@@ -66,11 +71,11 @@
                             <div class="flex items-center gap-2">
                                 <div class="text-sm font-bold tracking-tight truncate">Investment Portfolio</div>
                                 <button onclick="document.getElementById('portfolio-dropdown-mobile').classList.toggle('hidden')" class="flex items-center gap-1.5 px-2 py-1 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg text-xs font-medium shadow-sm shrink-0">
-                                    My Portfolio
+                                    My Portfolio <span class="font-normal text-base-400">· Me</span>
                                     <svg class="w-3 h-3 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                                 </button>
                             </div>
-                            <div class="text-[11px] text-base-400 mt-0.5">4 active platforms · 1 cash account · 1 closed</div>
+                            <div class="text-[11px] text-base-400 mt-0.5">4 active platforms · 2 cash accounts · 1 closed</div>
                         </div>
                     </div>
                 </div>
@@ -88,7 +93,7 @@
                 <!-- Active portfolio -->
                 <div class="flex items-center gap-3 px-4 py-2.5 bg-accent-50/50 dark:bg-accent-900/15 border-l-2 border-accent-600 dark:border-accent-400">
                     <div class="flex-1 min-w-0">
-                        <div class="text-sm font-medium">My Portfolio</div>
+                        <div class="text-sm font-medium">My Portfolio <span class="text-xs font-normal text-base-400">· Me</span></div>
                         <div class="text-xs text-base-400">4 platforms · Default</div>
                     </div>
                     <button onclick="event.stopPropagation(); document.getElementById('portfolio-dropdown-mobile').classList.add('hidden'); showDialog('edit-portfolio-dialog')" class="p-1.5 text-base-400 hover:text-base-600 dark:hover:text-base-300 rounded-lg hover:bg-white/50 dark:hover:bg-base-700 transition-colors" title="Edit portfolio">
@@ -98,7 +103,7 @@
                 <!-- Other portfolio -->
                 <div class="flex items-center gap-3 px-4 py-2.5 hover:bg-base-50 dark:hover:bg-base-700 transition-colors cursor-pointer">
                     <div class="flex-1 min-w-0">
-                        <div class="text-sm font-medium">Son's Portfolio</div>
+                        <div class="text-sm font-medium">Son's Portfolio <span class="text-xs font-normal text-base-400">· Oliver</span></div>
                         <div class="text-xs text-base-400">2 platforms</div>
                     </div>
                     <button onclick="event.stopPropagation(); document.getElementById('portfolio-dropdown-mobile').classList.add('hidden'); editPortfolio('Son\x27s Portfolio', 'Oliver')" class="p-1.5 text-base-400 hover:text-base-600 dark:hover:text-base-300 rounded-lg hover:bg-base-100 dark:hover:bg-base-700 transition-colors" title="Edit portfolio">
@@ -126,7 +131,7 @@
                     <!-- Portfolio Switcher -->
                     <div class="relative">
                         <button onclick="togglePortfolioDropdown()" class="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg text-sm font-medium shadow-sm hover:border-base-300 dark:hover:border-base-500 transition-colors">
-                            My Portfolio
+                            My Portfolio <span class="font-normal text-base-400">· Me</span>
                             <svg class="w-3.5 h-3.5 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
                         <!-- Dropdown -->
@@ -134,14 +139,14 @@
                             <div class="px-3 py-2 flex items-center justify-between bg-accent-50/50 dark:bg-accent-900/20">
                                 <div class="flex items-center gap-2">
                                     <svg class="w-3.5 h-3.5 text-accent-600 dark:text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                    <span class="text-sm font-medium">My Portfolio</span>
+                                    <span class="text-sm font-medium">My Portfolio <span class="text-xs font-normal text-base-400">· Me</span></span>
                                 </div>
                                 <button onclick="event.stopPropagation(); togglePortfolioDropdown(); showDialog('edit-portfolio-dialog')" class="p-1 text-base-400 hover:text-base-600 dark:hover:text-base-300 rounded transition-colors" title="Edit portfolio">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                 </button>
                             </div>
                             <div class="px-3 py-2 flex items-center justify-between hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer">
-                                <span class="text-sm">Son's Portfolio</span>
+                                <span class="text-sm">Son's Portfolio <span class="text-xs text-base-400">· Oliver</span></span>
                                 <button onclick="event.stopPropagation(); togglePortfolioDropdown(); editPortfolio('Son\x27s Portfolio', 'Oliver')" class="p-1 text-base-400 hover:text-base-600 dark:hover:text-base-300 rounded transition-colors" title="Edit portfolio">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                 </button>
@@ -155,16 +160,22 @@
                         </div>
                     </div>
                 </div>
-                <p class="text-sm text-base-400">4 active platforms · 1 cash account · 1 closed</p>
+                <p class="text-sm text-base-400">4 active platforms · 2 cash accounts · 1 closed</p>
             </div>
+        </div>
+
+        <!-- Mobile/Tablet action buttons -->
+        <div class="flex gap-2 mb-4 lg:hidden">
+            <button onclick="showDialog('add-datapoint-dialog')" class="flex-1 px-4 py-2 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg shadow-card dark:shadow-card-dark hover:border-base-300 dark:hover:border-base-500 transition-colors">+ Add Data Point</button>
+            <button onclick="showDialog('add-transaction-dialog')" class="flex-1 px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">+ Add Transaction</button>
         </div>
 
         <!-- Summary Cards (6 KPIs) -->
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 lg:gap-4 mb-6 lg:mb-10">
             <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
                 <div class="text-xs text-base-400 mb-2">Total Value</div>
-                <div class="font-mono-data text-xl font-medium">1.582.914 <span class="text-xs text-base-300">DKK</span></div>
-                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">As of Feb 14, 2026</div>
+                <div class="font-mono-data text-xl font-medium">1.759.504 <span class="text-xs text-base-300">DKK</span></div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">Feb 14, 2026</div>
             </div>
             <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
                 <div class="text-xs text-base-400 mb-2">All-Time Gain/Loss</div>
@@ -193,80 +204,106 @@
             </div>
         </div>
 
-        <!-- Allocation + Charts Row -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5 mb-6 lg:mb-10">
-            <!-- Portfolio Allocation -->
-            <div class="bg-white dark:bg-base-800 rounded-2xl p-4 sm:p-6 shadow-card dark:shadow-card-dark">
-                <h3 class="text-sm font-semibold mb-5">Portfolio Allocation</h3>
-                <!-- Proportional bar -->
-                <div class="flex rounded-lg overflow-hidden h-8 mb-5">
-                    <div class="bg-blue-500" style="width:53.2%" title="Nordnet (ASK)"></div>
-                    <div class="bg-red-400" style="width:25.6%" title="Mintos"></div>
-                    <div class="bg-violet-500" style="width:3.9%" title="Kameo"></div>
-                    <div class="bg-base-300 dark:bg-base-500" style="width:17.3%" title="Revolut"></div>
+        <!-- Option B: YoY Comparison Row -->
+        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark px-4 sm:px-5 py-3.5 mb-6 lg:mb-10">
+            <div class="flex items-center gap-2 mb-2.5">
+                <svg class="w-3.5 h-3.5 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                <span class="text-xs font-medium text-base-400 dark:text-base-500">Year-over-Year · Same period last year (Jan 1 – Feb 17, 2025)</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6">
+                <div class="flex items-center justify-between sm:block">
+                    <div>
+                        <div class="text-[10px] text-base-300 dark:text-base-500 uppercase tracking-wider mb-1">YTD Earnings</div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="font-mono-data text-sm font-medium text-emerald-600 dark:text-emerald-400">+47.280</span>
+                            <span class="font-mono-data text-xs text-base-300 dark:text-base-500">vs +31.450</span>
+                        </div>
+                    </div>
+                    <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400 sm:mt-0.5 inline-flex items-center gap-0.5">
+                        +50,3%<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
+                    </div>
                 </div>
-                <!-- Legend -->
-                <div class="space-y-2.5">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <div class="w-2.5 h-2.5 rounded-sm bg-blue-500"></div>
-                            <span class="text-sm">Nordnet (ASK)</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="font-mono-data text-sm">842.391</span>
-                            <span class="font-mono-data text-xs text-base-400 w-12 text-right">53,2%</span>
+                <div class="flex items-center justify-between sm:block border-t border-base-100 dark:border-base-700 pt-3 sm:border-0 sm:pt-0">
+                    <div>
+                        <div class="text-[10px] text-base-300 dark:text-base-500 uppercase tracking-wider mb-1">YTD XIRR</div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="font-mono-data text-sm font-medium">8,4%</span>
+                            <span class="font-mono-data text-xs text-base-300 dark:text-base-500">vs 6,1%</span>
                         </div>
                     </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <div class="w-2.5 h-2.5 rounded-sm bg-red-400"></div>
-                            <span class="text-sm">Mintos</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="font-mono-data text-sm">405.192</span>
-                            <span class="font-mono-data text-xs text-base-400 w-12 text-right">25,6%</span>
+                    <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400 sm:mt-0.5 inline-flex items-center gap-0.5">
+                        +2,3pp<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between sm:block border-t border-base-100 dark:border-base-700 pt-3 sm:border-0 sm:pt-0">
+                    <div>
+                        <div class="text-[10px] text-base-300 dark:text-base-500 uppercase tracking-wider mb-1">Month Earnings</div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="font-mono-data text-sm font-medium text-emerald-600 dark:text-emerald-400">+14.738</span>
+                            <span class="font-mono-data text-xs text-base-300 dark:text-base-500">vs +11.204</span>
                         </div>
                     </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <div class="w-2.5 h-2.5 rounded-sm bg-violet-500"></div>
-                            <span class="text-sm">Kameo</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="font-mono-data text-sm">61.358</span>
-                            <span class="font-mono-data text-xs text-base-400 w-12 text-right">3,9%</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <div class="w-2.5 h-2.5 rounded-sm bg-base-300 dark:bg-base-500"></div>
-                            <span class="text-sm text-base-500 dark:text-base-400">Revolut</span>
-                            <span class="text-xs text-base-300 dark:text-base-500 bg-base-100 dark:bg-base-700 px-1.5 py-0.5 rounded">Cash</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="font-mono-data text-sm">273.973</span>
-                            <span class="font-mono-data text-xs text-base-400 w-12 text-right">17,3%</span>
-                        </div>
+                    <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400 sm:mt-0.5 inline-flex items-center gap-0.5">
+                        +31,5%<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Charts (2 col span) -->
-            <div class="lg:col-span-2 bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark p-4 sm:p-6">
+        <!-- Performance Charts & Analysis (collapsible) -->
+        <div class="mb-6 lg:mb-10">
+            <button onclick="togglePerformance()" id="perf-toggle" class="w-full flex items-center justify-between px-4 sm:px-5 py-3.5 bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark hover:bg-base-50 dark:hover:bg-base-750 transition-colors cursor-pointer">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    <span class="text-sm font-semibold">Performance Charts & Analysis</span>
+                </div>
+                <svg id="perf-chevron" class="w-4 h-4 text-base-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="perf-content" class="hidden mt-4 space-y-6 lg:space-y-10">
+
+        <!-- Portfolio Value Over Time -->
+        <div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark p-4 sm:p-6">
                 <!-- Header: Period selector -->
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-5">
-                    <h3 class="text-sm font-semibold">Portfolio Value Over Time</h3>
-                    <div class="flex items-center gap-2 sm:gap-3">
-                        <div class="flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5">
-                            <button class="px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm">Earnings</button>
-                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400">XIRR</button>
+                <div class="flex flex-col gap-3 mb-4 sm:mb-5">
+                    <div class="flex items-center justify-between">
+                        <h2 class="font-semibold">Portfolio Value Over Time</h2>
+                        <div class="flex items-center gap-2">
+                            <!-- Option A: YoY toggle -->
+                            <button onclick="this.classList.toggle('yoy-active'); this.classList.toggle('bg-blue-50'); this.classList.toggle('dark:bg-blue-900/30'); this.classList.toggle('text-blue-600'); this.classList.toggle('dark:text-blue-400'); this.classList.toggle('border-blue-300'); this.classList.toggle('dark:border-blue-600'); this.classList.toggle('text-base-400'); this.classList.toggle('border-base-200'); this.classList.toggle('dark:border-base-600')" class="px-2.5 py-1 text-xs rounded-lg border text-base-400 border-base-200 dark:border-base-600 hover:border-base-300 dark:hover:border-base-500 transition-colors flex items-center gap-1.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                                YoY
+                            </button>
+                            <div class="flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5">
+                                <button class="px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm">Earnings</button>
+                                <button class="px-2.5 py-1 text-xs rounded-md text-base-400">XIRR</button>
+                            </div>
                         </div>
-                        <div class="flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5">
-                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200">1M</button>
-                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200">3M</button>
-                            <button class="px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm">YTD</button>
-                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200">1Y</button>
-                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200">All</button>
+                    </div>
+                    <div class="sm:flex sm:justify-end">
+                        <!-- Dropdown for narrow screens (<410px) -->
+                        <select class="min-[410px]:hidden w-full px-3 py-2 text-sm bg-base-100 dark:bg-base-700 border border-base-200 dark:border-base-600 rounded-lg text-base-900 dark:text-base-100 focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500">
+                            <option>1M</option>
+                            <option>3M</option>
+                            <option>6M</option>
+                            <option>MTD</option>
+                            <option selected>YTD</option>
+                            <option>1Y</option>
+                            <option>3Y</option>
+                            <option>5Y</option>
+                            <option>All</option>
+                        </select>
+                        <!-- Pills for wider screens (≥410px) -->
+                        <div class="hidden min-[410px]:flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5 w-full sm:w-fit">
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">1M</button>
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">3M</button>
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">6M</button>
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">MTD</button>
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm text-center">YTD</button>
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">1Y</button>
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">3Y</button>
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">5Y</button>
+                            <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">All</button>
                         </div>
                     </div>
                 </div>
@@ -277,7 +314,8 @@
                         <div class="h-44 flex items-center justify-center text-sm text-base-200 dark:text-base-600 border border-dashed border-base-150 dark:border-base-700 rounded-xl bg-base-50/30 dark:bg-base-900/30">
                             <div class="text-center">
                                 <div class="text-base-300 dark:text-base-500 mb-1">[Stacked Area Chart]</div>
-                                <div class="text-xs text-base-200 dark:text-base-600">Each platform's value contribution over time</div>
+                                <div class="text-xs text-base-200 dark:text-base-600">Each platform's value over time</div>
+                                <div class="text-xs text-blue-300 dark:text-blue-600 mt-1">YoY: dashed ghost line for last year</div>
                             </div>
                         </div>
                     </div>
@@ -287,12 +325,279 @@
                             <div class="text-center">
                                 <div class="text-base-300 dark:text-base-500 mb-1">[Bar Chart]</div>
                                 <div class="text-xs text-base-200 dark:text-base-600">Green/red bars per month · Values on bars</div>
+                                <div class="text-xs text-blue-300 dark:text-blue-600 mt-1">YoY: semi-transparent bars for last year</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Performance Analysis (Yearly / Monthly) -->
+        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden">
+            <!-- Tab Bar -->
+            <div class="flex items-center justify-between px-3 lg:px-6 border-b border-base-150 dark:border-base-700">
+                <div class="flex items-center gap-0">
+                    <button class="tab-btn active px-4 py-4 text-sm font-medium text-accent-700 dark:text-accent-400" onclick="switchTab('yearly')">Yearly</button>
+                    <button class="tab-btn px-4 py-4 text-sm text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors" onclick="switchTab('monthly')">Monthly</button>
+                </div>
+                <div class="flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5">
+                    <button class="px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm">Earnings</button>
+                    <button class="px-2.5 py-1 text-xs rounded-md text-base-400">XIRR %</button>
+                </div>
+            </div>
+
+            <!-- Tab: Yearly Analysis -->
+            <div id="tab-yearly" class="tab-content active p-4 sm:p-6">
+                <!-- Bar Chart Placeholder -->
+                <div class="h-52 flex items-center justify-center text-sm text-base-200 dark:text-base-600 border border-dashed border-base-150 dark:border-base-700 rounded-xl bg-base-50/30 dark:bg-base-900/30 mb-6">
+                    <div class="text-center">
+                        <div class="text-base-300 dark:text-base-500 mb-1">[Yearly Bar Chart]</div>
+                        <div class="text-xs text-base-200 dark:text-base-600">Portfolio-level yearly earnings · Green/red bars</div>
+                    </div>
+                </div>
+                <!-- Yearly Summary Table -->
+                <div class="overflow-x-auto -mx-4 sm:-mx-6 px-3 lg:px-6" id="pf-yearly-table">
+                <table class="w-full text-sm sm:min-w-[640px]">
+                    <thead>
+                        <tr class="border-b border-base-150 dark:border-base-700">
+                            <th class="text-left font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Year</th>
+                            <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Starting Value</th>
+                            <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Ending Value</th>
+                            <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Net Deposits</th>
+                            <th class="text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Earnings</th>
+                            <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Earnings %</th>
+                            <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">XIRR</th>
+                            <th class="sm:hidden text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">
+                                <button onclick="cycleColumn(event, 'pf-yearly-table')" class="inline-flex flex-col items-end gap-1">
+                                    <span class="flex items-center gap-1.5">
+                                        <span class="grid justify-items-end">
+                                            <span class="cycle-header [grid-area:1/1]" data-col="earningsPct">Earnings %</span>
+                                            <span class="cycle-header [grid-area:1/1] invisible" data-col="xirr">XIRR</span>
+                                            <span class="cycle-header [grid-area:1/1] invisible" data-col="startVal">Starting Value</span>
+                                            <span class="cycle-header [grid-area:1/1] invisible" data-col="endVal">Ending Value</span>
+                                            <span class="cycle-header [grid-area:1/1] invisible" data-col="netDep">Net Deposits</span>
+                                        </span>
+                                        <svg class="w-3 h-3 text-base-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                    </span>
+                                    <span class="flex gap-0.5 cycle-dots">
+                                        <span class="w-1 h-1 rounded-full bg-accent-500"></span>
+                                        <span class="w-1 h-1 rounded-full bg-base-300 dark:bg-base-500"></span>
+                                        <span class="w-1 h-1 rounded-full bg-base-300 dark:bg-base-500"></span>
+                                        <span class="w-1 h-1 rounded-full bg-base-300 dark:bg-base-500"></span>
+                                        <span class="w-1 h-1 rounded-full bg-base-300 dark:bg-base-500"></span>
+                                    </span>
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors">
+                            <td class="px-4 py-3 font-medium">2026 (YTD)</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">1.612.224</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium">1.759.504</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">+100.000</td>
+                            <td class="px-4 py-3 text-right font-mono-data text-emerald-600 dark:text-emerald-400">+47.280</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-emerald-600 dark:text-emerald-400">+3,1%</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium">8,4%</td>
+                            <td class="sm:hidden px-4 py-3 text-right">
+                                <div class="grid">
+                                    <div class="cycle-val [grid-area:1/1]" data-col="earningsPct"><span class="font-mono-data text-emerald-600 dark:text-emerald-400">+3,1%</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="xirr"><span class="font-mono-data font-medium">8,4%</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="startVal"><span class="font-mono-data text-base-500 dark:text-base-400">1.612.224</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="endVal"><span class="font-mono-data font-medium">1.759.504</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="netDep"><span class="font-mono-data text-base-500 dark:text-base-400">+100.000</span></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors">
+                            <td class="px-4 py-3 font-medium">2025</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">1.182.310</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium">1.612.224</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">+295.000</td>
+                            <td class="px-4 py-3 text-right font-mono-data text-emerald-600 dark:text-emerald-400">+134.914</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-emerald-600 dark:text-emerald-400">+9,1%</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium">11,2%</td>
+                            <td class="sm:hidden px-4 py-3 text-right">
+                                <div class="grid">
+                                    <div class="cycle-val [grid-area:1/1]" data-col="earningsPct"><span class="font-mono-data text-emerald-600 dark:text-emerald-400">+9,1%</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="xirr"><span class="font-mono-data font-medium">11,2%</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="startVal"><span class="font-mono-data text-base-500 dark:text-base-400">1.182.310</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="endVal"><span class="font-mono-data font-medium">1.612.224</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="netDep"><span class="font-mono-data text-base-500 dark:text-base-400">+295.000</span></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors">
+                            <td class="px-4 py-3 font-medium">2024</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">956.400</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium">1.182.310</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">+225.000</td>
+                            <td class="px-4 py-3 text-right font-mono-data text-emerald-600 dark:text-emerald-400">+910</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-emerald-600 dark:text-emerald-400">+0,1%</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium">0,2%</td>
+                            <td class="sm:hidden px-4 py-3 text-right">
+                                <div class="grid">
+                                    <div class="cycle-val [grid-area:1/1]" data-col="earningsPct"><span class="font-mono-data text-emerald-600 dark:text-emerald-400">+0,1%</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="xirr"><span class="font-mono-data font-medium">0,2%</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="startVal"><span class="font-mono-data text-base-500 dark:text-base-400">956.400</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="endVal"><span class="font-mono-data font-medium">1.182.310</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="netDep"><span class="font-mono-data text-base-500 dark:text-base-400">+225.000</span></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Totals Row -->
+                        <tr class="bg-base-50/60 dark:bg-base-900/40 font-medium">
+                            <td class="px-4 py-3">All Time</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">956.400</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">1.759.504</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">+620.190</td>
+                            <td class="px-4 py-3 text-right font-mono-data text-emerald-600 dark:text-emerald-400">+182.914</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-emerald-600 dark:text-emerald-400">+13,1%</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">9,8%</td>
+                            <td class="sm:hidden px-4 py-3 text-right">
+                                <div class="grid">
+                                    <div class="cycle-val [grid-area:1/1]" data-col="earningsPct"><span class="font-mono-data text-emerald-600 dark:text-emerald-400">+13,1%</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="xirr"><span class="font-mono-data">9,8%</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="startVal"><span class="font-mono-data">956.400</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="endVal"><span class="font-mono-data">1.759.504</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="netDep"><span class="font-mono-data">+620.190</span></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
+            <!-- Tab: Monthly Analysis -->
+            <div id="tab-monthly" class="tab-content p-4 sm:p-6">
+                <div class="h-52 flex items-center justify-center text-sm text-base-200 dark:text-base-600 border border-dashed border-base-150 dark:border-base-700 rounded-xl bg-base-50/30 dark:bg-base-900/30 mb-6">
+                    <div class="text-center">
+                        <div class="text-base-300 dark:text-base-500 mb-1">[Monthly Bar Chart]</div>
+                        <div class="text-xs text-base-200 dark:text-base-600">Green/red bars · Monthly earnings or XIRR toggle</div>
+                    </div>
+                </div>
+                <div class="overflow-x-auto -mx-4 sm:-mx-6 px-3 lg:px-6" id="pf-monthly-table">
+                <table class="w-full text-sm sm:min-w-[580px]">
+                    <thead>
+                        <tr class="border-b border-base-150 dark:border-base-700">
+                            <th class="text-left font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Month</th>
+                            <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Start Value</th>
+                            <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">End Value</th>
+                            <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Net Deposits</th>
+                            <th class="text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Earnings</th>
+                            <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Monthly XIRR</th>
+                            <th class="sm:hidden text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">
+                                <button onclick="cycleColumn(event, 'pf-monthly-table')" class="inline-flex flex-col items-end gap-1">
+                                    <span class="flex items-center gap-1.5">
+                                        <span class="grid justify-items-end">
+                                            <span class="cycle-header [grid-area:1/1]" data-col="monthlyXirr">Monthly XIRR</span>
+                                            <span class="cycle-header [grid-area:1/1] invisible" data-col="startVal">Start Value</span>
+                                            <span class="cycle-header [grid-area:1/1] invisible" data-col="endVal">End Value</span>
+                                            <span class="cycle-header [grid-area:1/1] invisible" data-col="netDep">Net Deposits</span>
+                                        </span>
+                                        <svg class="w-3 h-3 text-base-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                    </span>
+                                    <span class="flex gap-0.5 cycle-dots">
+                                        <span class="w-1 h-1 rounded-full bg-accent-500"></span>
+                                        <span class="w-1 h-1 rounded-full bg-base-300 dark:bg-base-500"></span>
+                                        <span class="w-1 h-1 rounded-full bg-base-300 dark:bg-base-500"></span>
+                                        <span class="w-1 h-1 rounded-full bg-base-300 dark:bg-base-500"></span>
+                                    </span>
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors">
+                            <td class="px-4 py-3 font-medium">Feb 2026</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">1.694.766</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium">1.759.504</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">+50.000</td>
+                            <td class="px-4 py-3 text-right font-mono-data text-emerald-600 dark:text-emerald-400">+14.738</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium text-emerald-600 dark:text-emerald-400">10,6%</td>
+                            <td class="sm:hidden px-4 py-3 text-right">
+                                <div class="grid">
+                                    <div class="cycle-val [grid-area:1/1]" data-col="monthlyXirr"><span class="font-mono-data font-medium text-emerald-600 dark:text-emerald-400">10,6%</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="startVal"><span class="font-mono-data text-base-500 dark:text-base-400">1.694.766</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="endVal"><span class="font-mono-data font-medium">1.759.504</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="netDep"><span class="font-mono-data text-base-500 dark:text-base-400">+50.000</span></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors">
+                            <td class="px-4 py-3 font-medium">Jan 2026</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">1.612.224</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium">1.694.766</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">+50.000</td>
+                            <td class="px-4 py-3 text-right font-mono-data text-emerald-600 dark:text-emerald-400">+32.542</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium text-emerald-600 dark:text-emerald-400">23,5%</td>
+                            <td class="sm:hidden px-4 py-3 text-right">
+                                <div class="grid">
+                                    <div class="cycle-val [grid-area:1/1]" data-col="monthlyXirr"><span class="font-mono-data font-medium text-emerald-600 dark:text-emerald-400">23,5%</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="startVal"><span class="font-mono-data text-base-500 dark:text-base-400">1.612.224</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="endVal"><span class="font-mono-data font-medium">1.694.766</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="netDep"><span class="font-mono-data text-base-500 dark:text-base-400">+50.000</span></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors">
+                            <td class="px-4 py-3 font-medium">Dec 2025</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">1.578.410</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium">1.612.224</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">+15.000</td>
+                            <td class="px-4 py-3 text-right font-mono-data text-emerald-600 dark:text-emerald-400">+18.814</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium text-emerald-600 dark:text-emerald-400">14,2%</td>
+                            <td class="sm:hidden px-4 py-3 text-right">
+                                <div class="grid">
+                                    <div class="cycle-val [grid-area:1/1]" data-col="monthlyXirr"><span class="font-mono-data font-medium text-emerald-600 dark:text-emerald-400">14,2%</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="startVal"><span class="font-mono-data text-base-500 dark:text-base-400">1.578.410</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="endVal"><span class="font-mono-data font-medium">1.612.224</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="netDep"><span class="font-mono-data text-base-500 dark:text-base-400">+15.000</span></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors">
+                            <td class="px-4 py-3 font-medium">Nov 2025</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">1.541.820</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium">1.578.410</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">+30.000</td>
+                            <td class="px-4 py-3 text-right font-mono-data text-emerald-600 dark:text-emerald-400">+6.590</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium text-emerald-600 dark:text-emerald-400">5,0%</td>
+                            <td class="sm:hidden px-4 py-3 text-right">
+                                <div class="grid">
+                                    <div class="cycle-val [grid-area:1/1]" data-col="monthlyXirr"><span class="font-mono-data font-medium text-emerald-600 dark:text-emerald-400">5,0%</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="startVal"><span class="font-mono-data text-base-500 dark:text-base-400">1.541.820</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="endVal"><span class="font-mono-data font-medium">1.578.410</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="netDep"><span class="font-mono-data text-base-500 dark:text-base-400">+30.000</span></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors">
+                            <td class="px-4 py-3 font-medium">Oct 2025</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">1.498.340</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium">1.541.820</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">+25.000</td>
+                            <td class="px-4 py-3 text-right font-mono-data text-emerald-600 dark:text-emerald-400">+18.480</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium text-emerald-600 dark:text-emerald-400">14,5%</td>
+                            <td class="sm:hidden px-4 py-3 text-right">
+                                <div class="grid">
+                                    <div class="cycle-val [grid-area:1/1]" data-col="monthlyXirr"><span class="font-mono-data font-medium text-emerald-600 dark:text-emerald-400">14,5%</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="startVal"><span class="font-mono-data text-base-500 dark:text-base-400">1.498.340</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="endVal"><span class="font-mono-data font-medium">1.541.820</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible" data-col="netDep"><span class="font-mono-data text-base-500 dark:text-base-400">+25.000</span></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+
+            </div><!-- /perf-content -->
+        </div><!-- /Performance Charts & Analysis -->
 
         <!-- Investment Platforms -->
         <div id="platforms-table" class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6">
@@ -301,7 +606,10 @@
                     <h2 class="font-semibold">Investment Platforms</h2>
                     <span class="text-xs text-base-400 bg-base-100 dark:bg-base-700 px-2 py-0.5 rounded-lg w-fit">3 platforms</span>
                 </div>
-                <button onclick="showDialog('add-transaction-dialog')" class="px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">+ Add Transaction</button>
+                <div class="hidden lg:flex items-center gap-2">
+                    <button onclick="showDialog('add-datapoint-dialog')" class="px-4 py-2 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg hover:border-base-300 dark:hover:border-base-500 transition-colors">+ Add Data Point</button>
+                    <button onclick="showDialog('add-transaction-dialog')" class="px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">+ Add Transaction</button>
+                </div>
             </div>
             <div class="overflow-x-auto">
             <table class="w-full text-sm sm:min-w-[700px]">
@@ -353,7 +661,12 @@
                             <div class="font-mono-data text-xs text-emerald-500/80 dark:text-emerald-400/70">+11,8%</div>
                         </td>
                         <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right font-mono-data font-medium">9,2%</td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right text-xs text-base-400">Feb 14</td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right">
+                            <div class="text-xs text-base-400">Jan 31</div>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs font-medium rounded-full mt-0.5 border border-amber-600 dark:border-amber-400">
+                                <span class="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></span>Stale
+                            </span>
+                        </td>
                         <!-- Mobile: cycling values -->
                         <td class="sm:hidden px-4 py-4 text-right">
                             <div class="grid">
@@ -363,7 +676,12 @@
                                     <div class="font-mono-data text-emerald-600 dark:text-emerald-400">+89.241</div>
                                     <div class="font-mono-data text-xs text-emerald-500/80 dark:text-emerald-400/70">+11,8%</div>
                                 </div>
-                                <div class="cycle-val [grid-area:1/1] invisible" data-col="updated"><span class="text-xs text-base-400">Feb 14</span></div>
+                                <div class="cycle-val [grid-area:1/1] invisible" data-col="updated">
+                                    <div class="text-xs text-base-400">Jan 31</div>
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs font-medium rounded-full mt-0.5 border border-amber-600 dark:border-amber-400">
+                                        <span class="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></span>Stale
+                                    </span>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -377,8 +695,8 @@
                             </div>
                         </td>
                         <td class="px-3 lg:px-6 py-4 text-right">
-                            <div class="font-mono-data">58.924 <span class="text-base-300 dark:text-base-500 text-xs">USD</span></div>
-                            <div class="text-xs text-base-300 dark:text-base-500">≈ 405.192 DKK</div>
+                            <div class="font-mono-data">58.924 <span class="text-base-300 dark:text-base-500 text-xs">EUR</span></div>
+                            <div class="text-xs text-base-300 dark:text-base-500">≈ 439.282 DKK</div>
                         </td>
                         <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right font-mono-data text-emerald-600 dark:text-emerald-400">+3.102</td>
                         <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right">
@@ -387,9 +705,9 @@
                         </td>
                         <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right font-mono-data font-medium">7,1%</td>
                         <td class="hidden sm:table-cell px-3 lg:px-6 py-4 text-right">
-                            <div class="text-xs text-base-400">Feb 11</div>
-                            <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs font-medium rounded-full mt-0.5">
-                                <span class="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></span>Stale
+                            <div class="text-xs text-base-400">Jan 28</div>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 text-xs font-medium rounded-full mt-0.5 border border-rose-600 dark:border-rose-400">
+                                <span class="w-1.5 h-1.5 bg-rose-400 rounded-full animate-pulse"></span>Stale
                             </span>
                         </td>
                         <!-- Mobile: cycling values -->
@@ -402,9 +720,9 @@
                                     <div class="font-mono-data text-xs text-emerald-500/80 dark:text-emerald-400/70">+9,8%</div>
                                 </div>
                                 <div class="cycle-val [grid-area:1/1] invisible" data-col="updated">
-                                    <div class="text-xs text-base-400">Feb 11</div>
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs font-medium rounded-full mt-0.5">
-                                        <span class="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></span>Stale
+                                    <div class="text-xs text-base-400">Jan 28</div>
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 text-xs font-medium rounded-full mt-0.5 border border-rose-600 dark:border-rose-400">
+                                        <span class="w-1.5 h-1.5 bg-rose-400 rounded-full animate-pulse"></span>Stale
                                     </span>
                                 </div>
                             </div>
@@ -453,7 +771,7 @@
             <div class="px-3 lg:px-6 py-5 flex items-center justify-between border-b border-base-100 dark:border-base-700">
                 <div class="flex items-center gap-3">
                     <h2 class="font-semibold">Cash Accounts</h2>
-                    <span class="text-xs text-base-400 bg-base-100 dark:bg-base-700 px-2 py-0.5 rounded-lg">1 account</span>
+                    <span class="text-xs text-base-400 bg-base-100 dark:bg-base-700 px-2 py-0.5 rounded-lg">2 accounts</span>
                 </div>
             </div>
             <div class="overflow-x-auto">
@@ -481,13 +799,26 @@
                         </td>
                         <td class="px-3 lg:px-6 py-4 text-right text-xs text-base-400">Feb 14</td>
                     </tr>
+                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/30 dark:hover:bg-accent-900/10 cursor-pointer transition-colors">
+                        <td class="pl-3 lg:pl-5 pr-0 py-4 text-base-300 dark:text-base-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></td>
+                        <td class="pl-1 pr-3 lg:pl-2 lg:pr-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <img src="icons/icon_danske-bank.png" alt="" class="w-5 min-w-5 h-5 rounded-full object-cover shrink-0 shadow ring-1 ring-black/10">
+                                <span class="font-medium">Danske Bank</span>
+                            </div>
+                        </td>
+                        <td class="px-3 lg:px-6 py-4 text-right">
+                            <div class="font-mono-data">142.500 <span class="text-base-300 dark:text-base-500 text-xs">DKK</span></div>
+                        </td>
+                        <td class="px-3 lg:px-6 py-4 text-right text-xs text-base-400">Feb 15</td>
+                    </tr>
                 </tbody>
             </table>
             </div>
         </div>
 
         <!-- Closed Platforms -->
-        <div id="closed-table" class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden">
+        <div id="closed-table" class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6">
             <div class="px-3 lg:px-6 py-5 flex items-center justify-between border-b border-base-100 dark:border-base-700">
                 <div class="flex items-center gap-3">
                     <h2 class="font-semibold text-base-400">Closed Platforms</h2>
@@ -552,6 +883,74 @@
             </div>
         </div>
 
+        <!-- Portfolio Allocation -->
+        <div class="bg-white dark:bg-base-800 rounded-2xl p-4 sm:p-6 shadow-card dark:shadow-card-dark mb-6">
+            <h2 class="font-semibold mb-5">Portfolio Allocation</h2>
+            <!-- Proportional bar -->
+            <div class="flex rounded-lg overflow-hidden h-8 mb-5">
+                <div class="bg-blue-500" style="width:47.9%" title="Nordnet (ASK)"></div>
+                <div class="bg-red-400" style="width:25.0%" title="Mintos"></div>
+                <div class="bg-violet-500" style="width:3.5%" title="Kameo"></div>
+                <div class="bg-base-300 dark:bg-base-500" style="width:15.6%" title="Revolut"></div>
+                <div class="bg-amber-400" style="width:8.1%" title="Danske Bank"></div>
+            </div>
+            <!-- Legend -->
+            <div class="space-y-2.5">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2.5 h-2.5 rounded-sm bg-blue-500"></div>
+                        <span class="text-sm">Nordnet (ASK)</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="font-mono-data text-sm">842.391</span>
+                        <span class="font-mono-data text-xs text-base-400 w-12 text-right">47,9%</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2.5 h-2.5 rounded-sm bg-red-400"></div>
+                        <span class="text-sm">Mintos</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="font-mono-data text-sm">439.282</span>
+                        <span class="font-mono-data text-xs text-base-400 w-12 text-right">25,0%</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2.5 h-2.5 rounded-sm bg-violet-500"></div>
+                        <span class="text-sm">Kameo</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="font-mono-data text-sm">61.358</span>
+                        <span class="font-mono-data text-xs text-base-400 w-12 text-right">3,5%</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2.5 h-2.5 rounded-sm bg-base-300 dark:bg-base-500"></div>
+                        <span class="text-sm text-base-500 dark:text-base-400">Revolut</span>
+                        <span class="text-xs text-base-300 dark:text-base-500 bg-base-100 dark:bg-base-700 px-1.5 py-0.5 rounded">Cash</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="font-mono-data text-sm">273.973</span>
+                        <span class="font-mono-data text-xs text-base-400 w-12 text-right">15,6%</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2.5 h-2.5 rounded-sm bg-amber-400"></div>
+                        <span class="text-sm text-base-500 dark:text-base-400">Danske Bank</span>
+                        <span class="text-xs text-base-300 dark:text-base-500 bg-base-100 dark:bg-base-700 px-1.5 py-0.5 rounded">Cash</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="font-mono-data text-sm">142.500</span>
+                        <span class="font-mono-data text-xs text-base-400 w-12 text-right">8,1%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Add Platform -->
         <button onclick="showDialog('add-platform-dialog')" class="w-full py-3 text-sm font-medium text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors flex items-center justify-center gap-1.5 mt-2 mb-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
@@ -569,6 +968,16 @@
             'closed-table': {
                 metrics: ['gain', 'closed'],
                 labels: { gain: 'Gain/Loss', closed: 'Closed' },
+                current: 0
+            },
+            'pf-yearly-table': {
+                metrics: ['earningsPct', 'xirr', 'startVal', 'endVal', 'netDep'],
+                labels: { earningsPct: 'Earnings %', xirr: 'XIRR', startVal: 'Starting Value', endVal: 'Ending Value', netDep: 'Net Deposits' },
+                current: 0
+            },
+            'pf-monthly-table': {
+                metrics: ['monthlyXirr', 'startVal', 'endVal', 'netDep'],
+                labels: { monthlyXirr: 'Monthly XIRR', startVal: 'Start Value', endVal: 'End Value', netDep: 'Net Deposits' },
                 current: 0
             }
         };
@@ -595,6 +1004,38 @@
                     : 'w-1 h-1 rounded-full bg-base-300 dark:bg-base-500';
             });
         }
+        /* Collapsible Performance section */
+        function togglePerformance() {
+            const content = document.getElementById('perf-content');
+            const chevron = document.getElementById('perf-chevron');
+            const toggle = document.getElementById('perf-toggle');
+            content.classList.toggle('hidden');
+            chevron.classList.toggle('rotate-180');
+            if (content.classList.contains('hidden')) {
+                toggle.classList.remove('rounded-t-2xl');
+                toggle.classList.add('rounded-2xl');
+            } else {
+                toggle.classList.remove('rounded-2xl');
+                toggle.classList.add('rounded-t-2xl');
+            }
+        }
+
+        /* Tab switching (Yearly / Monthly) */
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'font-medium', 'text-accent-700');
+                btn.classList.add('text-base-400');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            const tabMap = { yearly: 0, monthly: 1 };
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons[tabMap[tabName]].classList.add('active', 'font-medium', 'text-accent-700');
+            buttons[tabMap[tabName]].classList.remove('text-base-400');
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+
         /* Dialog system */
         function showDialog(dialogId) {
             const dialog = document.getElementById(dialogId);
@@ -734,8 +1175,6 @@
                             <select class="form-select w-full px-3 py-2.5 pr-10 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
                                 <option>DKK</option>
                                 <option>EUR</option>
-                                <option>USD</option>
-                                <option>GBP</option>
                             </select>
                         </div>
                     </div>
@@ -744,6 +1183,66 @@
                 <div class="px-5 sm:px-6 py-4 border-t border-base-100 dark:border-base-700 flex items-center justify-end gap-3">
                     <button onclick="closeDialog('add-platform-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
                     <button onclick="closeDialog('add-platform-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 hover:bg-base-800 dark:hover:bg-accent-700 rounded-lg transition-colors">Add Platform</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Data Point Dialog (with platform selector) -->
+    <div id="add-datapoint-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-datapoint-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto translate-y-full sm:translate-y-0 sm:scale-95 sm:opacity-0 transition-all duration-300">
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5 flex items-center justify-between">
+                    <h3 class="font-semibold text-base sm:text-lg">Add Data Point</h3>
+                    <button onclick="closeDialog('add-datapoint-dialog')" class="p-1 -mr-1 text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div class="px-5 sm:px-6 pb-2 space-y-4">
+                    <!-- Platform selector -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Platform <span class="text-rose-500">*</span></label>
+                        <select class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                            <option value="" disabled selected>Select platform...</option>
+                            <optgroup label="Investment Platforms">
+                                <option value="nordnet">Nordnet (DKK)</option>
+                                <option value="mintos">Mintos (EUR)</option>
+                                <option value="kameo">Kameo (EUR)</option>
+                            </optgroup>
+                            <optgroup label="Cash Accounts">
+                                <option value="revolut">Revolut (EUR)</option>
+                                <option value="danske-bank">Danske Bank (DKK)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <!-- Platform Value -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Platform Value <span class="text-rose-500">*</span></label>
+                        <div class="relative">
+                            <input type="number" step="0.01" min="0" required placeholder="0,00"
+                                class="w-full px-3 py-2.5 pr-14 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-base-300 dark:text-base-500 font-mono-data">DKK</span>
+                        </div>
+                    </div>
+                    <!-- Date & Time -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Date & Time <span class="text-rose-500">*</span></label>
+                        <input type="datetime-local" id="overview-dp-add-datetime"
+                            class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                    </div>
+                    <!-- Note -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label>
+                        <input type="text" placeholder="Optional note..."
+                            class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                    </div>
+                </div>
+                <div class="px-5 sm:px-6 py-4 mt-2 border-t border-base-100 dark:border-base-700 flex items-center justify-end gap-3 bg-base-50/50 dark:bg-base-900/30 sm:rounded-b-2xl">
+                    <button onclick="closeDialog('add-datapoint-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-datapoint-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg hover:bg-base-50 dark:hover:bg-base-700 transition-colors">Save & Add Another</button>
+                    <button onclick="closeDialog('add-datapoint-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Add Data Point</button>
                 </div>
             </div>
         </div>
@@ -770,7 +1269,7 @@
                         <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Platform <span class="text-rose-500">*</span></label>
                         <select id="tx-platform-select" onchange="updateTransactionCurrency()" class="form-select w-full px-3 py-2.5 pr-10 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
                             <option value="DKK">Nordnet (ASK) · DKK</option>
-                            <option value="USD">Mintos · USD</option>
+                            <option value="EUR">Mintos · EUR</option>
                             <option value="EUR">Kameo · EUR</option>
                             <option value="EUR">Revolut · EUR</option>
                         </select>

@@ -80,28 +80,38 @@ These features are available across all sections and should be implemented as sh
 
 ### 3.1 Time Span Selector
 
-A button group that filters all charts, tables, and summary metrics in the current view.
+A reusable button group embedded within each chart card that needs time-based filtering. Each card manages its own selected time span independently.
 
 | Label | Logic |
 |---|---|
+| 1M | Last 1 calendar month from today |
 | 3M | Last 3 calendar months from today |
 | 6M | Last 6 calendar months |
+| MTD | 1st of current month → today |
+| YTD | January 1 of current year → today |
 | 1Y | Last 12 months |
 | 3Y | Last 36 months |
 | 5Y | Last 60 months |
-| YTD | January 1 of current year → today |
 | All | Earliest data point → today |
 
-Default: **All**. Selecting a time span recalculates everything in the current view.
+Default: **YTD**. Selecting a time span recalculates the chart and any associated table within that card.
 
 ### 3.2 Year-over-Year Comparison
 
-A toggle (not enabled by default) that overlays the equivalent prior-year data on charts. When enabled:
+Two complementary YoY mechanisms:
+
+**YoY Comparison Summary** — An always-visible card on overview pages showing key metrics compared to the equivalent prior-year period. The comparison period is derived automatically (e.g. "Jan 1 – Feb 17, 2025" for the same YTD window last year). Metrics shown:
+
+- YTD Earnings: current vs same YTD period last year, with percentage change.
+- YTD XIRR: current vs same period last year, with change in percentage points.
+- Current month earnings: current vs same month last year, with percentage change.
+
+**YoY Chart Overlay** — A toggle (not enabled by default) on chart cards that overlays the equivalent prior-year data. When enabled:
 
 - Bar charts show a second, semi-transparent bar set behind the current data.
 - Line charts show a dashed or ghost line for the prior year.
 
-This is a **lens** the user activates, not a permanent fixture.
+The overlay is a **lens** the user activates, not a permanent fixture.
 
 ### 3.3 File Attachments
 
@@ -114,13 +124,12 @@ Any record type across the platform can have files attached (images, PDFs, docum
 
 ### 3.4 Staleness Indicators
 
-Each section's overview page shows a subtle "Last updated X days ago" indicator derived from the most recent data entry in that section. Visual treatment:
+Staleness applies to the **Investment** section (per platform) and the **Home** section (per utility). It signals that a new month has started without fresh data. The trigger is the absence of a new data point (investment) or meter reading (utility) for the current month:
 
-- **< 7 days**: Neutral/muted text.
-- **7–30 days**: Amber text.
-- **> 30 days**: Red text.
+- **No new entry by the 2nd of the month**: Amber "Stale" badge.
+- **No new entry by the 7th of the month**: Red "Stale" badge.
 
-No notifications or prompts — just the data telling the user it's aging.
+Once a data point or meter reading is added for the current month, the badge disappears. The badge is shown both on the overview row and in the detail page header. No notifications or prompts — just the data telling the user it's aging.
 
 ### 3.5 Universal Notes
 
@@ -132,8 +141,7 @@ Notes are displayed alongside the data point in tables and are searchable within
 
 Where raw data is relevant (readings, data points, transactions, maintenance events), it is shown in collapsible accordion tables. These are:
 
-- **Collapsed by default** on overview pages.
-- **Expanded and prominent** on detail pages (e.g. a specific investment platform page or a specific utility page).
+- **Collapsed by default** on all pages (overviews and detail pages alike).
 - Sortable by date.
 - Include delete/edit actions per row.
 - Display the note field (if populated) for each row.
@@ -145,15 +153,20 @@ Where raw data is relevant (readings, data points, transactions, maintenance eve
 The platform uses **Danish locale** conventions by default:
 
 - **Number format**: Period as thousands separator, comma as decimal separator (e.g. `1.000,00`).
-- **Currency**: DKK displayed with "kr." suffix (e.g. `1.000,00 kr.`). EUR displayed with "EUR" prefix or suffix as appropriate.
+- **Currency**: DKK displayed with "DKK" suffix (e.g. `1.000,00 DKK`). EUR displayed with "EUR" prefix or suffix as appropriate.
 - **Percentages**: Comma as decimal separator, 2 decimal places + `%` (e.g. `5,48%`).
-- **Date format**: `YYYY-MM-DD` by default (configurable to `DD/MM/YYYY` via settings).
+- **Date formats** — context-dependent:
+  - **Record dates** (transaction and data point tables): `YYYY-MM-DD` (e.g. `2026-02-01`). Configurable to `DD/MM/YYYY` via settings.
+  - **Human-readable timestamps** (summary cards, headers): `MMM DD, YYYY` (e.g. `Feb 14, 2026`).
+  - **Monthly period labels** (performance tables, chart axes): `MMM YYYY` (e.g. `Feb 2026`).
+  - **Recent update indicators** (platform list "Updated" column): `MMM DD` (e.g. `Feb 14`).
+  - **Yearly period labels**: `YYYY` or `YYYY (YTD)` for the current year.
 
 ### 3.8 Settings
 
 A settings page accessible from the main navigation, providing:
 
-- **Date format**: Toggle between `YYYY-MM-DD` and `DD/MM/YYYY`.
+- **Date format**: Toggle between `YYYY-MM-DD` and `DD/MM/YYYY` (applies to record dates in tables; human-readable labels like `Feb 14, 2026` are not affected).
 - **Theme**: Toggle between light mode and dark mode.
 - **Home currency**: DKK (displayed for reference; drives portfolio aggregation currency).
 - **Demo mode**: Toggle on/off. See §3.9.
@@ -203,8 +216,8 @@ The platform operates in a **multi-currency** environment. The user's home curre
 
 ### 4.3 Currency Display Rules
 
-- **DKK-denominated platforms**: Values shown in DKK only (e.g. `5.057,80 kr.`).
-- **Non-DKK platforms**: Values shown in native currency with DKK equivalent (e.g. `1.000 EUR (7.460 kr.)`).
+- **DKK-denominated platforms**: Values shown in DKK only (e.g. `5.057,80 DKK`).
+- **Non-DKK platforms**: Values shown in native currency on the primary line with the DKK equivalent below in smaller, muted text prefixed with `≈` (e.g. `1.000 EUR` / `≈ 7.460 DKK`).
 - **Portfolio totals**: Always in DKK (the aggregation currency).
 - **XIRR**: Calculated in the **native currency** of the platform. Portfolio-level XIRR uses DKK-converted values.
 - **Transactions on non-DKK platforms**: Stored in native currency with the exchange rate at the time of the transaction recorded. Display shows both native and DKK amounts.
@@ -281,7 +294,7 @@ The first thing the user sees after login.
 
 **Layout:**
 
-1. **Section heading** with staleness indicator.
+1. **Section heading**.
 2. **Summary cards** — one per utility, each showing:
    - Current month consumption (and delta vs. last month).
    - Current month cost.
@@ -301,7 +314,7 @@ Navigated to by clicking a utility from the overview. Full-width view with back 
 
 **Content:**
 
-- Utility name and metadata.
+- Utility name and metadata. Staleness badge if stale (per §3.4).
 - Summary stat cards (same metrics, scoped to this utility).
 - Time span selector.
 - Charts: monthly consumption, monthly cost, cost per unit over time.
@@ -466,12 +479,13 @@ All summary cards, charts, and platform lists below are scoped to the selected p
    - YTD gain/loss.
    - YTD XIRR.
    - Current month earnings.
-2. **Portfolio allocation** — visual breakdown (donut chart, proportional bar, or similar) showing each platform's share of total portfolio value. Cash platforms and investment platforms visually distinguishable.
-3. **Charts area** (expandable via toggle) with time span selector:
-   - Yearly bar chart (toggle: XIRR % / Earnings).
-   - Monthly bar chart (same toggle).
-   - XIRR line chart over time.
-   - YoY overlay toggle.
+2. **YoY comparison row** — always-visible card showing key metrics vs the same period last year (per §3.2):
+   - YTD Earnings (current vs prior year, with % change).
+   - YTD XIRR (current vs prior year, with change in percentage points).
+   - Month Earnings (current vs same month last year, with % change).
+3. **Performance Charts & Analysis** — collapsible accordion section (collapsed by default). Contains two cards:
+   - **Portfolio Value Over Time** — Side-by-side charts: a stacked area chart showing per-platform value breakdown over time, and a performance bar chart (green/red). Toggle between Earnings and XIRR %. YoY overlay toggle (per §3.2). Embedded time span selector.
+   - **Performance Analysis** — Tabbed card with Yearly / Monthly tabs (same structure as §6.4 item 2): bar chart with Earnings/XIRR toggle, summary table below with period columns and totals row.
 4. **Platform list** — organized with visual distinction between investment platforms and cash platforms:
    - **Investment platforms** (cards/rows), each showing:
      - Platform icon and name.
@@ -480,26 +494,28 @@ All summary cards, charts, and platform lists below are scoped to the selected p
      - Current month earnings.
      - All-time gain/loss (absolute + %).
      - All-time XIRR.
+     - Updated (date of most recent data point, formatted per §3.7).
      - Clickable → platform detail page.
-     - Edit/delete actions.
    - **Cash platforms** (cards/rows, visually distinct), each showing:
      - Platform icon and name.
      - Currency indicator (if non-DKK).
      - Current balance (native currency + DKK equivalent if applicable).
+     - Updated (date of most recent balance entry).
      - Clickable → cash platform detail page.
-     - Edit/delete actions.
    - **Closed platforms** (muted), each showing:
-     - Platform icon and name with "Closed" indicator.
+     - Platform icon and name.
+     - Closure date.
      - Final value at closure.
      - All-time gain/loss.
      - Clickable → platform detail page (historical view).
-5. **"Add Platform"** button (with type selection: investment or cash).
+5. **Portfolio allocation** — visual breakdown (donut chart, proportional bar, or similar) showing each platform's share of total portfolio value. Cash platforms and investment platforms visually distinguishable.
+6. **Quick-add buttons** — "Add Platform" (with type selection: investment or cash), "Add Data Point", and "Add Transaction".
 
 ### 6.4 Platform Detail Page (Investment)
 
-Full-width view with back button. The portfolio context (name) is shown in the header for orientation.
+Full-width view with back button.
 
-**Header:** Platform icon and name (both editable), currency badge, summary stat cards:
+**Header:** Platform icon and name (both editable), currency badge, staleness badge (if stale, per §3.4), summary stat cards:
 - Current value (native + DKK if applicable).
 - Current month earnings.
 - All-time gain/loss (absolute + %).
@@ -507,18 +523,16 @@ Full-width view with back button. The portfolio context (name) is shown in the h
 - YTD gain/loss.
 - YTD XIRR.
 
-**Time span selector** above all content.
+**Content (scrollable cards):**
 
-**Tabbed content:**
-
-| Tab | Content |
-|---|---|
-| **Yearly Analysis** | Bar chart — toggle between XIRR (%) and Earnings (currency/%). Green bars positive, red negative, values on bars. Below the chart: yearly summary table with exact earnings and XIRR per year, with totals row. |
-| **Monthly Analysis** | Same as yearly, monthly granularity, filtered to selected time span. Includes monthly earnings (absolute) and monthly XIRR columns. |
-| **XIRR Over Time** | Smooth blue line chart showing cumulative XIRR evolving over time. |
-| **Gain/Loss Table** | Columns: Period, Starting Value, Ending Value, Net Deposits, Gain/Loss, XIRR. Totals row. |
-| **Transactions** | Collapsible table: date, type badge (green/red), amount (native + DKK if applicable), exchange rate (if applicable), note, attachment, delete. "Add Transaction" button. |
-| **Data Points** | Collapsible table: date, value (native + DKK if applicable), note, delete. "Add Data Point" button. |
+1. **Performance Overview** — Line/area chart with embedded time span selector. Toggle between:
+   - **Earnings**: Monthly earnings over the selected period.
+   - **XIRR %**: Cumulative XIRR (inception-to-date) evolving over the selected period as a smooth line chart.
+2. **Performance Analysis** — Tabbed card with Yearly / Monthly tabs. Each tab contains:
+   - Bar chart — toggle between XIRR (%) and Earnings (currency/%). Green bars positive, red negative, values on bars.
+   - Summary table below the chart. Yearly columns: Period, Starting Value, Ending Value, Net Deposits, Earnings, Earnings %, XIRR. Monthly columns: Period, Starting Value, Ending Value, Net Deposits, Earnings, Monthly XIRR. Totals row on both.
+3. **Transactions** — Table: date, type badge (green/red), amount (native + DKK if applicable), exchange rate (if applicable), note, attachment, edit/delete. "Add Transaction" button.
+4. **Data Points** — Table: date, value (native + DKK if applicable), source (manual/interpolated), note, edit/delete. "Add Data Point" button.
 
 ### 6.5 Platform Detail Page (Cash)
 
@@ -657,7 +671,6 @@ When a refueling record for an electric vehicle has `chargedAtHome = true`:
    - Sale date.
    - Clickable → vehicle detail page (historical view).
 3. **"Add Vehicle"** button.
-4. Staleness indicator.
 
 ### 7.5 Vehicle Detail Page
 
@@ -684,7 +697,7 @@ Full-width view with back button.
 - Maintenance cost timeline.
 - YoY toggle on all charts.
 
-**Data tables (collapsible, expanded on this page):**
+**Data tables (collapsible):**
 - Refueling log: date, fuel amount (liters or kWh), cost/unit, total cost, odometer, station, charged-at-home indicator (for EVs), note, receipt thumbnail, edit/delete.
 - Maintenance log: date, description, cost, note, receipt thumbnail, edit/delete.
 
@@ -804,7 +817,7 @@ All dialogs are modal overlays with backdrop blur. Forms validate before submiss
 ### 9.9 Refueling Dialog
 - Date (date, required, default: today).
 - Fuel amount (number, required — label shows "Liters" or "kWh" based on vehicle fuel type).
-- Cost per unit (number, required — label shows "kr./liter" or "kr./kWh" based on vehicle fuel type).
+- Cost per unit (number, required — label shows "DKK/liter" or "DKK/kWh" based on vehicle fuel type).
 - Total cost (number, auto-computed, editable).
 - Odometer reading (number, required).
 - Station (text, optional).
@@ -992,16 +1005,16 @@ These are acknowledged directions but are **not** part of the initial build:
 33. Fuel efficiency uses weighted average (total km ÷ total fuel), not arithmetic mean.
 34. Rolling 5-refueling weighted average is calculated correctly.
 35. Yearly and YTD km driven are derived from odometer readings.
-36. Vehicle detail page shows all charts and expanded data tables.
+36. Vehicle detail page shows all charts and collapsible data tables.
 37. Total cost of ownership is calculated for sold vehicles (fuel + maintenance, with purchase-to-sale offset as secondary).
 
 ### Cross-Cutting
 38. All data entries across the platform support optional notes.
-39. Time span selector filters all content in current view for all sections.
+39. Per-card time span selector recalculates the chart and any associated table within that card (per §3.1).
 40. Year-over-year comparison toggle overlays prior year data on charts.
 41. File attachments work on all applicable record types.
-42. Staleness indicators appear on all section overview pages.
-43. Collapsible data tables are collapsed on overviews, expanded on detail pages.
+42. Staleness indicators appear on investment platform rows and utility rows when no new data point/meter reading exists for the current month (amber by the 2nd, red by the 7th). Badge shown on both overview rows and detail page headers.
+43. Collapsible data tables are collapsed by default on all pages.
 44. Authentication via PocketBase works; data is scoped to the logged-in user.
 45. Application is fully functional on both desktop and mobile browsers.
 46. Light mode and dark mode are both functional and togglable.
