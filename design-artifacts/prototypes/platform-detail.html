@@ -19,10 +19,12 @@
         .tab-content.active { display: block; }
         /* Dialog animations */
         @media (min-width: 640px) {
-            .dialog-panel.dialog-open { transform: scale(1); opacity: 1; }
+            .dialog-panel { transform: scale(0.95); opacity: 0; transition: transform 150ms ease, opacity 250ms ease; }
+            .dialog-panel.dialog-open { transform: scale(1); opacity: 1; transition: all 200ms ease; }
         }
         @media (max-width: 639px) {
-            .dialog-panel.dialog-open { transform: translateY(0); opacity: 1; }
+            .dialog-panel { transform: translateY(100%); opacity: 0; transition: transform 250ms cubic-bezier(0.32,0.72,0,1), opacity 350ms ease; }
+            .dialog-panel.dialog-open { transform: translateY(0); opacity: 1; transition: all 300ms cubic-bezier(0.32,0.72,0,1); }
         }
         /* Custom select arrow */
         select.form-select {
@@ -55,13 +57,13 @@
 
     <!-- Nav -->
     <nav class="bg-white dark:bg-base-800 shadow-card dark:shadow-card-dark sticky top-0 z-30 relative">
-        <div class="max-w-[1440px] mx-auto px-3 lg:px-6 lg:px-8">
+        <div class="max-w-[1440px] mx-auto px-3 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-10">
                     <!-- Desktop: Brand + section nav -->
                     <div class="hidden lg:block text-xl font-bold tracking-tight">Insight</div>
                     <div class="hidden lg:flex gap-1">
-                        <a href="#" class="px-4 py-2 text-sm rounded-lg text-base-400 dark:text-base-400 hover:text-base-600 dark:hover:text-base-200 transition-colors">Home</a>
+                        <a href="home-overview.html" class="px-4 py-2 text-sm rounded-lg text-base-400 dark:text-base-400 hover:text-base-600 dark:hover:text-base-200 transition-colors">Home</a>
                         <a href="#" class="px-4 py-2 text-sm rounded-lg font-medium text-accent-700 dark:text-accent-400 bg-accent-50 dark:bg-accent-700/20">Investment</a>
                         <a href="#" class="px-4 py-2 text-sm rounded-lg text-base-400 dark:text-base-400 hover:text-base-600 dark:hover:text-base-200 transition-colors">Vehicles</a>
                     </div>
@@ -70,7 +72,7 @@
                         <a href="portfolio-overview.html" class="w-9 h-9 rounded-xl bg-base-50 dark:bg-base-700 flex items-center justify-center text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors shrink-0" title="Back to portfolio overview">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                         </a>
-                        <button onclick="document.getElementById('platform-dropdown-mobile').classList.toggle('hidden')" class="flex items-center gap-2 min-w-0">
+                        <button onclick="toggleMobileDropdown('platform-dropdown-mobile')" class="flex items-center gap-2 min-w-0">
                             <img src="icons/icon_nordnet.webp" alt="" class="w-6 min-w-6 h-6 rounded-full object-cover shrink-0 shadow ring-1 ring-black/10">
                             <div class="min-w-0 text-left">
                                 <div class="text-sm font-bold tracking-tight truncate">Nordnet (Aktiesparekonto)</div>
@@ -93,7 +95,7 @@
             </div>
         </div>
         <!-- Mobile Platform Dropdown (slides below nav) -->
-        <div id="platform-dropdown-mobile" class="hidden lg:hidden absolute left-0 right-0 top-full bg-white dark:bg-base-800 border-t border-base-150 dark:border-base-700 shadow-lg z-40 max-h-[calc(100vh-4rem)] overflow-y-auto">
+        <div id="platform-dropdown-mobile" class="lg:hidden absolute left-0 right-0 top-full bg-white dark:bg-base-800 border-t border-base-150 dark:border-base-700 shadow-lg z-40 overflow-hidden transition-all duration-200 ease-out" style="max-height: 0; opacity: 0; pointer-events: none;" data-open="false">
             <div class="max-w-[1440px] mx-auto">
                 <a href="portfolio-overview.html" class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-base-50 dark:hover:bg-base-700 transition-colors border-b border-base-100 dark:border-base-700">
                     <svg class="w-4 h-4 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
@@ -108,7 +110,7 @@
                             <div class="text-sm font-medium">Nordnet (ASK)</div>
                             <div class="flex items-center gap-1.5">
                                 <span class="text-xs text-base-400">DKK</span>
-                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] rounded-full border border-amber-600 dark:border-amber-400">
+                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] font-medium rounded-full border border-amber-600 dark:border-amber-400">
                                     <span class="w-1 h-1 bg-amber-400 rounded-full animate-pulse"></span>Stale
                                 </span>
                             </div>
@@ -168,7 +170,7 @@
                     </a>
                     <!-- Edit Platform action -->
                     <div class="border-t border-base-100 dark:border-base-700 mt-1 pt-1">
-                        <button onclick="document.getElementById('platform-dropdown-mobile').classList.add('hidden'); showDialog('edit-platform-dialog')" class="w-full px-4 py-2.5 flex items-center gap-2 text-sm text-base-400 hover:text-base-600 dark:hover:text-base-300 hover:bg-base-50 dark:hover:bg-base-700/50 transition-colors">
+                        <button onclick="closeMobileDropdown('platform-dropdown-mobile'); showDialog('edit-platform-dialog')" class="w-full px-4 py-2.5 flex items-center gap-2 text-sm text-base-400 hover:text-base-600 dark:hover:text-base-300 hover:bg-base-50 dark:hover:bg-base-700/50 transition-colors">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                             Edit Platform
                         </button>
@@ -178,7 +180,7 @@
         </div>
     </nav>
 
-    <main class="max-w-[1440px] mx-auto px-3 lg:px-6 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+    <main class="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
 
         <!-- Platform Switcher Bar -->
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 lg:mb-8">
@@ -197,7 +199,7 @@
                             <div class="text-lg font-bold tracking-tight leading-tight">Nordnet (Aktiesparekonto)</div>
                             <div class="text-xs text-base-400">Investment · DKK · Updated Jan 31, 2026</div>
                         </div>
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-medium rounded-full border border-amber-700 dark:border-amber-400">
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs font-medium rounded-full border border-amber-600 dark:border-amber-400">
                             <span class="w-1.5 h-1.5 bg-amber-500 dark:bg-amber-400 rounded-full animate-pulse"></span>Stale
                         </span>
                         <svg class="w-4 h-4 text-base-300 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -218,7 +220,7 @@
                                     <div class="text-sm font-medium">Nordnet (ASK)</div>
                                     <div class="flex items-center gap-1.5">
                                         <span class="text-xs text-base-400">DKK</span>
-                                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] rounded-full border border-amber-600 dark:border-amber-400">
+                                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] font-medium rounded-full border border-amber-600 dark:border-amber-400">
                                             <span class="w-1 h-1 bg-amber-400 rounded-full animate-pulse"></span>Stale
                                         </span>
                                     </div>
@@ -291,7 +293,7 @@
             <!-- Action buttons (all sizes) -->
             <div class="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
                 <button onclick="showDialog('add-datapoint-dialog')" class="flex-1 sm:flex-none px-4 py-2 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg hover:border-base-300 dark:hover:border-base-500 transition-colors">+ Add Data Point</button>
-                <button onclick="showDialog('add-transaction-dialog')" class="flex-1 sm:flex-none px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">+ Add Transaction</button>
+                <button onclick="showDialog('add-transaction-dialog')" class="flex-1 sm:flex-none px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">+ Add Transaction</button>
             </div>
         </div>
 
@@ -332,7 +334,7 @@
         <!-- ═══════════════════════════════════════════════════════════ -->
         <!-- Performance Overview (chart + period selector)             -->
         <!-- ═══════════════════════════════════════════════════════════ -->
-        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6">
+        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6 lg:mb-8">
             <div class="p-4 sm:p-6">
                 <div class="flex flex-col gap-3 mb-4 sm:mb-5">
                     <div class="flex items-center justify-between">
@@ -381,7 +383,7 @@
         <!-- ═══════════════════════════════════════════════════════════ -->
         <!-- CARD 1: Performance Analysis (Yearly / Monthly tabs)       -->
         <!-- ═══════════════════════════════════════════════════════════ -->
-        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6">
+        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6 lg:mb-8">
             <!-- Tab Bar -->
             <div class="flex items-center justify-between px-3 lg:px-6 border-b border-base-150 dark:border-base-700">
                 <div class="flex items-center gap-0">
@@ -644,19 +646,146 @@
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════ -->
-        <!-- CARD 2: Transactions                                       -->
+        <!-- CARD 2: Data Points                                        -->
         <!-- ═══════════════════════════════════════════════════════════ -->
-        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6">
-            <div class="px-3 lg:px-6 py-5 flex items-center justify-between border-b border-base-100 dark:border-base-700">
-                <div class="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-3">
-                    <h3 class="text-sm font-semibold">Transactions</h3>
-                    <span class="text-xs text-base-400 bg-base-100 dark:bg-base-700 px-2 py-0.5 rounded-lg w-fit">8 transactions</span>
-                    <button onclick="toggleTable('tx-table')" id="tx-table-collapse" class="hidden text-xs text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors flex items-center gap-1 cursor-pointer">
-                        Show less
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
-                    </button>
+        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6 lg:mb-8">
+            <div class="px-3 lg:px-6 py-5 border-b border-base-100 dark:border-base-700">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-sm font-semibold">Data Points</h3>
+                        <span class="text-xs text-base-400 bg-base-100 dark:bg-base-700 px-2 py-0.5 rounded-full font-medium">6</span>
+                    </div>
+                    <button onclick="showDialog('add-datapoint-dialog')" class="px-4 py-2 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-700 border border-base-200 dark:border-base-600 rounded-lg hover:border-base-300 dark:hover:border-base-500 transition-colors shrink-0">+ Add Data Point</button>
                 </div>
-                <button onclick="showDialog('add-transaction-dialog')" class="px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors shrink-0">+ Add Transaction</button>
+                <button onclick="toggleTable('dp-table')" id="dp-table-collapse" class="hidden mt-2 text-xs text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors items-center gap-1 cursor-pointer">
+                    Show less
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+            <table id="dp-table" class="w-full text-sm sm:min-w-[550px]">
+                <thead>
+                    <tr class="border-b border-base-150 dark:border-base-700 bg-base-50/40 dark:bg-base-900/30">
+                        <th class="text-left font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Date</th>
+                        <th class="text-right font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Value</th>
+                        <th class="hidden sm:table-cell text-left font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Source</th>
+                        <th class="hidden sm:table-cell text-left font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Note</th>
+                        <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs w-16"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors sm:cursor-default cursor-pointer" onclick="openDpDrawer(this)" data-dp='{"date":"2026-02-14","value":"842.391 DKK","source":"Manual","note":"Current balance","interpolated":false}'>
+                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-base-500 dark:text-base-400">2026-02-14</td>
+                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data font-medium">
+                            842.391 DKK
+                            <span class="sm:hidden inline-flex gap-1 ml-1.5 align-middle">
+                                <svg class="w-3.5 h-3.5 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Has note"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                            </span>
+                        </td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5"><span class="text-xs text-base-400">Manual</span></td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-base-400">Current balance</td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-right">
+                            <button class="text-base-300 dark:text-base-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors sm:cursor-default cursor-pointer" onclick="openDpDrawer(this)" data-dp='{"date":"2026-01-31","value":"808.234 DKK","source":"Interpolated","note":"Month-end boundary (estimated from Feb 5 recording)","interpolated":true}'>
+                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-base-500 dark:text-base-400">2026-01-31</td>
+                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data font-medium">
+                            <div class="flex items-center justify-end gap-2">
+                                <span class="text-xs text-amber-500 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-1.5 py-0.5 rounded" title="Interpolated value">est.</span>
+                                808.234 DKK
+                                <svg class="sm:hidden w-3.5 h-3.5 text-base-300 dark:text-base-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Has note"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                            </div>
+                        </td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5"><span class="text-xs text-amber-500 dark:text-amber-400">Interpolated</span></td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-base-400 text-xs">Month-end boundary (estimated from Feb 5 recording)</td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-right">
+                            <button class="text-base-300 dark:text-base-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors" title="Override interpolated value">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors sm:cursor-default cursor-pointer" onclick="openDpDrawer(this)" data-dp='{"date":"2025-12-31","value":"758.234 DKK","source":"Manual","note":"Year-end snapshot","interpolated":false}'>
+                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-base-500 dark:text-base-400">2025-12-31</td>
+                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data font-medium">
+                            758.234 DKK
+                            <span class="sm:hidden inline-flex gap-1 ml-1.5 align-middle">
+                                <svg class="w-3.5 h-3.5 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Has note"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                            </span>
+                        </td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5"><span class="text-xs text-base-400">Manual</span></td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-base-400">Year-end snapshot</td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-right">
+                            <button class="text-base-300 dark:text-base-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors sm:cursor-default cursor-pointer" onclick="openDpDrawer(this)" data-dp='{"date":"2025-11-30","value":"742.891 DKK","source":"Manual","note":"","interpolated":false}'>
+                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-base-500 dark:text-base-400">2025-11-30</td>
+                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data font-medium">742.891 DKK</td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5"><span class="text-xs text-base-400">Manual</span></td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-base-400">—</td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-right">
+                            <button class="text-base-300 dark:text-base-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors sm:cursor-default cursor-pointer" onclick="openDpDrawer(this)" data-dp='{"date":"2025-10-31","value":"698.457 DKK","source":"Manual","note":"Month-end recording","interpolated":false}'>
+                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-base-500 dark:text-base-400">2025-10-31</td>
+                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data font-medium">
+                            698.457 DKK
+                            <span class="sm:hidden inline-flex gap-1 ml-1.5 align-middle">
+                                <svg class="w-3.5 h-3.5 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Has note"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                            </span>
+                        </td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5"><span class="text-xs text-base-400">Manual</span></td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-base-400">Month-end recording</td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-right">
+                            <button class="text-base-300 dark:text-base-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors sm:cursor-default cursor-pointer" onclick="openDpDrawer(this)" data-dp='{"date":"2025-09-30","value":"672.341 DKK","source":"Manual","note":"","interpolated":false}'>
+                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-base-500 dark:text-base-400">2025-09-30</td>
+                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data font-medium">672.341 DKK</td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5"><span class="text-xs text-base-400">Manual</span></td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-base-400">—</td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-right">
+                            <button class="text-base-300 dark:text-base-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+            <button onclick="toggleTable('dp-table')" id="dp-table-toggle" class="w-full py-3 text-xs font-medium text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors flex items-center justify-center gap-1.5 border-t border-base-100 dark:border-base-700/50">
+                <span class="toggle-label">Show all 6 data points</span>
+                <svg class="toggle-icon w-3.5 h-3.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- CARD 4: Transactions                                       -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden">
+            <div class="px-3 lg:px-6 py-5 border-b border-base-100 dark:border-base-700">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-sm font-semibold">Transactions</h3>
+                        <span class="text-xs text-base-400 bg-base-100 dark:bg-base-700 px-2 py-0.5 rounded-full font-medium">8</span>
+                    </div>
+                    <button onclick="showDialog('add-transaction-dialog')" class="px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors shrink-0">+ Add Transaction</button>
+                </div>
+                <button onclick="toggleTable('tx-table')" id="tx-table-collapse" class="hidden mt-2 text-xs text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors items-center gap-1 cursor-pointer">
+                    Show less
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+                </button>
             </div>
             <div class="overflow-x-auto">
             <table id="tx-table" class="w-full text-sm sm:min-w-[600px]">
@@ -816,146 +945,24 @@
             </button>
         </div>
 
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <!-- CARD 4: Data Points                                        -->
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden">
-            <div class="px-3 lg:px-6 py-5 flex items-center justify-between border-b border-base-100 dark:border-base-700">
-                <div class="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-3">
-                    <h3 class="text-sm font-semibold">Data Points</h3>
-                    <span class="text-xs text-base-400 bg-base-100 dark:bg-base-700 px-2 py-0.5 rounded-lg w-fit">6 data points</span>
-                    <button onclick="toggleTable('dp-table')" id="dp-table-collapse" class="hidden text-xs text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors flex items-center gap-1 cursor-pointer">
-                        Show less
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
-                    </button>
-                </div>
-                <button onclick="showDialog('add-datapoint-dialog')" class="px-4 py-2 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-700 border border-base-200 dark:border-base-600 rounded-lg hover:border-base-300 dark:hover:border-base-500 transition-colors shrink-0">+ Add Data Point</button>
-            </div>
-            <div class="overflow-x-auto">
-            <table id="dp-table" class="w-full text-sm sm:min-w-[550px]">
-                <thead>
-                    <tr class="border-b border-base-150 dark:border-base-700 bg-base-50/40 dark:bg-base-900/30">
-                        <th class="text-left font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Date</th>
-                        <th class="text-right font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Value</th>
-                        <th class="hidden sm:table-cell text-left font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Source</th>
-                        <th class="hidden sm:table-cell text-left font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs">Note</th>
-                        <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-3 lg:px-6 py-3 text-xs w-16"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors sm:cursor-default cursor-pointer" onclick="openDpDrawer(this)" data-dp='{"date":"2026-02-14","value":"842.391 DKK","source":"Manual","note":"Current balance","interpolated":false}'>
-                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-base-500 dark:text-base-400">2026-02-14</td>
-                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data font-medium">
-                            842.391 DKK
-                            <span class="sm:hidden inline-flex gap-1 ml-1.5 align-middle">
-                                <svg class="w-3.5 h-3.5 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Has note"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
-                            </span>
-                        </td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5"><span class="text-xs text-base-400">Manual</span></td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-base-400">Current balance</td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-right">
-                            <button class="text-base-300 dark:text-base-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors sm:cursor-default cursor-pointer" onclick="openDpDrawer(this)" data-dp='{"date":"2026-01-31","value":"808.234 DKK","source":"Interpolated","note":"Month-end boundary (estimated from Feb 5 recording)","interpolated":true}'>
-                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-base-500 dark:text-base-400">2026-01-31</td>
-                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data font-medium">
-                            <div class="flex items-center justify-end gap-2">
-                                <span class="text-xs text-amber-500 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-1.5 py-0.5 rounded" title="Interpolated value">est.</span>
-                                808.234 DKK
-                                <svg class="sm:hidden w-3.5 h-3.5 text-base-300 dark:text-base-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Has note"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
-                            </div>
-                        </td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5"><span class="text-xs text-amber-500 dark:text-amber-400">Interpolated</span></td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-base-400 text-xs">Month-end boundary (estimated from Feb 5 recording)</td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-right">
-                            <button class="text-base-300 dark:text-base-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors" title="Override interpolated value">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors sm:cursor-default cursor-pointer" onclick="openDpDrawer(this)" data-dp='{"date":"2025-12-31","value":"758.234 DKK","source":"Manual","note":"Year-end snapshot","interpolated":false}'>
-                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-base-500 dark:text-base-400">2025-12-31</td>
-                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data font-medium">
-                            758.234 DKK
-                            <span class="sm:hidden inline-flex gap-1 ml-1.5 align-middle">
-                                <svg class="w-3.5 h-3.5 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Has note"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
-                            </span>
-                        </td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5"><span class="text-xs text-base-400">Manual</span></td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-base-400">Year-end snapshot</td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-right">
-                            <button class="text-base-300 dark:text-base-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors sm:cursor-default cursor-pointer" onclick="openDpDrawer(this)" data-dp='{"date":"2025-11-30","value":"742.891 DKK","source":"Manual","note":"","interpolated":false}'>
-                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-base-500 dark:text-base-400">2025-11-30</td>
-                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data font-medium">742.891 DKK</td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5"><span class="text-xs text-base-400">Manual</span></td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-base-400">—</td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-right">
-                            <button class="text-base-300 dark:text-base-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors sm:cursor-default cursor-pointer" onclick="openDpDrawer(this)" data-dp='{"date":"2025-10-31","value":"698.457 DKK","source":"Manual","note":"Month-end recording","interpolated":false}'>
-                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-base-500 dark:text-base-400">2025-10-31</td>
-                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data font-medium">
-                            698.457 DKK
-                            <span class="sm:hidden inline-flex gap-1 ml-1.5 align-middle">
-                                <svg class="w-3.5 h-3.5 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Has note"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
-                            </span>
-                        </td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5"><span class="text-xs text-base-400">Manual</span></td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-base-400">Month-end recording</td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-right">
-                            <button class="text-base-300 dark:text-base-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors sm:cursor-default cursor-pointer" onclick="openDpDrawer(this)" data-dp='{"date":"2025-09-30","value":"672.341 DKK","source":"Manual","note":"","interpolated":false}'>
-                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-base-500 dark:text-base-400">2025-09-30</td>
-                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data font-medium">672.341 DKK</td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5"><span class="text-xs text-base-400">Manual</span></td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-base-400">—</td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-right">
-                            <button class="text-base-300 dark:text-base-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            </div>
-            <button onclick="toggleTable('dp-table')" id="dp-table-toggle" class="w-full py-3 text-xs font-medium text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors flex items-center justify-center gap-1.5 border-t border-base-100 dark:border-base-700/50">
-                <span class="toggle-label">Show all 6 data points</span>
-                <svg class="toggle-icon w-3.5 h-3.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-            </button>
-        </div>
-
     </main>
 
     <!-- Shared drawer backdrop (mobile) -->
-    <div id="drawer-backdrop" class="fixed inset-0 bg-black/40 z-40 hidden opacity-0 transition-opacity duration-200" onclick="closeDrawer()"></div>
+    <div id="drawer-backdrop" class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-200" onclick="closeDrawer()"></div>
 
     <!-- Transaction Detail Drawer (mobile) -->
-    <div id="tx-drawer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300 ease-out sm:hidden">
-        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[70vh] overflow-y-auto">
-            <!-- Drag handle -->
+    <div id="tx-drawer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300 ease-out lg:hidden" role="dialog" aria-modal="true">
+        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[85vh] overflow-y-auto">
             <div class="flex justify-center pt-3 pb-1">
                 <div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div>
             </div>
-            <!-- Header -->
-            <div class="px-5 pb-4 pt-2 flex items-center justify-between">
-                <h3 class="font-semibold text-base">Transaction Details</h3>
-                <button onclick="closeDrawer()" class="p-1 -mr-1 text-base-400 hover:text-base-600 dark:hover:text-base-300">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            <div class="px-5 pb-4 pt-2 flex items-center gap-2">
+                <button onclick="navigateTxDrawer(-1)" id="tx-prev" class="shrink-0 p-1.5 -ml-1.5 rounded-lg text-base-300 hover:text-base-600 hover:bg-base-100 dark:hover:text-base-300 dark:hover:bg-base-700 transition-colors disabled:opacity-25 disabled:pointer-events-none" disabled>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <h3 id="tx-title" class="flex-1 text-center font-semibold text-base truncate min-w-0">Transaction Details</h3>
+                <button onclick="navigateTxDrawer(1)" id="tx-next" class="shrink-0 p-1.5 rounded-lg text-base-300 hover:text-base-600 hover:bg-base-100 dark:hover:text-base-300 dark:hover:bg-base-700 transition-colors disabled:opacity-25 disabled:pointer-events-none" disabled>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </button>
             </div>
             <!-- Content -->
@@ -980,27 +987,29 @@
                 </div>
                 <div id="tx-attachment-row">
                     <div class="text-xs text-base-400 mb-1">Attachment</div>
-                    <div id="tx-attachment" class="text-sm"></div>
+                    <div id="tx-attachment" class="text-sm min-h-5 flex items-center"></div>
                 </div>
-                <!-- Actions -->
-                <div class="flex gap-3 pt-2">
-                    <button onclick="editTransactionFromDrawer()" class="flex-1 px-4 py-2.5 text-sm font-medium text-base-700 dark:text-base-200 bg-base-100 dark:bg-base-700 rounded-lg hover:bg-base-200 dark:hover:bg-base-600 transition-colors">Edit</button>
-                    <button onclick="deleteTransactionFromDrawer()" class="px-4 py-2.5 text-sm font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/40 transition-colors">Delete</button>
-                </div>
+            </div>
+            <div class="px-5 py-4 flex gap-3">
+                <button onclick="editTransactionFromDrawer()" class="flex-1 px-4 py-2.5 text-sm font-medium text-base-700 dark:text-base-200 bg-base-100 dark:bg-base-700 rounded-lg hover:bg-base-200 dark:hover:bg-base-600 transition-colors">Edit</button>
+                <button onclick="deleteTransactionFromDrawer()" class="px-4 py-2.5 text-sm font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/40 transition-colors">Delete</button>
             </div>
         </div>
     </div>
 
     <!-- Data Point Detail Drawer (mobile) -->
-    <div id="dp-drawer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300 ease-out sm:hidden">
-        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[70vh] overflow-y-auto">
+    <div id="dp-drawer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300 ease-out lg:hidden" role="dialog" aria-modal="true">
+        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[85vh] overflow-y-auto">
             <div class="flex justify-center pt-3 pb-1">
                 <div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div>
             </div>
-            <div class="px-5 pb-4 pt-2 flex items-center justify-between">
-                <h3 class="font-semibold text-base">Data Point Details</h3>
-                <button onclick="closeDrawer()" class="p-1 -mr-1 text-base-400 hover:text-base-600 dark:hover:text-base-300">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            <div class="px-5 pb-4 pt-2 flex items-center gap-2">
+                <button onclick="navigateDpDrawer(-1)" id="dp-prev" class="shrink-0 p-1.5 -ml-1.5 rounded-lg text-base-300 hover:text-base-600 hover:bg-base-100 dark:hover:text-base-300 dark:hover:bg-base-700 transition-colors disabled:opacity-25 disabled:pointer-events-none" disabled>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <h3 id="dp-title" class="flex-1 text-center font-semibold text-base truncate min-w-0">Data Point Details</h3>
+                <button onclick="navigateDpDrawer(1)" id="dp-next" class="shrink-0 p-1.5 rounded-lg text-base-300 hover:text-base-600 hover:bg-base-100 dark:hover:text-base-300 dark:hover:bg-base-700 transition-colors disabled:opacity-25 disabled:pointer-events-none" disabled>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </button>
             </div>
             <div class="px-5 pb-6 space-y-4">
@@ -1022,32 +1031,27 @@
                     <div class="text-xs text-base-400 mb-1">Note</div>
                     <div id="dp-note" class="text-sm text-base-600 dark:text-base-300"></div>
                 </div>
-                <div class="flex gap-3 pt-2">
-                    <button onclick="editDataPointFromDrawer()" class="flex-1 px-4 py-2.5 text-sm font-medium text-base-700 dark:text-base-200 bg-base-100 dark:bg-base-700 rounded-lg hover:bg-base-200 dark:hover:bg-base-600 transition-colors">Edit</button>
-                    <button onclick="deleteDataPointFromDrawer()" class="px-4 py-2.5 text-sm font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/40 transition-colors">Delete</button>
-                </div>
+            </div>
+            <div class="px-5 py-4 flex gap-3">
+                <button onclick="editDataPointFromDrawer()" class="flex-1 px-4 py-2.5 text-sm font-medium text-base-700 dark:text-base-200 bg-base-100 dark:bg-base-700 rounded-lg hover:bg-base-200 dark:hover:bg-base-600 transition-colors">Edit</button>
+                <button onclick="deleteDataPointFromDrawer()" class="px-4 py-2.5 text-sm font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/40 transition-colors">Delete</button>
             </div>
         </div>
     </div>
 
     <!-- Performance Row Detail Drawer (mobile) -->
-    <div id="perf-drawer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300 ease-out sm:hidden">
-        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[70vh] overflow-y-auto">
+    <div id="perf-drawer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300 ease-out lg:hidden" role="dialog" aria-modal="true">
+        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[85vh] overflow-y-auto">
             <div class="flex justify-center pt-3 pb-1">
                 <div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div>
             </div>
-            <div class="px-5 pb-4 pt-2 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <button onclick="navigatePerfDrawer(-1)" id="perf-prev" class="p-1.5 -ml-1.5 rounded-lg text-base-300 hover:text-base-600 hover:bg-base-100 dark:hover:text-base-300 dark:hover:bg-base-700 transition-colors disabled:opacity-25 disabled:pointer-events-none" disabled>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                    </button>
-                    <h3 id="perf-title" class="font-semibold text-base">Performance Details</h3>
-                    <button onclick="navigatePerfDrawer(1)" id="perf-next" class="p-1.5 rounded-lg text-base-300 hover:text-base-600 hover:bg-base-100 dark:hover:text-base-300 dark:hover:bg-base-700 transition-colors disabled:opacity-25 disabled:pointer-events-none" disabled>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                    </button>
-                </div>
-                <button onclick="closeDrawer()" class="p-1 -mr-1 text-base-400 hover:text-base-600 dark:hover:text-base-300">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            <div class="px-5 pb-4 pt-2 flex items-center gap-2">
+                <button onclick="navigatePerfDrawer(-1)" id="perf-prev" class="shrink-0 p-1.5 -ml-1.5 rounded-lg text-base-300 hover:text-base-600 hover:bg-base-100 dark:hover:text-base-300 dark:hover:bg-base-700 transition-colors disabled:opacity-25 disabled:pointer-events-none" disabled>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <h3 id="perf-title" class="flex-1 text-center font-semibold text-base truncate min-w-0">Performance Details</h3>
+                <button onclick="navigatePerfDrawer(1)" id="perf-next" class="shrink-0 p-1.5 rounded-lg text-base-300 hover:text-base-600 hover:bg-base-100 dark:hover:text-base-300 dark:hover:bg-base-700 transition-colors disabled:opacity-25 disabled:pointer-events-none" disabled>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </button>
             </div>
             <div class="px-5 pb-6 space-y-4">
@@ -1158,7 +1162,7 @@
         }
 
         function openPerfDrawer(row) {
-            if (window.innerWidth >= 640) return;
+            if (window.innerWidth >= 1024) return;
             const table = row.closest('[id$="-table"]');
             perfDrawerState.tableId = table ? table.id : null;
             const rows = table ? Array.from(table.querySelectorAll('tbody tr[data-perf]')) : [];
@@ -1205,6 +1209,7 @@
                 backdrop.classList.remove('opacity-0');
                 drawer.classList.remove('translate-y-full');
             });
+            document.addEventListener('keydown', handleDrawerEscape);
         }
 
         function closeDrawer() {
@@ -1214,27 +1219,66 @@
             }
             backdrop.classList.add('opacity-0');
             setTimeout(() => { backdrop.classList.add('hidden'); activeDrawer = null; }, 200);
+            document.removeEventListener('keydown', handleDrawerEscape);
         }
 
-        function openTxDrawer(row) {
-            if (window.innerWidth >= 640) return;
+        function handleDrawerEscape(e) {
+            if (e.key === 'Escape' && activeDrawer) {
+                closeDrawer();
+            }
+        }
+
+        /* ── Transaction detail drawer ────────────────────── */
+        let txDrawerState = { rowIndex: 0 };
+
+        function populateTxDrawer(row) {
             const tx = JSON.parse(row.dataset.tx);
             const colorMap = { emerald: 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400', rose: 'bg-rose-50 dark:bg-rose-900/30 text-rose-500 dark:text-rose-400' };
+            document.getElementById('tx-title').textContent = tx.type + ' · ' + tx.date;
             document.getElementById('tx-date').textContent = tx.date;
             document.getElementById('tx-type').innerHTML = '<span class="px-2 py-0.5 text-xs font-medium rounded-md ' + (colorMap[tx.typeColor] || '') + '">' + tx.type + '</span>';
             document.getElementById('tx-amount').textContent = tx.amount;
-            const noteRow = document.getElementById('tx-note-row');
-            if (tx.note) { noteRow.classList.remove('hidden'); document.getElementById('tx-note').textContent = tx.note; }
-            else { noteRow.classList.add('hidden'); }
-            const attachRow = document.getElementById('tx-attachment-row');
-            if (tx.attachment) { attachRow.classList.remove('hidden'); document.getElementById('tx-attachment').innerHTML = '<a href="#" class="text-accent-600 dark:text-accent-400 hover:underline inline-flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>' + tx.attachment + '</a>'; }
-            else { attachRow.classList.add('hidden'); }
+            document.getElementById('tx-note').textContent = tx.note || '—';
+            document.getElementById('tx-note').className = tx.note
+                ? 'text-sm text-base-600 dark:text-base-300'
+                : 'text-sm text-base-300 dark:text-base-500';
+            if (tx.attachment) {
+                document.getElementById('tx-attachment').innerHTML = '<a href="#" class="text-accent-600 dark:text-accent-400 hover:underline inline-flex items-center gap-1"><svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg><span class="truncate">' + tx.attachment + '</span></a>';
+            } else {
+                document.getElementById('tx-attachment').innerHTML = '<span class="text-sm text-base-300 dark:text-base-500">—</span>';
+            }
+        }
+
+        function updateTxNavButtons() {
+            const rows = document.querySelectorAll('#tx-table tbody tr[data-tx]');
+            document.getElementById('tx-prev').disabled = txDrawerState.rowIndex <= 0;
+            document.getElementById('tx-next').disabled = txDrawerState.rowIndex >= rows.length - 1;
+        }
+
+        function openTxDrawer(row) {
+            if (window.innerWidth >= 1024) return;
+            const rows = Array.from(document.querySelectorAll('#tx-table tbody tr[data-tx]'));
+            txDrawerState.rowIndex = rows.indexOf(row);
+            populateTxDrawer(row);
+            updateTxNavButtons();
             showDrawer('tx-drawer');
         }
 
-        function openDpDrawer(row) {
-            if (window.innerWidth >= 640) return;
+        function navigateTxDrawer(dir) {
+            const rows = document.querySelectorAll('#tx-table tbody tr[data-tx]');
+            const newIndex = txDrawerState.rowIndex + dir;
+            if (newIndex < 0 || newIndex >= rows.length) return;
+            txDrawerState.rowIndex = newIndex;
+            populateTxDrawer(rows[newIndex]);
+            updateTxNavButtons();
+        }
+
+        /* ── Data point detail drawer ─────────────────────── */
+        let dpDrawerState = { rowIndex: 0 };
+
+        function populateDpDrawer(row) {
             const dp = JSON.parse(row.dataset.dp);
+            document.getElementById('dp-title').textContent = dp.date;
             document.getElementById('dp-date').textContent = dp.date;
             document.getElementById('dp-source').innerHTML = dp.interpolated
                 ? '<span class="text-xs text-amber-500 dark:text-amber-400">Interpolated</span>'
@@ -1242,10 +1286,34 @@
             document.getElementById('dp-value').innerHTML = dp.interpolated
                 ? '<span class="text-xs text-amber-500 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-1.5 py-0.5 rounded mr-2">est.</span>' + dp.value
                 : dp.value;
-            const noteRow = document.getElementById('dp-note-row');
-            if (dp.note) { noteRow.classList.remove('hidden'); document.getElementById('dp-note').textContent = dp.note; }
-            else { noteRow.classList.add('hidden'); }
+            document.getElementById('dp-note').textContent = dp.note || '—';
+            document.getElementById('dp-note').className = dp.note
+                ? 'text-sm text-base-600 dark:text-base-300'
+                : 'text-sm text-base-300 dark:text-base-500';
+        }
+
+        function updateDpNavButtons() {
+            const rows = document.querySelectorAll('#dp-table tbody tr[data-dp]');
+            document.getElementById('dp-prev').disabled = dpDrawerState.rowIndex <= 0;
+            document.getElementById('dp-next').disabled = dpDrawerState.rowIndex >= rows.length - 1;
+        }
+
+        function openDpDrawer(row) {
+            if (window.innerWidth >= 1024) return;
+            const rows = Array.from(document.querySelectorAll('#dp-table tbody tr[data-dp]'));
+            dpDrawerState.rowIndex = rows.indexOf(row);
+            populateDpDrawer(row);
+            updateDpNavButtons();
             showDrawer('dp-drawer');
+        }
+
+        function navigateDpDrawer(dir) {
+            const rows = document.querySelectorAll('#dp-table tbody tr[data-dp]');
+            const newIndex = dpDrawerState.rowIndex + dir;
+            if (newIndex < 0 || newIndex >= rows.length) return;
+            dpDrawerState.rowIndex = newIndex;
+            populateDpDrawer(rows[newIndex]);
+            updateDpNavButtons();
         }
 
         /* ── Collapsible tables ─────────────────────────────── */
@@ -1364,6 +1432,23 @@
 
         initDesktopRowActions();
 
+        /* ── Close platform dropdowns on outside click ───── */
+        document.addEventListener('click', function(e) {
+            const desktopDropdown = document.getElementById('platform-dropdown');
+            const desktopTrigger = desktopDropdown && desktopDropdown.closest('.relative');
+            if (desktopDropdown && !desktopDropdown.classList.contains('hidden')) {
+                if (!desktopTrigger || !desktopTrigger.contains(e.target)) {
+                    desktopDropdown.classList.add('hidden');
+                }
+            }
+            const mobileDropdown = document.getElementById('platform-dropdown-mobile');
+            if (mobileDropdown && mobileDropdown.dataset.open === 'true') {
+                if (!mobileDropdown.contains(e.target) && !e.target.closest('button[onclick*="platform-dropdown-mobile"]')) {
+                    closeMobileDropdown('platform-dropdown-mobile');
+                }
+            }
+        });
+
         /* ── Dialog system ───────────────────────────────── */
         function showDialog(dialogId) {
             const dialog = document.getElementById(dialogId);
@@ -1388,14 +1473,16 @@
             const panel = dialog.querySelector('.dialog-panel');
             if (panel) panel.classList.remove('dialog-open');
             setTimeout(() => { dialog.classList.add('hidden'); }, 300);
-            document.removeEventListener('keydown', handleDialogEscape);
         }
 
         function handleDialogEscape(e) {
             if (e.key === 'Escape') {
-                const openDialogs = document.querySelectorAll('[role="dialog"]:not(.hidden)');
-                if (openDialogs.length) {
-                    closeDialog(openDialogs[openDialogs.length - 1].id);
+                const dialogs = document.querySelectorAll('[role="dialog"]:not(.hidden)');
+                if (dialogs.length > 0) {
+                    closeDialog(dialogs[dialogs.length - 1].id);
+                }
+                if (document.querySelectorAll('[role="dialog"]:not(.hidden)').length === 0) {
+                    document.removeEventListener('keydown', handleDialogEscape);
                 }
             }
         }
@@ -1433,10 +1520,9 @@
             }
             document.getElementById('edit-tx-datetime').value = data.date ? data.date + 'T00:00' : '';
             document.getElementById('edit-tx-note').value = data.note || '';
-            if (data.attachment && data.attachment !== '—') {
-                document.getElementById('edit-tx-attachment-label').textContent = data.attachment;
-            } else {
-                document.getElementById('edit-tx-attachment-label').textContent = 'Choose file...';
+            const attachLabel = document.getElementById('edit-tx-attachment-label');
+            if (attachLabel) {
+                attachLabel.textContent = (data.attachment && data.attachment !== '—') ? data.attachment : 'Choose file...';
             }
         }
 
@@ -1550,6 +1636,27 @@
             confirmDelete('Data Point',
                 '<span class="font-mono-data">' + dp.value + '</span> recorded on <span class="font-mono-data">' + dp.date + '</span>');
         }
+
+        /* ── Mobile dropdown slide animation ─────────────── */
+        function toggleMobileDropdown(id) {
+            const el = document.getElementById(id);
+            if (el.dataset.open === 'true') {
+                closeMobileDropdown(id);
+            } else {
+                el.style.maxHeight = el.scrollHeight + 'px';
+                el.style.opacity = '1';
+                el.style.pointerEvents = 'auto';
+                el.dataset.open = 'true';
+            }
+        }
+
+        function closeMobileDropdown(id) {
+            const el = document.getElementById(id);
+            el.style.maxHeight = '0';
+            el.style.opacity = '0';
+            el.style.pointerEvents = 'none';
+            el.dataset.open = 'false';
+        }
     </script>
 
     <!-- ═══════════════════════════════════════════════════════════ -->
@@ -1560,15 +1667,12 @@
     <div id="add-datapoint-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-datapoint-dialog')"></div>
         <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto translate-y-full sm:translate-y-0 sm:scale-95 sm:opacity-0 transition-all duration-300">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
                 <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
-                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5 flex items-center justify-between">
-                    <h3 class="font-semibold text-base sm:text-lg">Add Data Point</h3>
-                    <button onclick="closeDialog('add-datapoint-dialog')" class="p-1 -mr-1 text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
+                    <h3 class="text-base font-semibold">Add Data Point</h3>
                 </div>
-                <div class="px-5 sm:px-6 pb-2 space-y-4">
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
                     <div>
                         <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Platform Value <span class="text-rose-500">*</span></label>
                         <div class="relative">
@@ -1588,10 +1692,10 @@
                             class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
                     </div>
                 </div>
-                <div class="px-5 sm:px-6 py-4 mt-2 border-t border-base-100 dark:border-base-700 flex items-center justify-end gap-3 bg-base-50/50 dark:bg-base-900/30 sm:rounded-b-2xl">
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
                     <button onclick="closeDialog('add-datapoint-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
                     <button onclick="closeDialog('add-datapoint-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg hover:bg-base-50 dark:hover:bg-base-700 transition-colors">Save & Add Another</button>
-                    <button onclick="closeDialog('add-datapoint-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Add Data Point</button>
+                    <button onclick="closeDialog('add-datapoint-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Add Data Point</button>
                 </div>
             </div>
         </div>
@@ -1601,15 +1705,12 @@
     <div id="add-transaction-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-transaction-dialog')"></div>
         <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto translate-y-full sm:translate-y-0 sm:scale-95 sm:opacity-0 transition-all duration-300">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
                 <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
-                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5 flex items-center justify-between">
-                    <h3 id="tx-dialog-title" class="font-semibold text-base sm:text-lg">Add Transaction</h3>
-                    <button onclick="closeDialog('add-transaction-dialog')" class="p-1 -mr-1 text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
+                    <h3 id="tx-dialog-title" class="text-base font-semibold">Add Transaction</h3>
                 </div>
-                <div class="px-5 sm:px-6 pb-2 space-y-4">
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
                     <!-- Type: Deposit / Withdrawal -->
                     <div>
                         <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Type <span class="text-rose-500">*</span></label>
@@ -1648,17 +1749,16 @@
                     <!-- Attachment -->
                     <div>
                         <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Attachment</label>
-                        <label class="flex items-center gap-2 px-3 py-2.5 text-sm text-base-400 bg-white dark:bg-base-900 border border-dashed border-base-200 dark:border-base-600 rounded-lg cursor-pointer hover:border-base-300 dark:hover:border-base-500 transition-colors">
-                            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
-                            <span>Choose file...</span>
-                            <input type="file" class="hidden">
-                        </label>
+                        <div class="w-full px-3 py-4 border border-dashed border-base-200 dark:border-base-600 rounded-lg bg-base-50 dark:bg-base-700/50 text-center cursor-pointer hover:border-base-300 dark:hover:border-base-500 transition-colors">
+                            <svg class="w-5 h-5 mx-auto mb-1 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                            <span class="text-xs text-base-400">Drop file or click to upload</span>
+                        </div>
                     </div>
                 </div>
-                <div class="px-5 sm:px-6 py-4 mt-2 border-t border-base-100 dark:border-base-700 flex items-center justify-end gap-3 bg-base-50/50 dark:bg-base-900/30 sm:rounded-b-2xl">
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
                     <button onclick="closeDialog('add-transaction-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
                     <button onclick="closeDialog('add-transaction-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg hover:bg-base-50 dark:hover:bg-base-700 transition-colors">Save & Add Another</button>
-                    <button onclick="closeDialog('add-transaction-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Add Transaction</button>
+                    <button onclick="closeDialog('add-transaction-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Add Transaction</button>
                 </div>
             </div>
         </div>
@@ -1668,15 +1768,12 @@
     <div id="edit-transaction-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('edit-transaction-dialog')"></div>
         <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto translate-y-full sm:translate-y-0 sm:scale-95 sm:opacity-0 transition-all duration-300">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
                 <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
-                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5 flex items-center justify-between">
-                    <h3 class="font-semibold text-base sm:text-lg">Edit Transaction</h3>
-                    <button onclick="closeDialog('edit-transaction-dialog')" class="p-1 -mr-1 text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
+                    <h3 class="text-base font-semibold">Edit Transaction</h3>
                 </div>
-                <div class="px-5 sm:px-6 pb-2 space-y-4">
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
                     <div>
                         <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Type <span class="text-rose-500">*</span></label>
                         <div class="flex gap-2">
@@ -1710,16 +1807,15 @@
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Attachment</label>
-                        <label class="flex items-center gap-2 px-3 py-2.5 text-sm text-base-400 bg-white dark:bg-base-900 border border-dashed border-base-200 dark:border-base-600 rounded-lg cursor-pointer hover:border-base-300 dark:hover:border-base-500 transition-colors">
-                            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
-                            <span id="edit-tx-attachment-label">Choose file...</span>
-                            <input type="file" class="hidden">
-                        </label>
+                        <div class="w-full px-3 py-4 border border-dashed border-base-200 dark:border-base-600 rounded-lg bg-base-50 dark:bg-base-700/50 text-center cursor-pointer hover:border-base-300 dark:hover:border-base-500 transition-colors">
+                            <svg class="w-5 h-5 mx-auto mb-1 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                            <span class="text-xs text-base-400">Drop file or click to upload</span>
+                        </div>
                     </div>
                 </div>
-                <div class="px-5 sm:px-6 py-4 mt-2 border-t border-base-100 dark:border-base-700 flex items-center justify-end gap-3 bg-base-50/50 dark:bg-base-900/30 sm:rounded-b-2xl">
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
                     <button onclick="closeDialog('edit-transaction-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
-                    <button onclick="closeDialog('edit-transaction-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Save Changes</button>
+                    <button onclick="closeDialog('edit-transaction-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Save Changes</button>
                 </div>
             </div>
         </div>
@@ -1729,15 +1825,12 @@
     <div id="edit-datapoint-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('edit-datapoint-dialog')"></div>
         <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto translate-y-full sm:translate-y-0 sm:scale-95 sm:opacity-0 transition-all duration-300">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
                 <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
-                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5 flex items-center justify-between">
-                    <h3 class="font-semibold text-base sm:text-lg">Edit Data Point</h3>
-                    <button onclick="closeDialog('edit-datapoint-dialog')" class="p-1 -mr-1 text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
+                    <h3 class="text-base font-semibold">Edit Data Point</h3>
                 </div>
-                <div class="px-5 sm:px-6 pb-2 space-y-4">
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
                     <!-- Interpolation banner (hidden by default) -->
                     <div id="edit-dp-interpolation-banner" class="hidden flex items-start gap-2 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-900/30 rounded-lg">
                         <svg class="w-4 h-4 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -1762,9 +1855,9 @@
                             class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
                     </div>
                 </div>
-                <div class="px-5 sm:px-6 py-4 mt-2 border-t border-base-100 dark:border-base-700 flex items-center justify-end gap-3 bg-base-50/50 dark:bg-base-900/30 sm:rounded-b-2xl">
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
                     <button onclick="closeDialog('edit-datapoint-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
-                    <button onclick="closeDialog('edit-datapoint-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Save Changes</button>
+                    <button onclick="closeDialog('edit-datapoint-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Save Changes</button>
                 </div>
             </div>
         </div>
@@ -1774,15 +1867,12 @@
     <div id="edit-platform-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('edit-platform-dialog')"></div>
         <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto translate-y-full sm:translate-y-0 sm:scale-95 sm:opacity-0 transition-all duration-300">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
                 <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
-                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5 flex items-center justify-between">
-                    <h3 class="font-semibold text-base sm:text-lg">Edit Platform</h3>
-                    <button onclick="closeDialog('edit-platform-dialog')" class="p-1 -mr-1 text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
+                    <h3 class="text-base font-semibold">Edit Platform</h3>
                 </div>
-                <div class="px-5 sm:px-6 pb-2 space-y-4">
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
                     <div class="flex items-start gap-3">
                         <div class="shrink-0">
                             <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Icon <span class="text-rose-500">*</span></label>
@@ -1833,9 +1923,9 @@
                         </div>
                     </div>
                 </div>
-                <div id="edit-platform-footer" class="px-5 sm:px-6 py-4 mt-2 border-t border-base-100 dark:border-base-700 flex items-center justify-end gap-3 bg-base-50/50 dark:bg-base-900/30 sm:rounded-b-2xl">
+                <div id="edit-platform-footer" class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
                     <button onclick="closeDialog('edit-platform-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
-                    <button id="edit-platform-save" onclick="closeDialog('edit-platform-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Save Changes</button>
+                    <button id="edit-platform-save" onclick="closeDialog('edit-platform-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Save Changes</button>
                 </div>
             </div>
         </div>
@@ -1845,18 +1935,20 @@
     <div id="delete-confirm-dialog" class="fixed inset-0 z-[60] hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('delete-confirm-dialog')"></div>
         <div class="fixed inset-0 flex items-center justify-center p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-2xl shadow-xl w-full max-w-sm scale-95 opacity-0 transition-all duration-200">
-                <div class="p-5 sm:p-6">
-                    <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-2xl shadow-xl w-full max-w-sm">
+                <div class="p-6">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center mb-3">
+                            <svg class="w-5 h-5 text-rose-600 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </div>
+                        <h3 id="delete-confirm-title" class="text-base font-semibold mb-1">Delete Transaction?</h3>
+                        <p id="delete-confirm-summary" class="text-sm text-base-500 dark:text-base-400 mb-1">
+                            <span class="font-mono-data">25.000 DKK</span> deposit on <span class="font-mono-data">2026-02-01</span>
+                        </p>
+                        <p class="text-xs text-base-400 dark:text-base-500">This action cannot be undone.</p>
                     </div>
-                    <h3 id="delete-confirm-title" class="font-semibold text-base text-center mb-2">Delete Transaction?</h3>
-                    <p id="delete-confirm-summary" class="text-sm text-base-500 dark:text-base-400 text-center mb-1">
-                        <span class="font-mono-data">25.000 DKK</span> deposit on <span class="font-mono-data">2026-02-01</span>
-                    </p>
-                    <p class="text-xs text-base-400 text-center">This action cannot be undone.</p>
                 </div>
-                <div class="px-5 sm:px-6 py-4 border-t border-base-100 dark:border-base-700 flex items-center justify-end gap-3">
+                <div class="px-6 py-4 flex items-center justify-end gap-3">
                     <button onclick="closeDialog('delete-confirm-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
                     <button onclick="closeDialog('delete-confirm-dialog')" class="px-4 py-2.5 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-colors">Delete</button>
                 </div>
@@ -1867,7 +1959,7 @@
     <!-- Bottom Tab Bar (mobile/tablet) -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-base-800 border-t border-base-150 dark:border-base-700 z-30 lg:hidden">
         <div class="flex items-center justify-around h-16">
-            <a href="#" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400">
+            <a href="home-overview.html" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 <span class="text-[10px] font-medium">Home</span>
             </a>
@@ -1879,7 +1971,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17h2V9l-3-6H6L3 9v8h2m14 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M9 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0"/></svg>
                 <span class="text-[10px] font-medium">Vehicles</span>
             </a>
-            <a href="#" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400">
+            <a href="#" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400" onclick="document.documentElement.classList.toggle('dark')">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 <span class="text-[10px] font-medium">Settings</span>
             </a>

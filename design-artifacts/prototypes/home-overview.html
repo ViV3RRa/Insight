@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home — Insight</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'DM Sans', system-ui, sans-serif; }
+        .font-mono-data { font-family: 'DM Mono', monospace; font-variant-numeric: tabular-nums; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #c4c4c4; border-radius: 3px; }
+        .dark ::-webkit-scrollbar-thumb { background: #525252; }
+        /* Dialog animations */
+        @media (min-width: 640px) {
+            .dialog-panel { transform: scale(0.95); opacity: 0; transition: transform 150ms ease, opacity 250ms ease; }
+            .dialog-panel.dialog-open { transform: scale(1); opacity: 1; transition: all 200ms ease; }
+        }
+        @media (max-width: 639px) {
+            .dialog-panel { transform: translateY(100%); opacity: 0; transition: transform 250ms cubic-bezier(0.32,0.72,0,1), opacity 350ms ease; }
+            .dialog-panel.dialog-open { transform: translateY(0); opacity: 1; transition: all 300ms cubic-bezier(0.32,0.72,0,1); }
+        }
+        /* Custom select arrow */
+        select.form-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%238a8a8a' viewBox='0 0 24 24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-position: right 1rem center;
+            background-repeat: no-repeat;
+            background-size: 1rem;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: {
+                colors: {
+                    'accent': { 50:'#f0fdf4',100:'#dcfce7',200:'#bbf7d0',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d' },
+                    'white': '#fafcfa',
+                    'base': { 50:'#f7f9f7',100:'#f0f2f0',150:'#e7e9e7',200:'#d3d5d3',300:'#afb1af',400:'#898b89',500:'#6a6c6a',600:'#515351',700:'#3c3e3c',800:'#252725',900:'#161816' }
+                },
+                boxShadow: {
+                    'card':'0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04)',
+                    'card-dark':'0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2)'
+                }
+            }}
+        }
+    </script>
+</head>
+<body class="bg-base-100 dark:bg-base-900 text-base-900 dark:text-base-100 antialiased transition-colors duration-200">
+
+    <!-- Nav -->
+    <nav class="bg-white dark:bg-base-800 shadow-card dark:shadow-card-dark sticky top-0 z-30 relative">
+        <div class="max-w-[1440px] mx-auto px-3 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-10">
+                    <!-- Desktop: Brand + section nav -->
+                    <div class="hidden lg:block text-xl font-bold tracking-tight">Insight</div>
+                    <div class="hidden lg:flex gap-1">
+                        <a href="#" class="px-4 py-2 text-sm rounded-lg font-medium text-accent-700 dark:text-accent-400 bg-accent-50 dark:bg-accent-700/20">Home</a>
+                        <a href="portfolio-overview.html" class="px-4 py-2 text-sm rounded-lg text-base-400 dark:text-base-400 hover:text-base-600 dark:hover:text-base-200 transition-colors">Investment</a>
+                        <a href="#" class="px-4 py-2 text-sm rounded-lg text-base-400 dark:text-base-400 hover:text-base-600 dark:hover:text-base-200 transition-colors">Vehicles</a>
+                    </div>
+                    <!-- Mobile/Tablet: Page title in nav -->
+                    <div class="flex lg:hidden items-center gap-2.5">
+                        <div class="min-w-0">
+                            <div class="text-sm font-bold tracking-tight">Home</div>
+                            <div class="text-[11px] text-base-400 mt-0.5">3 utilities · Feb 2026</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Settings (desktop only — on mobile/tablet it's in the bottom tab bar) -->
+                <div class="hidden lg:flex items-center">
+                    <button onclick="document.documentElement.classList.toggle('dark')" class="w-9 h-9 rounded-xl bg-base-150 dark:bg-base-700 flex items-center justify-center text-base-500 dark:text-base-300 hover:bg-base-200 dark:hover:bg-base-600 transition-colors" title="Settings">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+
+        <!-- Page Header (desktop only — on mobile/tablet this is in the nav) -->
+        <div class="hidden lg:flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight mb-1">Home</h1>
+                <p class="text-sm text-base-400">3 utilities tracked · Updated Feb 1, 2026</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="showDialog('add-reading-dialog')" class="px-4 py-2 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg shadow-sm hover:border-base-300 dark:hover:border-base-500 transition-colors">+ Add Reading</button>
+                <button onclick="showDialog('add-bill-dialog')" class="px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">+ Add Bill</button>
+            </div>
+        </div>
+
+        <!-- Mobile/Tablet action buttons -->
+        <div class="flex gap-2 mb-4 lg:hidden">
+            <button onclick="showDialog('add-reading-dialog')" class="flex-1 px-4 py-2 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg shadow-card dark:shadow-card-dark hover:border-base-300 dark:hover:border-base-500 transition-colors">+ Add Reading</button>
+            <button onclick="showDialog('add-bill-dialog')" class="flex-1 px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">+ Add Bill</button>
+        </div>
+
+        <!-- Utility Summary Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:gap-4 mb-6 lg:mb-8">
+
+            <!-- Electricity -->
+            <a href="utility-detail.html" class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark block hover:shadow-lg dark:hover:shadow-[0_1px_3px_rgba(0,0,0,0.4),0_8px_24px_rgba(0,0,0,0.3)] transition-shadow cursor-pointer group relative">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-sm font-semibold">Electricity</div>
+                            <div class="text-xs text-base-400">kWh</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <!-- Stale badge -->
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 text-xs font-medium rounded-full border border-rose-600 dark:border-rose-400">
+                            <span class="w-1.5 h-1.5 bg-rose-500 dark:bg-rose-400 rounded-full animate-pulse"></span>Stale
+                        </span>
+                        <svg class="w-4 h-4 text-base-200 dark:text-base-600 group-hover:text-base-400 dark:group-hover:text-base-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-3">
+                    <div>
+                        <div class="text-[10px] uppercase tracking-wider text-base-300 dark:text-base-500 mb-1">Consumption</div>
+                        <div class="font-mono-data text-xl font-medium">285</div>
+                        <div class="text-xs text-base-400">kWh</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] uppercase tracking-wider text-base-300 dark:text-base-500 mb-1">Cost</div>
+                        <div class="font-mono-data text-xl font-medium">892</div>
+                        <div class="text-xs text-base-400">DKK</div>
+                    </div>
+                </div>
+                <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400 inline-flex items-center gap-0.5 mb-3">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                    -8,7% vs last month
+                </div>
+                <div class="border-t border-base-100 dark:border-base-700 pt-3 grid grid-cols-3 gap-2 text-xs">
+                    <div>
+                        <div class="text-base-300 dark:text-base-500 mb-0.5">YTD Cost</div>
+                        <div class="font-mono-data font-medium">1.870</div>
+                    </div>
+                    <div>
+                        <div class="text-base-300 dark:text-base-500 mb-0.5">Cost/Unit</div>
+                        <div class="font-mono-data font-medium">3,13</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-base-300 dark:text-base-500 mb-0.5">Updated</div>
+                        <div class="font-mono-data">Dec 15</div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Water -->
+            <a href="#" class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark block hover:shadow-lg dark:hover:shadow-[0_1px_3px_rgba(0,0,0,0.4),0_8px_24px_rgba(0,0,0,0.3)] transition-shadow cursor-pointer group">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21c-4.97 0-9-4.03-9-9 0-4.632 8.086-11.118 8.427-11.385a.956.956 0 011.146 0C12.914.882 21 7.368 21 12c0 4.97-4.03 9-9 9z"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-sm font-semibold">Water</div>
+                            <div class="text-xs text-base-400">m³</div>
+                        </div>
+                    </div>
+                    <svg class="w-4 h-4 text-base-200 dark:text-base-600 group-hover:text-base-400 dark:group-hover:text-base-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-3">
+                    <div>
+                        <div class="text-[10px] uppercase tracking-wider text-base-300 dark:text-base-500 mb-1">Consumption</div>
+                        <div class="font-mono-data text-xl font-medium">8,4</div>
+                        <div class="text-xs text-base-400">m³</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] uppercase tracking-wider text-base-300 dark:text-base-500 mb-1">Cost</div>
+                        <div class="font-mono-data text-xl font-medium">314</div>
+                        <div class="text-xs text-base-400">DKK</div>
+                    </div>
+                </div>
+                <div class="font-mono-data text-xs text-rose-500 dark:text-rose-400 inline-flex items-center gap-0.5 mb-3">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
+                    +6,3% vs last month
+                </div>
+                <div class="border-t border-base-100 dark:border-base-700 pt-3 grid grid-cols-3 gap-2 text-xs">
+                    <div>
+                        <div class="text-base-300 dark:text-base-500 mb-0.5">YTD Cost</div>
+                        <div class="font-mono-data font-medium">610</div>
+                    </div>
+                    <div>
+                        <div class="text-base-300 dark:text-base-500 mb-0.5">Cost/Unit</div>
+                        <div class="font-mono-data font-medium">37,38</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-base-300 dark:text-base-500 mb-0.5">Updated</div>
+                        <div class="font-mono-data">Feb 1</div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Heat -->
+            <a href="#" class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark block hover:shadow-lg dark:hover:shadow-[0_1px_3px_rgba(0,0,0,0.4),0_8px_24px_rgba(0,0,0,0.3)] transition-shadow cursor-pointer group relative">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-orange-50 dark:bg-orange-900/30 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-sm font-semibold">Heat</div>
+                            <div class="text-xs text-base-400">MWh</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <!-- Stale badge -->
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs font-medium rounded-full border border-amber-600 dark:border-amber-400">
+                            <span class="w-1.5 h-1.5 bg-amber-500 dark:bg-amber-400 rounded-full animate-pulse"></span>Stale
+                        </span>
+                        <svg class="w-4 h-4 text-base-200 dark:text-base-600 group-hover:text-base-400 dark:group-hover:text-base-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-3">
+                    <div>
+                        <div class="text-[10px] uppercase tracking-wider text-base-300 dark:text-base-500 mb-1">Consumption</div>
+                        <div class="font-mono-data text-xl font-medium">1,2</div>
+                        <div class="text-xs text-base-400">MWh</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] uppercase tracking-wider text-base-300 dark:text-base-500 mb-1">Cost</div>
+                        <div class="font-mono-data text-xl font-medium">1.128</div>
+                        <div class="text-xs text-base-400">DKK</div>
+                    </div>
+                </div>
+                <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400 inline-flex items-center gap-0.5 mb-3">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                    -33,3% vs last month
+                </div>
+                <div class="border-t border-base-100 dark:border-base-700 pt-3 grid grid-cols-3 gap-2 text-xs">
+                    <div>
+                        <div class="text-base-300 dark:text-base-500 mb-0.5">YTD Cost</div>
+                        <div class="font-mono-data font-medium">2.820</div>
+                    </div>
+                    <div>
+                        <div class="text-base-300 dark:text-base-500 mb-0.5">Cost/Unit</div>
+                        <div class="font-mono-data font-medium">940</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-base-300 dark:text-base-500 mb-0.5">Updated</div>
+                        <div class="font-mono-data">Jan 28</div>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- YoY Comparison Row -->
+        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark px-4 sm:px-5 py-3.5 mb-6 lg:mb-8">
+            <div class="flex items-center gap-2 mb-2.5">
+                <svg class="w-3.5 h-3.5 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                <span class="text-xs font-medium text-base-400 dark:text-base-500">Year-over-Year · Same period last year (Jan 1 – Feb 17, 2025)</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6">
+                <div class="flex items-center justify-between sm:block">
+                    <div>
+                        <div class="text-[10px] text-base-300 dark:text-base-500 uppercase tracking-wider mb-1">YTD Total Cost</div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="font-mono-data text-sm font-medium text-emerald-600 dark:text-emerald-400">5.300</span>
+                            <span class="font-mono-data text-xs text-base-300 dark:text-base-500">vs 5.844</span>
+                        </div>
+                    </div>
+                    <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400 sm:mt-0.5 inline-flex items-center gap-0.5">
+                        -9,3%<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between sm:block border-t border-base-100 dark:border-base-700 pt-3 sm:border-0 sm:pt-0">
+                    <div>
+                        <div class="text-[10px] text-base-300 dark:text-base-500 uppercase tracking-wider mb-1">Current Month Cost</div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="font-mono-data text-sm font-medium text-emerald-600 dark:text-emerald-400">2.334</span>
+                            <span class="font-mono-data text-xs text-base-300 dark:text-base-500">vs 2.712</span>
+                        </div>
+                    </div>
+                    <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400 sm:mt-0.5 inline-flex items-center gap-0.5">
+                        -13,9%<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between sm:block border-t border-base-100 dark:border-base-700 pt-3 sm:border-0 sm:pt-0">
+                    <div>
+                        <div class="text-[10px] text-base-300 dark:text-base-500 uppercase tracking-wider mb-1">Avg Cost/kWh (Elec.)</div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="font-mono-data text-sm font-medium">3,13</span>
+                            <span class="font-mono-data text-xs text-base-300 dark:text-base-500">vs 3,32</span>
+                        </div>
+                    </div>
+                    <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400 sm:mt-0.5 inline-flex items-center gap-0.5">
+                        -5,7%<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Consumption & Cost Charts -->
+        <div class="mb-6 lg:mb-8">
+
+                <!-- Combined Utility Chart -->
+                <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark p-4 sm:p-6">
+                    <div class="flex flex-col gap-3 mb-4 sm:mb-5">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-semibold">Monthly Overview</h3>
+                            <div class="flex items-center gap-2">
+                                <!-- YoY toggle -->
+                                <button onclick="this.classList.toggle('yoy-active'); this.classList.toggle('bg-accent-50'); this.classList.toggle('dark:bg-accent-700/20'); this.classList.toggle('text-accent-600'); this.classList.toggle('dark:text-accent-400'); this.classList.toggle('border-accent-200'); this.classList.toggle('dark:border-accent-600'); this.classList.toggle('text-base-400'); this.classList.toggle('border-base-200'); this.classList.toggle('dark:border-base-600')" class="px-2.5 py-1 text-xs rounded-lg border text-base-400 border-base-200 dark:border-base-600 hover:border-base-300 dark:hover:border-base-500 transition-colors flex items-center gap-1.5">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                                    YoY
+                                </button>
+                                <!-- Mode toggle -->
+                                <div class="flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5">
+                                    <button onclick="setChartMode('consumption', this)" class="chart-mode-btn px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm">Consumption</button>
+                                    <button onclick="setChartMode('cost', this)" class="chart-mode-btn px-2.5 py-1 text-xs rounded-md text-base-400">Cost</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sm:flex sm:justify-end">
+                            <!-- Dropdown for narrow screens (<410px) -->
+                            <select class="min-[410px]:hidden w-full px-3 py-2 text-sm bg-base-100 dark:bg-base-700 border border-base-200 dark:border-base-600 rounded-lg text-base-900 dark:text-base-100 focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                                <option>1M</option>
+                                <option>3M</option>
+                                <option>6M</option>
+                                <option>MTD</option>
+                                <option selected>YTD</option>
+                                <option>1Y</option>
+                                <option>3Y</option>
+                                <option>5Y</option>
+                                <option>All</option>
+                            </select>
+                            <!-- Pills for wider screens (≥410px) -->
+                            <div class="hidden min-[410px]:flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5 w-full sm:w-fit">
+                                <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">1M</button>
+                                <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">3M</button>
+                                <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">6M</button>
+                                <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">MTD</button>
+                                <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm text-center">YTD</button>
+                                <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">1Y</button>
+                                <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">3Y</button>
+                                <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">5Y</button>
+                                <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">All</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Chart placeholder -->
+                    <div class="h-64 sm:h-80 rounded-xl border-2 border-dashed border-base-200 dark:border-base-600 flex items-center justify-center">
+                        <div class="text-center text-base-300 dark:text-base-500">
+                            <div class="text-sm font-medium mb-1">[Grouped Bar Chart — YTD]</div>
+                            <div class="text-xs">Monthly consumption per utility (kWh, m³, MWh)</div>
+                            <div class="text-xs mt-0.5">Toggle to Cost for monthly cost bars (DKK)</div>
+                            <div class="flex items-center justify-center gap-4 mt-3">
+                                <div class="flex items-center gap-1.5">
+                                    <div class="w-3 h-3 rounded-sm bg-amber-500"></div>
+                                    <span class="text-xs">Electricity</span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <div class="w-3 h-3 rounded-sm bg-blue-500"></div>
+                                    <span class="text-xs">Water</span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <div class="w-3 h-3 rounded-sm bg-orange-500"></div>
+                                    <span class="text-xs">Heat</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+
+
+    </main>
+
+    <!-- Mobile Bottom Tab Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-base-800 border-t border-base-150 dark:border-base-700 z-30 lg:hidden">
+        <div class="flex items-center justify-around h-16">
+            <a href="#" class="flex flex-col items-center gap-1 px-4 py-2 text-accent-600 dark:text-accent-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span class="text-[10px] font-medium">Home</span>
+            </a>
+            <a href="portfolio-overview.html" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                <span class="text-[10px] font-medium">Investment</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17h2V9l-3-6H6L3 9v8h2m14 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M9 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0"/></svg>
+                <span class="text-[10px] font-medium">Vehicles</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400" onclick="document.documentElement.classList.toggle('dark')">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span class="text-[10px] font-medium">Settings</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- ============================================ -->
+    <!-- DIALOGS                                      -->
+    <!-- ============================================ -->
+
+    <!-- Add Reading Dialog -->
+    <div id="add-reading-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-reading-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+                <!-- Mobile drag handle -->
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <!-- Header -->
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
+                    <h3 class="text-base font-semibold">Add Reading</h3>
+                </div>
+                <!-- Form -->
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Utility <span class="text-rose-500">*</span></label>
+                        <select class="form-select w-full px-3 py-2.5 pr-10 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                            <option>Electricity (kWh)</option>
+                            <option>Water (m³)</option>
+                            <option>Heat (MWh)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Meter Reading (cumulative) <span class="text-rose-500">*</span></label>
+                        <input type="number" step="0.01" placeholder="e.g. 42845" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm font-mono-data focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Date & Time <span class="text-rose-500">*</span></label>
+                        <input type="datetime-local" value="2026-02-18T09:00" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label>
+                        <input type="text" placeholder="e.g. Meter replaced, reading reset" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Attachment</label>
+                        <div class="w-full px-3 py-4 border border-dashed border-base-200 dark:border-base-600 rounded-lg bg-base-50 dark:bg-base-700/50 text-center cursor-pointer hover:border-base-300 dark:hover:border-base-500 transition-colors">
+                            <svg class="w-5 h-5 mx-auto mb-1 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                            <span class="text-xs text-base-400">Drop file or click to upload</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Footer -->
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('add-reading-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-reading-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 hover:bg-base-800 dark:hover:bg-accent-700 rounded-lg transition-colors">Save Reading</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Bill Dialog -->
+    <div id="add-bill-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-bill-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <!-- Header -->
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
+                    <h3 class="text-base font-semibold">Add Bill</h3>
+                </div>
+                <!-- Form -->
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Utility <span class="text-rose-500">*</span></label>
+                        <select class="form-select w-full px-3 py-2.5 pr-10 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                            <option>Electricity (kWh)</option>
+                            <option>Water (m³)</option>
+                            <option>Heat (MWh)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Amount (DKK) <span class="text-rose-500">*</span></label>
+                        <input type="number" step="0.01" placeholder="e.g. 12036" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm font-mono-data focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Period Start <span class="text-rose-500">*</span></label>
+                            <input type="date" value="2025-01-01" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Period End <span class="text-rose-500">*</span></label>
+                            <input type="date" value="2025-12-31" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label>
+                        <input type="text" placeholder="e.g. Annual settlement bill" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Attachment</label>
+                        <div class="w-full px-3 py-4 border border-dashed border-base-200 dark:border-base-600 rounded-lg bg-base-50 dark:bg-base-700/50 text-center cursor-pointer hover:border-base-300 dark:hover:border-base-500 transition-colors">
+                            <svg class="w-5 h-5 mx-auto mb-1 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                            <span class="text-xs text-base-400">Drop file or click to upload</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Footer -->
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('add-bill-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-bill-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 hover:bg-base-800 dark:hover:bg-accent-700 rounded-lg transition-colors">Save Bill</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showDialog(dialogId) {
+            const dialog = document.getElementById(dialogId);
+            if (!dialog) return;
+            dialog.classList.remove('hidden');
+            const dtInput = dialog.querySelector('input[type="datetime-local"]:not([id^="edit-"])');
+            if (dtInput && !dtInput.value) {
+                dtInput.value = new Date().toISOString().slice(0, 16);
+            }
+            requestAnimationFrame(() => {
+                const panel = dialog.querySelector('.dialog-panel');
+                if (panel) panel.classList.add('dialog-open');
+            });
+            document.addEventListener('keydown', handleDialogEscape);
+        }
+        function closeDialog(dialogId) {
+            const dialog = document.getElementById(dialogId);
+            if (!dialog) return;
+            const panel = dialog.querySelector('.dialog-panel');
+            if (panel) panel.classList.remove('dialog-open');
+            setTimeout(() => { dialog.classList.add('hidden'); }, 300);
+        }
+        function handleDialogEscape(e) {
+            if (e.key === 'Escape') {
+                const dialogs = document.querySelectorAll('[role="dialog"]:not(.hidden)');
+                if (dialogs.length > 0) {
+                    closeDialog(dialogs[dialogs.length - 1].id);
+                }
+                if (document.querySelectorAll('[role="dialog"]:not(.hidden)').length === 0) {
+                    document.removeEventListener('keydown', handleDialogEscape);
+                }
+            }
+        }
+        function setChartMode(mode, btn) {
+            document.querySelectorAll('.chart-mode-btn').forEach(b => {
+                b.className = 'chart-mode-btn px-2.5 py-1 text-xs rounded-md text-base-400';
+            });
+            btn.className = 'chart-mode-btn px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm';
+        }
+    </script>
+</body>
+</html>

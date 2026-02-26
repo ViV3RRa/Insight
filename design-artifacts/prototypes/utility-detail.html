@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electricity — Insight</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'DM Sans', system-ui, sans-serif; }
+        .font-mono-data { font-family: 'DM Mono', monospace; font-variant-numeric: tabular-nums; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #c4c4c4; border-radius: 3px; }
+        .dark ::-webkit-scrollbar-thumb { background: #525252; }
+        @media (min-width: 640px) {
+            .dialog-panel { transform: scale(0.95); opacity: 0; transition: transform 150ms ease, opacity 250ms ease; }
+            .dialog-panel.dialog-open { transform: scale(1); opacity: 1; transition: all 200ms ease; }
+        }
+        @media (max-width: 639px) {
+            .dialog-panel { transform: translateY(100%); opacity: 0; transition: transform 250ms cubic-bezier(0.32,0.72,0,1), opacity 350ms ease; }
+            .dialog-panel.dialog-open { transform: translateY(0); opacity: 1; transition: all 300ms cubic-bezier(0.32,0.72,0,1); }
+        }
+        select.form-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%238a8a8a' viewBox='0 0 24 24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-position: right 1rem center;
+            background-repeat: no-repeat;
+            background-size: 1rem;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: {
+                colors: {
+                    'accent': { 50:'#f0fdf4',100:'#dcfce7',200:'#bbf7d0',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d' },
+                    'white': '#fafcfa',
+                    'base': { 50:'#f7f9f7',100:'#f0f2f0',150:'#e7e9e7',200:'#d3d5d3',300:'#afb1af',400:'#898b89',500:'#6a6c6a',600:'#515351',700:'#3c3e3c',800:'#252725',900:'#161816' }
+                },
+                boxShadow: {
+                    'card':'0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04)',
+                    'card-dark':'0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2)'
+                }
+            }}
+        }
+    </script>
+</head>
+<body class="bg-base-100 dark:bg-base-900 text-base-900 dark:text-base-100 antialiased transition-colors duration-200">
+
+    <!-- Nav -->
+    <nav class="relative bg-white dark:bg-base-800 shadow-card dark:shadow-card-dark sticky top-0 z-30">
+        <div class="max-w-[1440px] mx-auto px-3 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-10">
+                    <div class="hidden lg:block text-xl font-bold tracking-tight">Insight</div>
+                    <div class="hidden lg:flex gap-1">
+                        <a href="home-overview.html" class="px-4 py-2 text-sm rounded-lg font-medium text-accent-700 dark:text-accent-400 bg-accent-50 dark:bg-accent-700/20">Home</a>
+                        <a href="portfolio-overview.html" class="px-4 py-2 text-sm rounded-lg text-base-400 hover:text-base-600 dark:hover:text-base-200 transition-colors">Investment</a>
+                        <a href="#" class="px-4 py-2 text-sm rounded-lg text-base-400 hover:text-base-600 dark:hover:text-base-200 transition-colors">Vehicles</a>
+                    </div>
+                    <!-- Mobile/Tablet: Back + Utility name in nav -->
+                    <div class="flex lg:hidden items-center gap-2.5">
+                        <a href="home-overview.html" class="w-9 h-9 rounded-xl bg-base-50 dark:bg-base-700 flex items-center justify-center text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        </a>
+                        <button onclick="toggleMobileDropdown('utility-dropdown-mobile')" class="flex items-center gap-2 min-w-0">
+                            <div class="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center shrink-0">
+                                <svg class="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                            </div>
+                            <div class="min-w-0 text-left">
+                                <div class="text-sm font-bold tracking-tight truncate">Electricity</div>
+                                <div class="text-[11px] text-base-400">kWh · Updated Dec 15</div>
+                            </div>
+                            <svg class="w-3.5 h-3.5 text-base-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <!-- Stale badge (mobile/tablet, right-aligned) -->
+                <span class="lg:hidden inline-flex items-center gap-2 px-3.5 py-1.5 bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 text-sm font-semibold rounded-full shrink-0 border border-rose-700 dark:border-rose-400">
+                    <span class="w-2 h-2 bg-rose-500 dark:bg-rose-400 rounded-full animate-pulse"></span>Stale
+                </span>
+                <!-- Settings (desktop only — on mobile/tablet it's in the bottom tab bar) -->
+                <div class="hidden lg:flex items-center">
+                    <button onclick="document.documentElement.classList.toggle('dark')" class="w-9 h-9 rounded-xl bg-base-150 dark:bg-base-700 flex items-center justify-center text-base-500 dark:text-base-300 hover:bg-base-200 dark:hover:bg-base-600 transition-colors" title="Settings">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Utility Dropdown -->
+        <div id="utility-dropdown-mobile" class="lg:hidden absolute left-0 right-0 top-full bg-white dark:bg-base-800 border-t border-base-150 dark:border-base-700 shadow-lg z-40 overflow-hidden transition-all duration-200 ease-out" style="max-height: 0; opacity: 0; pointer-events: none;" data-open="false">
+            <div class="max-w-[1440px] mx-auto">
+                <a href="home-overview.html" class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-base-50 dark:hover:bg-base-700 transition-colors border-b border-base-100 dark:border-base-700">
+                    <svg class="w-4 h-4 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                    <span class="font-medium">Home Overview</span>
+                </a>
+                <div class="py-1">
+                    <!-- Active utility -->
+                    <div class="flex items-center gap-3 px-4 py-2.5 bg-accent-50/50 dark:bg-accent-900/15 border-l-2 border-accent-600 dark:border-accent-400">
+                        <div class="w-6 h-6 rounded-md bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center shrink-0">
+                            <svg class="w-3 h-3 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-medium">Electricity</div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-xs text-base-400">kWh</span>
+                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 text-[10px] font-medium rounded-full border border-rose-600 dark:border-rose-400"><span class="w-1 h-1 bg-rose-400 rounded-full animate-pulse"></span>Stale</span>
+                            </div>
+                        </div>
+                        <div class="font-mono-data text-sm">285 kWh</div>
+                    </div>
+                    <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-base-50 dark:hover:bg-base-700 transition-colors">
+                        <div class="w-6 h-6 rounded-md bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
+                            <svg class="w-3 h-3 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21c-4.97 0-9-4.03-9-9 0-4.632 8.086-11.118 8.427-11.385a.956.956 0 011.146 0C12.914.882 21 7.368 21 12c0 4.97-4.03 9-9 9z"/></svg>
+                        </div>
+                        <div class="flex-1"><div class="text-sm font-medium">Water</div><div class="text-xs text-base-400">m³</div></div>
+                        <div class="font-mono-data text-sm">8,4 m³</div>
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-base-50 dark:hover:bg-base-700 transition-colors">
+                        <div class="w-6 h-6 rounded-md bg-orange-50 dark:bg-orange-900/30 flex items-center justify-center shrink-0">
+                            <svg class="w-3 h-3 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-medium">Heat</div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-xs text-base-400">MWh</span>
+                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] font-medium rounded-full border border-amber-600 dark:border-amber-400"><span class="w-1 h-1 bg-amber-400 rounded-full animate-pulse"></span>Stale</span>
+                            </div>
+                        </div>
+                        <div class="font-mono-data text-sm">1,2 MWh</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+
+        <!-- Desktop: Utility Switcher Bar -->
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 lg:mb-8">
+            <div class="hidden lg:flex items-center gap-3">
+                <a href="home-overview.html" class="w-9 h-9 rounded-xl bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 flex items-center justify-center text-base-400 hover:text-base-600 dark:hover:text-base-300 hover:border-base-300 dark:hover:border-base-500 transition-colors shadow-sm" title="Back to Home">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </a>
+                <div class="relative">
+                    <button onclick="document.getElementById('utility-dropdown').classList.toggle('hidden')" class="flex items-center gap-3 pl-4 pr-3 py-2.5 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-xl shadow-sm hover:border-base-300 dark:hover:border-base-500 transition-colors">
+                        <div class="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center shrink-0">
+                            <svg class="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </div>
+                        <div class="text-left">
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg font-bold tracking-tight leading-tight">Electricity</span>
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 text-xs font-medium rounded-full border border-rose-600 dark:border-rose-400">
+                                    <span class="w-1.5 h-1.5 bg-rose-500 dark:bg-rose-400 rounded-full animate-pulse"></span>Stale
+                                </span>
+                            </div>
+                            <div class="text-xs text-base-400">kWh · Updated Dec 15, 2025</div>
+                        </div>
+                        <svg class="w-4 h-4 text-base-300 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <!-- Desktop Dropdown -->
+                    <div id="utility-dropdown" class="hidden absolute top-full left-0 mt-2 w-[340px] bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-xl shadow-lg z-20 overflow-hidden">
+                        <a href="home-overview.html" class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-base-50 dark:hover:bg-base-700 transition-colors border-b border-base-100 dark:border-base-700">
+                            <svg class="w-4 h-4 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                            <span class="font-medium">Home Overview</span>
+                        </a>
+                        <div class="py-1">
+                            <div class="flex items-center gap-3 px-4 py-2.5 bg-accent-50/50 dark:bg-accent-900/15 border-l-2 border-accent-600 dark:border-accent-400">
+                                <div class="w-6 h-6 rounded-md bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center shrink-0"><svg class="w-3 h-3 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+                                <div class="flex-1">
+                                    <div class="text-sm font-medium">Electricity</div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-xs text-base-400">kWh</span>
+                                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 text-[10px] font-medium rounded-full border border-rose-600 dark:border-rose-400"><span class="w-1 h-1 bg-rose-400 rounded-full animate-pulse"></span>Stale</span>
+                                    </div>
+                                </div>
+                                <div class="font-mono-data text-sm text-base-400">285 kWh</div>
+                            </div>
+                            <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-base-50 dark:hover:bg-base-700 transition-colors cursor-pointer">
+                                <div class="w-6 h-6 rounded-md bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0"><svg class="w-3 h-3 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21c-4.97 0-9-4.03-9-9 0-4.632 8.086-11.118 8.427-11.385a.956.956 0 011.146 0C12.914.882 21 7.368 21 12c0 4.97-4.03 9-9 9z"/></svg></div>
+                                <div class="flex-1"><div class="text-sm font-medium">Water</div><div class="text-xs text-base-400">m³</div></div>
+                                <div class="font-mono-data text-sm text-base-400">8,4 m³</div>
+                            </a>
+                            <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-base-50 dark:hover:bg-base-700 transition-colors cursor-pointer">
+                                <div class="w-6 h-6 rounded-md bg-orange-50 dark:bg-orange-900/30 flex items-center justify-center shrink-0"><svg class="w-3 h-3 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg></div>
+                                <div class="flex-1">
+                                    <div class="text-sm font-medium">Heat</div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-xs text-base-400">MWh</span>
+                                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] font-medium rounded-full border border-amber-600 dark:border-amber-400"><span class="w-1 h-1 bg-amber-400 rounded-full animate-pulse"></span>Stale</span>
+                                    </div>
+                                </div>
+                                <div class="font-mono-data text-sm text-base-400">1,2 MWh</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Action buttons -->
+            <div class="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+                <button onclick="showDialog('add-reading-dialog')" class="flex-1 sm:flex-none px-4 py-2 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg hover:border-base-300 dark:hover:border-base-500 transition-colors">+ Add Reading</button>
+                <button onclick="showDialog('add-bill-dialog')" class="flex-1 sm:flex-none px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">+ Add Bill</button>
+            </div>
+        </div>
+
+        <!-- Summary KPI Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 lg:gap-4 mb-6 lg:mb-8">
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">This Month</div>
+                <div class="font-mono-data text-xl font-medium">285</div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">kWh</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">This Month Cost</div>
+                <div class="font-mono-data text-xl font-medium">892</div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">DKK</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">vs Last Month</div>
+                <div class="font-mono-data text-xl font-medium text-emerald-600 dark:text-emerald-400">-8,7<span class="text-xs">%</span></div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">312 → 285 kWh</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">YTD Consumption</div>
+                <div class="font-mono-data text-xl font-medium">597</div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">kWh</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">YTD Cost</div>
+                <div class="font-mono-data text-xl font-medium">1.870</div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">DKK</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">Cost per Unit</div>
+                <div class="font-mono-data text-xl font-medium">3,13</div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">DKK/kWh</div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark p-4 sm:p-6 mb-6 lg:mb-8">
+            <div class="flex flex-col gap-3 mb-4 sm:mb-5">
+                <div class="flex items-center justify-between gap-2">
+                    <h3 class="text-sm font-semibold">Consumption & Cost</h3>
+                    <div class="flex items-center gap-2">
+                        <button class="px-2.5 py-1 text-xs rounded-lg border text-base-400 border-base-200 dark:border-base-600 hover:border-base-300 transition-colors flex items-center gap-1.5">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>YoY
+                        </button>
+                        <!-- Chart type toggle: desktop only (sm+) -->
+                        <div class="hidden sm:flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5">
+                            <button class="px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm">Consumption</button>
+                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400">Cost</button>
+                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400">Cost/Unit</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Chart type toggle: mobile only, full-width -->
+                <div class="sm:hidden flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5">
+                    <button class="flex-1 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm text-center">Consumption</button>
+                    <button class="flex-1 py-1 text-xs rounded-md text-base-400 text-center">Cost</button>
+                    <button class="flex-1 py-1 text-xs rounded-md text-base-400 text-center">Cost/Unit</button>
+                </div>
+                <div class="sm:flex sm:justify-end">
+                    <!-- Dropdown for narrow screens (<410px) -->
+                    <select class="min-[410px]:hidden w-full px-3 py-2 text-sm bg-base-100 dark:bg-base-700 border border-base-200 dark:border-base-600 rounded-lg text-base-900 dark:text-base-100 focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                        <option>1M</option>
+                        <option>3M</option>
+                        <option>6M</option>
+                        <option>MTD</option>
+                        <option selected>YTD</option>
+                        <option>1Y</option>
+                        <option>3Y</option>
+                        <option>5Y</option>
+                        <option>All</option>
+                    </select>
+                    <!-- Pills for wider screens (≥410px) -->
+                    <div class="hidden min-[410px]:flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5 w-full sm:w-fit">
+                        <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 text-center">1M</button>
+                        <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 text-center">3M</button>
+                        <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 text-center">6M</button>
+                        <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 text-center">MTD</button>
+                        <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm text-center">YTD</button>
+                        <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 text-center">1Y</button>
+                        <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 text-center">3Y</button>
+                        <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 text-center">5Y</button>
+                        <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 text-center">All</button>
+                    </div>
+                </div>
+            </div>
+            <div class="h-64 sm:h-80 rounded-xl border-2 border-dashed border-base-200 dark:border-base-600 flex items-center justify-center">
+                <div class="text-center text-base-300 dark:text-base-500">
+                    <div class="text-sm font-medium mb-1">[Bar Chart — Monthly Consumption — YTD]</div>
+                    <div class="text-xs">Amber bars for each month's kWh consumption</div>
+                    <div class="text-xs mt-0.5">Toggle to Cost or Cost/Unit for different views</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yearly Data Table (inline collapsible rows) -->
+        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6 lg:mb-8">
+            <div class="px-3 lg:px-6 py-5">
+                <h3 class="text-sm font-semibold">Yearly Summary</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table id="utility-yearly-table" class="w-full">
+                    <thead class="bg-base-50/40 dark:bg-base-900/30">
+                        <tr class="border-t border-base-100 dark:border-base-700">
+                            <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-base-300 dark:text-base-500"></th>
+                            <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-base-300 dark:text-base-500">Year</th>
+                            <th class="px-3 lg:px-6 py-3 text-right text-xs font-medium text-base-300 dark:text-base-500">Total Consump.</th>
+                            <th class="hidden lg:table-cell px-3 lg:px-6 py-3 text-right text-xs font-medium text-base-300 dark:text-base-500">Avg Monthly</th>
+                            <th class="hidden lg:table-cell px-3 lg:px-6 py-3 text-right text-xs font-medium text-base-300 dark:text-base-500">Consump. Change</th>
+                            <th class="hidden lg:table-cell px-3 lg:px-6 py-3 text-right text-xs font-medium text-base-300 dark:text-base-500">Total Cost</th>
+                            <th class="hidden lg:table-cell px-3 lg:px-6 py-3 text-right text-xs font-medium text-base-300 dark:text-base-500">Avg Mo. Cost</th>
+                            <th class="hidden lg:table-cell px-3 lg:px-6 py-3 text-right text-xs font-medium text-base-300 dark:text-base-500">Avg Cost/Unit</th>
+                            <th class="hidden lg:table-cell px-3 lg:px-6 py-3 text-right text-xs font-medium text-base-300 dark:text-base-500">Cost Change</th>
+                            <th class="lg:hidden px-3 lg:px-6 py-3 text-right text-xs font-medium text-base-300 dark:text-base-500">
+                                <button onclick="cycleColumn(event, 'utility-yearly-table')" class="inline-flex flex-col items-end gap-1">
+                                    <span class="flex items-center gap-1.5">
+                                        <span class="grid justify-items-end">
+                                            <span class="cycle-header [grid-area:1/1]" data-col="avgMonthly">Avg Monthly</span>
+                                            <span class="cycle-header [grid-area:1/1] invisible" data-col="consumpChange">Consump. %</span>
+                                            <span class="cycle-header [grid-area:1/1] invisible" data-col="totalCost">Total Cost</span>
+                                            <span class="cycle-header [grid-area:1/1] invisible" data-col="avgMoCost">Avg Mo. Cost</span>
+                                            <span class="cycle-header [grid-area:1/1] invisible" data-col="costPerUnit">Cost/Unit</span>
+                                            <span class="cycle-header [grid-area:1/1] invisible" data-col="costChange">Cost Change</span>
+                                        </span>
+                                        <svg class="w-3 h-3 text-base-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                    </span>
+                                    <span class="flex gap-0.5 cycle-dots">
+                                        <span class="w-1 h-1 rounded-full bg-accent-500"></span>
+                                        <span class="w-1 h-1 rounded-full bg-base-300 dark:bg-base-500"></span>
+                                        <span class="w-1 h-1 rounded-full bg-base-300 dark:bg-base-500"></span>
+                                        <span class="w-1 h-1 rounded-full bg-base-300 dark:bg-base-500"></span>
+                                        <span class="w-1 h-1 rounded-full bg-base-300 dark:bg-base-500"></span>
+                                        <span class="w-1 h-1 rounded-full bg-base-300 dark:bg-base-500"></span>
+                                    </span>
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 2026 (YTD) — Expanded -->
+                        <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer transition-colors" onclick="toggleYear('y2026')">
+                            <td class="px-3 lg:px-6 py-3.5 w-8">
+                                <svg id="y2026-chevron" class="w-4 h-4 text-base-400 transition-transform duration-200 rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </td>
+                            <td class="px-3 lg:px-6 py-3.5 text-sm font-medium">2026 <span class="text-xs text-base-400 font-normal">(YTD)</span></td>
+                            <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">597 <span class="text-xs text-base-300">kWh</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">299 <span class="text-xs text-base-300">kWh</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-xs text-emerald-600 dark:text-emerald-400">-5,2%</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">1.870 <span class="text-xs text-base-300">DKK</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">935 <span class="text-xs text-base-300">DKK</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">3,13 <span class="text-xs text-base-300">DKK/kWh</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-xs text-emerald-600 dark:text-emerald-400">-6,8%</td>
+                            <td class="lg:hidden px-3 lg:px-6 py-3.5 text-right">
+                                <div class="grid justify-items-end">
+                                    <div class="cycle-val [grid-area:1/1] font-mono-data text-sm" data-col="avgMonthly">299 <span class="text-xs text-base-300">kWh</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-emerald-600 dark:text-emerald-400" data-col="consumpChange">-5,2%</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-sm" data-col="totalCost">1.870 <span class="text-xs text-base-300">DKK</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-sm" data-col="avgMoCost">935 <span class="text-xs text-base-300">DKK</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-sm" data-col="costPerUnit">3,13 <span class="text-xs text-base-300">DKK/kWh</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-emerald-600 dark:text-emerald-400" data-col="costChange">-6,8%</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- 2026 expanded monthly rows -->
+                        <tr id="y2026-row-feb" class="bg-base-50 dark:bg-base-800/80 border-t border-base-100/50 dark:border-base-700/50 lg:cursor-default cursor-pointer" data-month='{"label":"Feb 2026","consumption":"285 kWh","consumpChange":"-10,4%","consumpColor":"emerald","cost":"892 DKK","costPerUnit":"3,13 DKK/kWh","costChange":"-10,4%","costColor":"emerald"}' onclick="showMonthDetail(this)">
+                            <td class="px-3 lg:px-6 py-2.5"></td>
+                            <td class="px-3 lg:px-6 py-2.5 text-xs text-base-500 pl-10">Feb 2026</td>
+                            <td class="px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs">285 kWh</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-base-400">—</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-emerald-600 dark:text-emerald-400">-10,4%</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs">892 DKK</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-base-400">—</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs">3,13</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-emerald-600 dark:text-emerald-400">-10,4%</td>
+                            <td class="lg:hidden px-3 lg:px-6 py-2.5 text-right">
+                                <div class="grid justify-items-end">
+                                    <div class="cycle-val [grid-area:1/1] font-mono-data text-xs text-base-400" data-col="avgMonthly">—</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-emerald-600 dark:text-emerald-400" data-col="consumpChange">-10,4%</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs" data-col="totalCost">892 DKK</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-base-400" data-col="avgMoCost">—</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs" data-col="costPerUnit">3,13</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-emerald-600 dark:text-emerald-400" data-col="costChange">-10,4%</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="y2026-row-jan" class="bg-base-50 dark:bg-base-800/80 border-t border-base-100/50 dark:border-base-700/50 lg:cursor-default cursor-pointer" data-month='{"label":"Jan 2026","consumption":"312 kWh","consumpChange":"-8,8%","consumpColor":"emerald","cost":"978 DKK","costPerUnit":"3,13 DKK/kWh","costChange":"-8,7%","costColor":"emerald"}' onclick="showMonthDetail(this)">
+                            <td class="px-3 lg:px-6 py-2.5"></td>
+                            <td class="px-3 lg:px-6 py-2.5 text-xs text-base-500 pl-10">Jan 2026</td>
+                            <td class="px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs">312 kWh</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-base-400">—</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-emerald-600 dark:text-emerald-400">-8,8%</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs">978 DKK</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-base-400">—</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs">3,13</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-emerald-600 dark:text-emerald-400">-8,7%</td>
+                            <td class="lg:hidden px-3 lg:px-6 py-2.5 text-right">
+                                <div class="grid justify-items-end">
+                                    <div class="cycle-val [grid-area:1/1] font-mono-data text-xs text-base-400" data-col="avgMonthly">—</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-emerald-600 dark:text-emerald-400" data-col="consumpChange">-8,8%</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs" data-col="totalCost">978 DKK</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-base-400" data-col="avgMoCost">—</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs" data-col="costPerUnit">3,13</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-emerald-600 dark:text-emerald-400" data-col="costChange">-8,7%</div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- 2025 — Collapsed -->
+                        <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer transition-colors" onclick="toggleYear('y2025')">
+                            <td class="px-3 lg:px-6 py-3.5 w-8">
+                                <svg id="y2025-chevron" class="w-4 h-4 text-base-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </td>
+                            <td class="px-3 lg:px-6 py-3.5 text-sm font-medium">2025</td>
+                            <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">3.842 <span class="text-xs text-base-300">kWh</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">320 <span class="text-xs text-base-300">kWh</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-xs text-emerald-600 dark:text-emerald-400">-4,2%</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">12.036 <span class="text-xs text-base-300">DKK</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">1.003 <span class="text-xs text-base-300">DKK</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">3,13 <span class="text-xs text-base-300">DKK/kWh</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-xs text-emerald-600 dark:text-emerald-400">-6,1%</td>
+                            <td class="lg:hidden px-3 lg:px-6 py-3.5 text-right">
+                                <div class="grid justify-items-end">
+                                    <div class="cycle-val [grid-area:1/1] font-mono-data text-sm" data-col="avgMonthly">320 <span class="text-xs text-base-300">kWh</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-emerald-600 dark:text-emerald-400" data-col="consumpChange">-4,2%</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-sm" data-col="totalCost">12.036 <span class="text-xs text-base-300">DKK</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-sm" data-col="avgMoCost">1.003 <span class="text-xs text-base-300">DKK</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-sm" data-col="costPerUnit">3,13 <span class="text-xs text-base-300">DKK/kWh</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-emerald-600 dark:text-emerald-400" data-col="costChange">-6,1%</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- 2025 monthly rows (hidden by default) -->
+                        <tr id="y2025-row-2" class="hidden bg-base-50 dark:bg-base-800/80 border-t border-base-100/50 dark:border-base-700/50 lg:cursor-default cursor-pointer" data-month='{"label":"Mar 2025","consumption":"295 kWh","consumpChange":"-5,4%","consumpColor":"emerald","cost":"923 DKK","costPerUnit":"3,13 DKK/kWh","costChange":"-7,5%","costColor":"emerald"}' onclick="showMonthDetail(this)">
+                            <td class="px-3 lg:px-6 py-2.5"></td>
+                            <td class="px-3 lg:px-6 py-2.5 text-xs text-base-500 pl-10">Mar 2025</td>
+                            <td class="px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs">295 kWh</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-base-400">—</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-emerald-600 dark:text-emerald-400">-5,4%</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs">923 DKK</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-base-400">—</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs">3,13</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-emerald-600 dark:text-emerald-400">-7,5%</td>
+                            <td class="lg:hidden px-3 lg:px-6 py-2.5 text-right">
+                                <div class="grid justify-items-end">
+                                    <div class="cycle-val [grid-area:1/1] font-mono-data text-xs text-base-400" data-col="avgMonthly">—</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-emerald-600 dark:text-emerald-400" data-col="consumpChange">-5,4%</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs" data-col="totalCost">923 DKK</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-base-400" data-col="avgMoCost">—</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs" data-col="costPerUnit">3,13</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-emerald-600 dark:text-emerald-400" data-col="costChange">-7,5%</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="y2025-row-1" class="hidden bg-base-50 dark:bg-base-800/80 border-t border-base-100/50 dark:border-base-700/50 lg:cursor-default cursor-pointer" data-month='{"label":"Feb 2025","consumption":"318 kWh","consumpChange":"-5,9%","consumpColor":"emerald","cost":"996 DKK","costPerUnit":"3,13 DKK/kWh","costChange":"-7,9%","costColor":"emerald"}' onclick="showMonthDetail(this)">
+                            <td class="px-3 lg:px-6 py-2.5"></td>
+                            <td class="px-3 lg:px-6 py-2.5 text-xs text-base-500 pl-10">Feb 2025</td>
+                            <td class="px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs">318 kWh</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-base-400">—</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-emerald-600 dark:text-emerald-400">-5,9%</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs">996 DKK</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-base-400">—</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs">3,13</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-emerald-600 dark:text-emerald-400">-7,9%</td>
+                            <td class="lg:hidden px-3 lg:px-6 py-2.5 text-right">
+                                <div class="grid justify-items-end">
+                                    <div class="cycle-val [grid-area:1/1] font-mono-data text-xs text-base-400" data-col="avgMonthly">—</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-emerald-600 dark:text-emerald-400" data-col="consumpChange">-5,9%</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs" data-col="totalCost">996 DKK</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-base-400" data-col="avgMoCost">—</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs" data-col="costPerUnit">3,13</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-emerald-600 dark:text-emerald-400" data-col="costChange">-7,9%</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="y2025-row-0" class="hidden bg-base-50 dark:bg-base-800/80 border-t border-base-100/50 dark:border-base-700/50 lg:cursor-default cursor-pointer" data-month='{"label":"Jan 2025","consumption":"342 kWh","consumpChange":"-5,3%","consumpColor":"emerald","cost":"1.071 DKK","costPerUnit":"3,13 DKK/kWh","costChange":"-7,3%","costColor":"emerald"}' onclick="showMonthDetail(this)">
+                            <td class="px-3 lg:px-6 py-2.5"></td>
+                            <td class="px-3 lg:px-6 py-2.5 text-xs text-base-500 pl-10">Jan 2025</td>
+                            <td class="px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs">342 kWh</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-base-400">—</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-emerald-600 dark:text-emerald-400">-5,3%</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs">1.071 DKK</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-base-400">—</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs">3,13</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-2.5 text-right font-mono-data text-xs text-emerald-600 dark:text-emerald-400">-7,3%</td>
+                            <td class="lg:hidden px-3 lg:px-6 py-2.5 text-right">
+                                <div class="grid justify-items-end">
+                                    <div class="cycle-val [grid-area:1/1] font-mono-data text-xs text-base-400" data-col="avgMonthly">—</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-emerald-600 dark:text-emerald-400" data-col="consumpChange">-5,3%</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs" data-col="totalCost">1.071 DKK</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-base-400" data-col="avgMoCost">—</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs" data-col="costPerUnit">3,13</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-emerald-600 dark:text-emerald-400" data-col="costChange">-7,3%</div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- 2024 — Collapsed -->
+                        <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer transition-colors" onclick="toggleYear('y2024')">
+                            <td class="px-3 lg:px-6 py-3.5 w-8">
+                                <svg id="y2024-chevron" class="w-4 h-4 text-base-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </td>
+                            <td class="px-3 lg:px-6 py-3.5 text-sm font-medium">2024</td>
+                            <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">4.010 <span class="text-xs text-base-300">kWh</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">334 <span class="text-xs text-base-300">kWh</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-xs text-rose-500 dark:text-rose-400">+2,1%</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">12.820 <span class="text-xs text-base-300">DKK</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">1.068 <span class="text-xs text-base-300">DKK</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">3,20 <span class="text-xs text-base-300">DKK/kWh</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-xs text-rose-500 dark:text-rose-400">+3,4%</td>
+                            <td class="lg:hidden px-3 lg:px-6 py-3.5 text-right">
+                                <div class="grid justify-items-end">
+                                    <div class="cycle-val [grid-area:1/1] font-mono-data text-sm" data-col="avgMonthly">334 <span class="text-xs text-base-300">kWh</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-rose-500 dark:text-rose-400" data-col="consumpChange">+2,1%</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-sm" data-col="totalCost">12.820 <span class="text-xs text-base-300">DKK</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-sm" data-col="avgMoCost">1.068 <span class="text-xs text-base-300">DKK</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-sm" data-col="costPerUnit">3,20 <span class="text-xs text-base-300">DKK/kWh</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-rose-500 dark:text-rose-400" data-col="costChange">+3,4%</div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- 2023 -->
+                        <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer transition-colors" onclick="toggleYear('y2023')">
+                            <td class="px-3 lg:px-6 py-3.5 w-8">
+                                <svg id="y2023-chevron" class="w-4 h-4 text-base-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </td>
+                            <td class="px-3 lg:px-6 py-3.5 text-sm font-medium">2023</td>
+                            <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">3.928 <span class="text-xs text-base-300">kWh</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">327 <span class="text-xs text-base-300">kWh</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-xs text-emerald-600 dark:text-emerald-400">-6,8%</td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">12.398 <span class="text-xs text-base-300">DKK</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">1.033 <span class="text-xs text-base-300">DKK</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm">3,16 <span class="text-xs text-base-300">DKK/kWh</span></td>
+                            <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right font-mono-data text-xs text-emerald-600 dark:text-emerald-400">-8,2%</td>
+                            <td class="lg:hidden px-3 lg:px-6 py-3.5 text-right">
+                                <div class="grid justify-items-end">
+                                    <div class="cycle-val [grid-area:1/1] font-mono-data text-sm" data-col="avgMonthly">327 <span class="text-xs text-base-300">kWh</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-emerald-600 dark:text-emerald-400" data-col="consumpChange">-6,8%</div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-sm" data-col="totalCost">12.398 <span class="text-xs text-base-300">DKK</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-sm" data-col="avgMoCost">1.033 <span class="text-xs text-base-300">DKK</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-sm" data-col="costPerUnit">3,16 <span class="text-xs text-base-300">DKK/kWh</span></div>
+                                    <div class="cycle-val [grid-area:1/1] invisible font-mono-data text-xs text-emerald-600 dark:text-emerald-400" data-col="costChange">-8,2%</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Meter Readings -->
+        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6 lg:mb-8">
+            <div class="px-3 lg:px-6 py-5 border-b border-base-100 dark:border-base-700">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-sm font-semibold">Meter Readings</h3>
+                        <span class="text-xs bg-base-100 dark:bg-base-700 text-base-400 px-2 py-0.5 rounded-full font-medium">12</span>
+                    </div>
+                    <button onclick="showDialog('add-reading-dialog')" class="px-4 py-2 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg hover:border-base-300 dark:hover:border-base-500 transition-colors shrink-0">+ Add Reading</button>
+                </div>
+                <button onclick="toggleReadings()" id="readings-collapse" class="hidden mt-2 text-xs text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors items-center gap-1 cursor-pointer">
+                    Show less <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+                </button>
+            </div>
+            <table id="readings-table" class="w-full table-fixed">
+                <thead>
+                    <tr class="bg-base-50/40 dark:bg-base-900/30">
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-base-300 dark:text-base-500 w-36">Date</th>
+                        <th class="px-3 lg:px-6 py-3 text-right text-xs font-medium text-base-300 dark:text-base-500 w-36">Meter value</th>
+                        <th class="hidden lg:table-cell px-3 lg:px-6 py-3 text-left text-xs font-medium text-base-300 dark:text-base-500">Note</th>
+                        <th class="hidden lg:table-cell px-3 lg:px-6 py-3 text-left text-xs font-medium text-base-300 dark:text-base-500">Attachment</th>
+                        <th class="hidden lg:table-cell px-3 lg:px-6 py-3w-16"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-base-100 dark:divide-base-700 border-t border-base-100 dark:border-base-700">
+                    <tr class="hover:bg-base-50 dark:hover:bg-base-700/50 lg:cursor-default cursor-pointer transition-colors" data-reading='{"date":"14 Feb 2026","value":"42.815 kWh","note":null,"attachment":"invoice_feb_2026.pdf"}' onclick="openReadingDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3 text-sm">14 Feb 2026</td>
+                        <td class="px-3 lg:px-6 py-3 text-right font-mono-data text-sm">42.815 <span class="text-xs text-base-300">kWh</span></td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-400">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3">
+                            <a href="#" onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 text-xs text-accent-600 dark:text-accent-400 hover:underline">
+                                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                                invoice_feb_2026.pdf
+                            </a>
+                        </td>
+                        <td class="hidden lg:table-cell px-3 py-3 text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                <button onclick="event.stopPropagation(); showDialog('edit-reading-dialog')" class="p-1.5 text-base-300 hover:text-base-500 transition-colors rounded-lg hover:bg-base-100 dark:hover:bg-base-700"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                <button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1.5 text-base-300 hover:text-rose-500 transition-colors rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-base-50 dark:hover:bg-base-700/50 lg:cursor-default cursor-pointer transition-colors" data-reading='{"date":"03 Jan 2026","value":"42.530 kWh","note":null,"attachment":null}' onclick="openReadingDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3 text-sm">03 Jan 2026</td>
+                        <td class="px-3 lg:px-6 py-3 text-right font-mono-data text-sm">42.530 <span class="text-xs text-base-300">kWh</span></td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-400">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-300">—</td>
+                        <td class="hidden lg:table-cell px-3 py-3 text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                <button onclick="event.stopPropagation(); showDialog('edit-reading-dialog')" class="p-1.5 text-base-300 hover:text-base-500 transition-colors rounded-lg hover:bg-base-100 dark:hover:bg-base-700"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                <button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1.5 text-base-300 hover:text-rose-500 transition-colors rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-base-50 dark:hover:bg-base-700/50 lg:cursor-default cursor-pointer transition-colors" data-reading='{"date":"29 Dec 2025","value":"42.245 kWh","note":"After holiday","attachment":null}' onclick="openReadingDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3 text-sm">29 Dec 2025</td>
+                        <td class="px-3 lg:px-6 py-3 text-right font-mono-data text-sm">42.245 <span class="text-xs text-base-300">kWh</span></td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-500">After holiday</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-300">—</td>
+                        <td class="hidden lg:table-cell px-3 py-3 text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                <button onclick="event.stopPropagation(); showDialog('edit-reading-dialog')" class="p-1.5 text-base-300 hover:text-base-500 transition-colors rounded-lg hover:bg-base-100 dark:hover:bg-base-700"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                <button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1.5 text-base-300 hover:text-rose-500 transition-colors rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-base-50 dark:hover:bg-base-700/50 lg:cursor-default cursor-pointer transition-colors" data-reading='{"date":"01 Dec 2025","value":"41.998 kWh","note":null,"attachment":"invoice_dec_2025.pdf"}' onclick="openReadingDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3 text-sm">01 Dec 2025</td>
+                        <td class="px-3 lg:px-6 py-3 text-right font-mono-data text-sm">41.998 <span class="text-xs text-base-300">kWh</span></td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-400">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3">
+                            <a href="#" onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 text-xs text-accent-600 dark:text-accent-400 hover:underline">
+                                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                                invoice_dec_2025.pdf
+                            </a>
+                        </td>
+                        <td class="hidden lg:table-cell px-3 py-3 text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                <button onclick="event.stopPropagation(); showDialog('edit-reading-dialog')" class="p-1.5 text-base-300 hover:text-base-500 transition-colors rounded-lg hover:bg-base-100 dark:hover:bg-base-700"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                <button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1.5 text-base-300 hover:text-rose-500 transition-colors rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-base-50 dark:hover:bg-base-700/50 lg:cursor-default cursor-pointer transition-colors" data-reading='{"date":"31 Oct 2025","value":"41.750 kWh","note":null,"attachment":null}' onclick="openReadingDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3 text-sm">31 Oct 2025</td>
+                        <td class="px-3 lg:px-6 py-3 text-right font-mono-data text-sm">41.750 <span class="text-xs text-base-300">kWh</span></td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-400">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-300">—</td>
+                        <td class="hidden lg:table-cell px-3 py-3 text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                <button onclick="event.stopPropagation(); showDialog('edit-reading-dialog')" class="p-1.5 text-base-300 hover:text-base-500 transition-colors rounded-lg hover:bg-base-100 dark:hover:bg-base-700"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                <button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1.5 text-base-300 hover:text-rose-500 transition-colors rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="hidden hover:bg-base-50 dark:hover:bg-base-700/50 lg:cursor-default cursor-pointer transition-colors" data-reading='{"date":"30 Sep 2025","value":"41.482 kWh","note":null,"attachment":"invoice_q3_2025.pdf"}' onclick="openReadingDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3 text-sm">30 Sep 2025</td>
+                        <td class="px-3 lg:px-6 py-3 text-right font-mono-data text-sm">41.482 <span class="text-xs text-base-300">kWh</span></td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-400">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3">
+                            <a href="#" onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 text-xs text-accent-600 dark:text-accent-400 hover:underline">
+                                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                                invoice_q3_2025.pdf
+                            </a>
+                        </td>
+                        <td class="hidden lg:table-cell px-3 py-3 text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                <button onclick="event.stopPropagation(); showDialog('edit-reading-dialog')" class="p-1.5 text-base-300 hover:text-base-500 transition-colors rounded-lg hover:bg-base-100 dark:hover:bg-base-700"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                <button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1.5 text-base-300 hover:text-rose-500 transition-colors rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="hidden hover:bg-base-50 dark:hover:bg-base-700/50 lg:cursor-default cursor-pointer transition-colors" data-reading='{"date":"31 Jul 2025","value":"41.190 kWh","note":null,"attachment":null}' onclick="openReadingDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3 text-sm">31 Jul 2025</td>
+                        <td class="px-3 lg:px-6 py-3 text-right font-mono-data text-sm">41.190 <span class="text-xs text-base-300">kWh</span></td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-400">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-300">—</td>
+                        <td class="hidden lg:table-cell px-3 py-3 text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                <button onclick="event.stopPropagation(); showDialog('edit-reading-dialog')" class="p-1.5 text-base-300 hover:text-base-500 transition-colors rounded-lg hover:bg-base-100 dark:hover:bg-base-700"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                <button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1.5 text-base-300 hover:text-rose-500 transition-colors rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="hidden hover:bg-base-50 dark:hover:bg-base-700/50 lg:cursor-default cursor-pointer transition-colors" data-reading='{"date":"30 May 2025","value":"40.888 kWh","note":null,"attachment":null}' onclick="openReadingDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3 text-sm">30 May 2025</td>
+                        <td class="px-3 lg:px-6 py-3 text-right font-mono-data text-sm">40.888 <span class="text-xs text-base-300">kWh</span></td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-400">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-300">—</td>
+                        <td class="hidden lg:table-cell px-3 py-3 text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                <button onclick="event.stopPropagation(); showDialog('edit-reading-dialog')" class="p-1.5 text-base-300 hover:text-base-500 transition-colors rounded-lg hover:bg-base-100 dark:hover:bg-base-700"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                <button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1.5 text-base-300 hover:text-rose-500 transition-colors rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="hidden hover:bg-base-50 dark:hover:bg-base-700/50 lg:cursor-default cursor-pointer transition-colors" data-reading='{"date":"02 Apr 2025","value":"40.593 kWh","note":null,"attachment":null}' onclick="openReadingDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3 text-sm">02 Apr 2025</td>
+                        <td class="px-3 lg:px-6 py-3 text-right font-mono-data text-sm">40.593 <span class="text-xs text-base-300">kWh</span></td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-400">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-300">—</td>
+                        <td class="hidden lg:table-cell px-3 py-3 text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                <button onclick="event.stopPropagation(); showDialog('edit-reading-dialog')" class="p-1.5 text-base-300 hover:text-base-500 transition-colors rounded-lg hover:bg-base-100 dark:hover:bg-base-700"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                <button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1.5 text-base-300 hover:text-rose-500 transition-colors rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="hidden hover:bg-base-50 dark:hover:bg-base-700/50 lg:cursor-default cursor-pointer transition-colors" data-reading='{"date":"31 Mar 2025","value":"41.831 kWh","note":"End of quarter","attachment":"invoice_q1_2025.pdf"}' onclick="openReadingDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3 text-sm">31 Mar 2025</td>
+                        <td class="px-3 lg:px-6 py-3 text-right font-mono-data text-sm">41.831 <span class="text-xs text-base-300">kWh</span></td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-500">End of quarter</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3">
+                            <a href="#" onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 text-xs text-accent-600 dark:text-accent-400 hover:underline">
+                                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                                invoice_q1_2025.pdf
+                            </a>
+                        </td>
+                        <td class="hidden lg:table-cell px-3 py-3 text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                <button onclick="event.stopPropagation(); showDialog('edit-reading-dialog')" class="p-1.5 text-base-300 hover:text-base-500 transition-colors rounded-lg hover:bg-base-100 dark:hover:bg-base-700"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                <button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1.5 text-base-300 hover:text-rose-500 transition-colors rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="hidden hover:bg-base-50 dark:hover:bg-base-700/50 lg:cursor-default cursor-pointer transition-colors" data-reading='{"date":"28 Feb 2025","value":"41.536 kWh","note":null,"attachment":null}' onclick="openReadingDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3 text-sm">28 Feb 2025</td>
+                        <td class="px-3 lg:px-6 py-3 text-right font-mono-data text-sm">41.536 <span class="text-xs text-base-300">kWh</span></td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-400">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-300">—</td>
+                        <td class="hidden lg:table-cell px-3 py-3 text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                <button onclick="event.stopPropagation(); showDialog('edit-reading-dialog')" class="p-1.5 text-base-300 hover:text-base-500 transition-colors rounded-lg hover:bg-base-100 dark:hover:bg-base-700"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                <button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1.5 text-base-300 hover:text-rose-500 transition-colors rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="hidden hover:bg-base-50 dark:hover:bg-base-700/50 lg:cursor-default cursor-pointer transition-colors" data-reading='{"date":"31 Jan 2025","value":"41.218 kWh","note":null,"attachment":null}' onclick="openReadingDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3 text-sm">31 Jan 2025</td>
+                        <td class="px-3 lg:px-6 py-3 text-right font-mono-data text-sm">41.218 <span class="text-xs text-base-300">kWh</span></td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-400">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3 text-sm text-base-300">—</td>
+                        <td class="hidden lg:table-cell px-3 py-3 text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                <button onclick="event.stopPropagation(); showDialog('edit-reading-dialog')" class="p-1.5 text-base-300 hover:text-base-500 transition-colors rounded-lg hover:bg-base-100 dark:hover:bg-base-700"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                <button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1.5 text-base-300 hover:text-rose-500 transition-colors rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button onclick="toggleReadings()" id="readings-toggle" class="w-full py-3 text-xs font-medium text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors flex items-center justify-center gap-1.5 border-t border-base-100 dark:border-base-700/50">
+                <span class="toggle-label">Show 7 older readings</span>
+                <svg class="toggle-icon w-3.5 h-3.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+        </div>
+
+        <!-- Bills -->
+        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden">
+            <div class="px-3 lg:px-6 py-5 border-b border-base-100 dark:border-base-700">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-sm font-semibold">Bills</h3>
+                        <span class="text-xs bg-base-100 dark:bg-base-700 text-base-400 px-2 py-0.5 rounded-full font-medium">7</span>
+                    </div>
+                    <button onclick="showDialog('add-bill-dialog')" class="px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors shrink-0">+ Add Bill</button>
+                </div>
+                <button onclick="toggleBillsTable()" id="bills-collapse" class="hidden mt-2 text-xs text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors items-center gap-1 cursor-pointer">
+                    Show less <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+                </button>
+            </div>
+            <table id="bills-table" class="w-full table-fixed">
+                <thead>
+                    <tr class="bg-base-50/40 dark:bg-base-900/30">
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-base-300 dark:text-base-500 w-36">Date</th>
+                        <th class="px-3 lg:px-6 py-3 text-right text-xs font-medium text-base-300 dark:text-base-500 w-36">Amount</th>
+                        <th class="hidden sm:table-cell px-3 lg:px-6 py-3 text-left text-xs font-medium text-base-300 dark:text-base-500">Period</th>
+                        <th class="hidden lg:table-cell px-3 lg:px-6 py-3 text-left text-xs font-medium text-base-300 dark:text-base-500">Note</th>
+                        <th class="hidden lg:table-cell px-3 lg:px-6 py-3 text-left text-xs font-medium text-base-300 dark:text-base-500">Attachment</th>
+                        <th class="hidden lg:table-cell px-3 lg:px-6 py-3w-20"></th>
+                    </tr>
+                </thead>
+                <tbody class="border-t border-base-100 dark:border-base-700">
+                    <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"date":"2025-12-15","amount":"12.036 DKK","period":"Jan 2025 – Dec 2025","note":"Annual settlement","attachment":"bill_2025.pdf"}' onclick="openBillDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-500">2025-12-15</td>
+                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm font-medium">12.036 <span class="text-xs text-base-300">DKK</span></td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2025 – Dec 2025</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Annual settlement</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5"><button onclick="event.stopPropagation()" class="text-accent-700 dark:text-accent-400 hover:underline text-xs">bill_2025.pdf</button></td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right"><div class="flex items-center justify-end gap-2"><button onclick="event.stopPropagation(); showDialog('edit-bill-dialog')" class="p-1 text-base-300 hover:text-base-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1 text-base-300 hover:text-rose-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td>
+                    </tr>
+                    <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"date":"2024-12-18","amount":"12.820 DKK","period":"Jan 2024 – Dec 2024","note":"Annual settlement","attachment":"bill_2024.pdf"}' onclick="openBillDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-500">2024-12-18</td>
+                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm font-medium">12.820 <span class="text-xs text-base-300">DKK</span></td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2024 – Dec 2024</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Annual settlement</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5"><button onclick="event.stopPropagation()" class="text-accent-700 dark:text-accent-400 hover:underline text-xs">bill_2024.pdf</button></td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right"><div class="flex items-center justify-end gap-2"><button onclick="event.stopPropagation(); showDialog('edit-bill-dialog')" class="p-1 text-base-300 hover:text-base-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1 text-base-300 hover:text-rose-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td>
+                    </tr>
+                    <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"date":"2023-12-20","amount":"13.502 DKK","period":"Jan 2023 – Dec 2023","note":null,"attachment":null}' onclick="openBillDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-500">2023-12-20</td>
+                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm font-medium">13.502 <span class="text-xs text-base-300">DKK</span></td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2023 – Dec 2023</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-400">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-300">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right"><div class="flex items-center justify-end gap-2"><button onclick="event.stopPropagation(); showDialog('edit-bill-dialog')" class="p-1 text-base-300 hover:text-base-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1 text-base-300 hover:text-rose-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td>
+                    </tr>
+                    <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"date":"2022-12-19","amount":"14.105 DKK","period":"Jan 2022 – Dec 2022","note":"Annual settlement","attachment":null}' onclick="openBillDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-500">2022-12-19</td>
+                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm font-medium">14.105 <span class="text-xs text-base-300">DKK</span></td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2022 – Dec 2022</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Annual settlement</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-300">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right"><div class="flex items-center justify-end gap-2"><button onclick="event.stopPropagation(); showDialog('edit-bill-dialog')" class="p-1 text-base-300 hover:text-base-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1 text-base-300 hover:text-rose-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td>
+                    </tr>
+                    <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"date":"2021-12-17","amount":"10.843 DKK","period":"Jan 2021 – Dec 2021","note":"Annual settlement","attachment":"bill_2021.pdf"}' onclick="openBillDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-500">2021-12-17</td>
+                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm font-medium">10.843 <span class="text-xs text-base-300">DKK</span></td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2021 – Dec 2021</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Annual settlement</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5"><button onclick="event.stopPropagation()" class="text-accent-700 dark:text-accent-400 hover:underline text-xs">bill_2021.pdf</button></td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right"><div class="flex items-center justify-end gap-2"><button onclick="event.stopPropagation(); showDialog('edit-bill-dialog')" class="p-1 text-base-300 hover:text-base-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1 text-base-300 hover:text-rose-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td>
+                    </tr>
+                    <tr class="hidden border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"date":"2020-12-21","amount":"9.766 DKK","period":"Jan 2020 – Dec 2020","note":null,"attachment":null}' onclick="openBillDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-500">2020-12-21</td>
+                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm font-medium">9.766 <span class="text-xs text-base-300">DKK</span></td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2020 – Dec 2020</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-400">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-300">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right"><div class="flex items-center justify-end gap-2"><button onclick="event.stopPropagation(); showDialog('edit-bill-dialog')" class="p-1 text-base-300 hover:text-base-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1 text-base-300 hover:text-rose-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td>
+                    </tr>
+                    <tr class="hidden border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"date":"2019-12-18","amount":"9.234 DKK","period":"Jan 2019 – Dec 2019","note":null,"attachment":null}' onclick="openBillDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-500">2019-12-18</td>
+                        <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm font-medium">9.234 <span class="text-xs text-base-300">DKK</span></td>
+                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2019 – Dec 2019</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-400">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-300">—</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right"><div class="flex items-center justify-end gap-2"><button onclick="event.stopPropagation(); showDialog('edit-bill-dialog')" class="p-1 text-base-300 hover:text-base-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1 text-base-300 hover:text-rose-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button onclick="toggleBillsTable()" id="bills-toggle" class="w-full py-3 text-xs font-medium text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors flex items-center justify-center gap-1.5 border-t border-base-100 dark:border-base-700/50">
+                <span class="toggle-label">Show 2 older bills</span>
+                <svg class="toggle-icon w-3.5 h-3.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+        </div>
+    </main>
+
+    <!-- Mobile Bottom Tab Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-base-800 border-t border-base-150 dark:border-base-700 z-30 lg:hidden">
+        <div class="flex items-center justify-around h-16">
+            <a href="home-overview.html" class="flex flex-col items-center gap-1 px-4 py-2 text-accent-600 dark:text-accent-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span class="text-[10px] font-medium">Home</span>
+            </a>
+            <a href="portfolio-overview.html" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                <span class="text-[10px] font-medium">Investment</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17h2V9l-3-6H6L3 9v8h2m14 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M9 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0"/></svg>
+                <span class="text-[10px] font-medium">Vehicles</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400" onclick="document.documentElement.classList.toggle('dark')">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span class="text-[10px] font-medium">Settings</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Shared drawer backdrop (mobile/tablet) -->
+    <div id="drawer-backdrop" class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-200" onclick="closeDrawer()"></div>
+
+    <!-- Month Detail Drawer (mobile/tablet) -->
+    <div id="month-drawer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300 ease-out lg:hidden" role="dialog" aria-modal="true">
+        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-center pt-3 pb-1">
+                <div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div>
+            </div>
+            <div class="px-5 pb-4 pt-2 flex items-center gap-2">
+                <button onclick="navigateMonthDrawer(-1)" id="month-prev" class="shrink-0 p-1.5 -ml-1.5 rounded-lg text-base-300 hover:text-base-600 hover:bg-base-100 dark:hover:text-base-300 dark:hover:bg-base-700 transition-colors disabled:opacity-25 disabled:pointer-events-none" disabled>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <h3 id="month-detail-label" class="flex-1 text-center font-semibold text-base truncate min-w-0">Feb 2026</h3>
+                <button onclick="navigateMonthDrawer(1)" id="month-next" class="shrink-0 p-1.5 rounded-lg text-base-300 hover:text-base-600 hover:bg-base-100 dark:hover:text-base-300 dark:hover:bg-base-700 transition-colors disabled:opacity-25 disabled:pointer-events-none" disabled>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+            <div class="px-5 pb-6 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <div class="text-xs text-base-400 mb-1">Consumption</div>
+                        <div id="month-detail-consumption" class="font-mono-data text-sm font-medium">—</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-base-400 mb-1">Consump. Change</div>
+                        <div id="month-detail-consump-change" class="font-mono-data text-sm">—</div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <div class="text-xs text-base-400 mb-1">Total Cost</div>
+                        <div id="month-detail-cost" class="font-mono-data text-sm font-medium">—</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-base-400 mb-1">Cost/Unit</div>
+                        <div id="month-detail-cost-per-unit" class="font-mono-data text-sm">—</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="text-xs text-base-400 mb-1">Cost Change</div>
+                    <div id="month-detail-cost-change" class="font-mono-data text-sm">—</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reading Detail Drawer (mobile/tablet) -->
+    <div id="reading-drawer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300 ease-out lg:hidden" role="dialog" aria-modal="true">
+        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-center pt-3 pb-1">
+                <div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div>
+            </div>
+            <div class="px-5 pb-4 pt-2 flex items-center gap-2">
+                <button onclick="navigateReadingDrawer(-1)" id="reading-prev" class="shrink-0 p-1.5 -ml-1.5 rounded-lg text-base-300 hover:text-base-600 hover:bg-base-100 dark:hover:text-base-300 dark:hover:bg-base-700 transition-colors disabled:opacity-25 disabled:pointer-events-none" disabled>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <h3 id="reading-title" class="flex-1 text-center font-semibold text-base truncate min-w-0">14 Feb 2026</h3>
+                <button onclick="navigateReadingDrawer(1)" id="reading-next" class="shrink-0 p-1.5 rounded-lg text-base-300 hover:text-base-600 hover:bg-base-100 dark:hover:text-base-300 dark:hover:bg-base-700 transition-colors disabled:opacity-25 disabled:pointer-events-none" disabled>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+            <div class="px-5 pb-6 space-y-4">
+                <div>
+                    <div class="text-xs text-base-400 mb-1">Meter Value</div>
+                    <div id="reading-value" class="font-mono-data text-lg font-medium">42.815 kWh</div>
+                </div>
+                <div id="reading-note-row">
+                    <div class="text-xs text-base-400 mb-1">Note</div>
+                    <div id="reading-note" class="text-sm text-base-600 dark:text-base-300"></div>
+                </div>
+                <div id="reading-attachment-row">
+                    <div class="text-xs text-base-400 mb-1">Attachment</div>
+                    <div id="reading-attachment" class="text-sm min-h-5 flex items-center"></div>
+                </div>
+            </div>
+            <div class="px-5 py-4 flex gap-3">
+                <button onclick="editReadingFromDrawer()" class="flex-1 px-4 py-2.5 text-sm font-medium text-base-700 dark:text-base-200 bg-base-100 dark:bg-base-700 rounded-lg hover:bg-base-200 dark:hover:bg-base-600 transition-colors">Edit</button>
+                <button onclick="deleteReadingFromDrawer()" class="px-4 py-2.5 text-sm font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/40 transition-colors">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bill Detail Drawer (mobile/tablet) -->
+    <div id="bill-drawer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300 ease-out lg:hidden" role="dialog" aria-modal="true">
+        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-center pt-3 pb-1">
+                <div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div>
+            </div>
+            <div class="px-5 pb-4 pt-2 flex items-center gap-2">
+                <button onclick="navigateBillDrawer(-1)" id="bill-prev" class="shrink-0 p-1.5 -ml-1.5 rounded-lg text-base-300 hover:text-base-600 hover:bg-base-100 dark:hover:text-base-300 dark:hover:bg-base-700 transition-colors disabled:opacity-25 disabled:pointer-events-none" disabled>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <h3 id="bill-title" class="flex-1 text-center font-semibold text-base truncate min-w-0">2025-12-15</h3>
+                <button onclick="navigateBillDrawer(1)" id="bill-next" class="shrink-0 p-1.5 rounded-lg text-base-300 hover:text-base-600 hover:bg-base-100 dark:hover:text-base-300 dark:hover:bg-base-700 transition-colors disabled:opacity-25 disabled:pointer-events-none" disabled>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+            <div class="px-5 pb-6 space-y-4">
+                <div>
+                    <div class="text-xs text-base-400 mb-1">Amount</div>
+                    <div id="bill-amount" class="font-mono-data text-lg font-medium">12.036 DKK</div>
+                </div>
+                <div>
+                    <div class="text-xs text-base-400 mb-1">Period</div>
+                    <div id="bill-period" class="text-sm">Jan 2025 – Dec 2025</div>
+                </div>
+                <div id="bill-note-row">
+                    <div class="text-xs text-base-400 mb-1">Note</div>
+                    <div id="bill-note" class="text-sm text-base-600 dark:text-base-300"></div>
+                </div>
+                <div id="bill-attachment-row">
+                    <div class="text-xs text-base-400 mb-1">Attachment</div>
+                    <div id="bill-attachment" class="text-sm min-h-5 flex items-center"></div>
+                </div>
+            </div>
+            <div class="px-5 py-4 flex gap-3">
+                <button onclick="editBillFromDrawer()" class="flex-1 px-4 py-2.5 text-sm font-medium text-base-700 dark:text-base-200 bg-base-100 dark:bg-base-700 rounded-lg hover:bg-base-200 dark:hover:bg-base-600 transition-colors">Edit</button>
+                <button onclick="deleteBillFromDrawer()" class="px-4 py-2.5 text-sm font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/40 transition-colors">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Reading Dialog -->
+    <div id="edit-reading-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('edit-reading-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
+                    <h3 class="text-base font-semibold">Edit Reading</h3>
+                </div>
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
+                    <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Meter Reading (cumulative) <span class="text-rose-500">*</span></label><input type="number" step="0.01" value="42815" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm font-mono-data focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                    <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Date & Time <span class="text-rose-500">*</span></label><input type="datetime-local" id="edit-reading-datetime" value="2026-02-14T11:30" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                    <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label><input type="text" placeholder="e.g. Meter replaced" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                    <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Attachment</label>
+                        <div class="flex items-center gap-3 p-3 border border-base-200 dark:border-base-600 rounded-lg bg-base-50 dark:bg-base-700/50">
+                            <svg class="w-4 h-4 text-accent-600 dark:text-accent-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                            <span class="text-sm text-accent-600 dark:text-accent-400 flex-1 truncate">invoice_feb_2026.pdf</span>
+                            <button type="button" class="text-xs text-rose-500 hover:text-rose-600 shrink-0">Remove</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('edit-reading-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('edit-reading-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Bill Dialog -->
+    <div id="edit-bill-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('edit-bill-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
+                    <h3 class="text-base font-semibold">Edit Bill</h3>
+                </div>
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
+                    <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Amount (DKK) <span class="text-rose-500">*</span></label><input type="number" step="0.01" value="12036" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm font-mono-data focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Period Start <span class="text-rose-500">*</span></label><input type="date" value="2025-01-01" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                        <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Period End <span class="text-rose-500">*</span></label><input type="date" value="2025-12-31" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                    </div>
+                    <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label><input type="text" value="Annual settlement" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                    <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Attachment</label>
+                        <div class="flex items-center gap-3 p-3 border border-base-200 dark:border-base-600 rounded-lg bg-base-50 dark:bg-base-700/50">
+                            <svg class="w-4 h-4 text-accent-600 dark:text-accent-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                            <span class="text-sm text-accent-600 dark:text-accent-400 flex-1 truncate">bill_2025.pdf</span>
+                            <button type="button" class="text-xs text-rose-500 hover:text-rose-600 shrink-0">Remove</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('edit-bill-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('edit-bill-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Dialog -->
+    <div id="delete-confirm-dialog" class="fixed inset-0 z-[60] hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('delete-confirm-dialog')"></div>
+        <div class="fixed inset-0 flex items-center justify-center p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-2xl shadow-xl w-full max-w-sm">
+                <div class="p-6">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center mb-3">
+                            <svg class="w-5 h-5 text-rose-600 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </div>
+                        <h3 id="delete-confirm-title" class="text-base font-semibold mb-1">Delete reading?</h3>
+                        <p id="delete-confirm-body" class="text-sm text-base-500 dark:text-base-400 mb-1">This will permanently delete the reading from 14 Feb 2026 (42.815 kWh).</p>
+                        <p class="text-xs text-base-400 dark:text-base-500">This action cannot be undone.</p>
+                    </div>
+                </div>
+                <div class="px-6 py-4 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('delete-confirm-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('delete-confirm-dialog')" class="px-4 py-2.5 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-colors">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Reading Dialog -->
+    <div id="add-reading-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-reading-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <!-- Header -->
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
+                    <h3 class="text-base font-semibold">Add Reading</h3>
+                </div>
+                <!-- Form -->
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
+                    <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Meter Reading (cumulative) <span class="text-rose-500">*</span></label><input type="number" step="0.01" placeholder="e.g. 42845" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm font-mono-data focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                    <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Date & Time <span class="text-rose-500">*</span></label><input type="datetime-local" value="2026-02-18T09:00" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                    <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label><input type="text" placeholder="e.g. Meter replaced" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                    <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Attachment</label>
+                        <div class="w-full px-3 py-4 border border-dashed border-base-200 dark:border-base-600 rounded-lg bg-base-50 dark:bg-base-700/50 text-center cursor-pointer hover:border-base-300 dark:hover:border-base-500 transition-colors"><svg class="w-5 h-5 mx-auto mb-1 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg><span class="text-xs text-base-400">Drop file or click to upload</span></div>
+                    </div>
+                </div>
+                <!-- Footer -->
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('add-reading-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-reading-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 hover:bg-base-800 dark:hover:bg-accent-700 rounded-lg transition-colors">Save Reading</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Bill Dialog -->
+    <div id="add-bill-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-bill-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <!-- Header -->
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
+                    <h3 class="text-base font-semibold">Add Bill</h3>
+                </div>
+                <!-- Form -->
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
+                    <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Amount (DKK) <span class="text-rose-500">*</span></label><input type="number" step="0.01" placeholder="e.g. 12036" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm font-mono-data focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Period Start <span class="text-rose-500">*</span></label><input type="date" value="2025-01-01" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                        <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Period End <span class="text-rose-500">*</span></label><input type="date" value="2025-12-31" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                    </div>
+                    <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label><input type="text" placeholder="e.g. Annual settlement" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                    <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Attachment</label>
+                        <div class="w-full px-3 py-4 border border-dashed border-base-200 dark:border-base-600 rounded-lg bg-base-50 dark:bg-base-700/50 text-center cursor-pointer hover:border-base-300 dark:hover:border-base-500 transition-colors"><svg class="w-5 h-5 mx-auto mb-1 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg><span class="text-xs text-base-400">Drop file or click to upload</span></div>
+                    </div>
+                </div>
+                <!-- Footer -->
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('add-bill-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-bill-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 hover:bg-base-800 dark:hover:bg-accent-700 rounded-lg transition-colors">Save Bill</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showDialog(dialogId) {
+            const dialog = document.getElementById(dialogId);
+            if (!dialog) return;
+            dialog.classList.remove('hidden');
+            const dtInput = dialog.querySelector('input[type="datetime-local"]:not([id^="edit-"])');
+            if (dtInput && !dtInput.value) {
+                dtInput.value = new Date().toISOString().slice(0, 16);
+            }
+            requestAnimationFrame(() => {
+                const panel = dialog.querySelector('.dialog-panel');
+                if (panel) panel.classList.add('dialog-open');
+            });
+            document.addEventListener('keydown', handleDialogEscape);
+        }
+        function closeDialog(dialogId) {
+            const dialog = document.getElementById(dialogId);
+            if (!dialog) return;
+            const panel = dialog.querySelector('.dialog-panel');
+            if (panel) panel.classList.remove('dialog-open');
+            setTimeout(() => { dialog.classList.add('hidden'); }, 300);
+        }
+        function handleDialogEscape(e) {
+            if (e.key === 'Escape') {
+                const dialogs = document.querySelectorAll('[role="dialog"]:not(.hidden)');
+                if (dialogs.length > 0) {
+                    closeDialog(dialogs[dialogs.length - 1].id);
+                }
+                if (document.querySelectorAll('[role="dialog"]:not(.hidden)').length === 0) {
+                    document.removeEventListener('keydown', handleDialogEscape);
+                }
+            }
+        }
+        function toggleYear(prefix) {
+            const chevron = document.getElementById(prefix + '-chevron');
+            // Desktop rows
+            let i = 0, row;
+            while ((row = document.getElementById(prefix + '-row-' + i)) || (row = document.getElementById(prefix + '-row-jan')) || (row = document.getElementById(prefix + '-row-feb'))) {
+                break; // fallback
+            }
+            // Try numbered rows first
+            const rows = document.querySelectorAll('[id^="' + prefix + '-row"]');
+            if (rows.length > 0) {
+                const isHidden = rows[0].classList.contains('hidden');
+                rows.forEach(r => r.classList.toggle('hidden', !isHidden));
+                if (chevron) chevron.style.transform = isHidden ? 'rotate(90deg)' : '';
+            }
+            // Mobile rows container
+            const mobileRows = document.getElementById(prefix + '-rows');
+            if (mobileRows) {
+                mobileRows.classList.toggle('hidden');
+                if (chevron) chevron.style.transform = mobileRows.classList.contains('hidden') ? '' : 'rotate(90deg)';
+            }
+        }
+        const tableConfigs = {
+            'utility-yearly-table': { metrics: ['avgMonthly','consumpChange','totalCost','avgMoCost','costPerUnit','costChange'], current: 0 }
+        };
+        function cycleColumn(e, tableId) {
+            e.stopPropagation();
+            const cfg = tableConfigs[tableId];
+            cfg.current = (cfg.current + 1) % cfg.metrics.length;
+            const table = document.getElementById(tableId);
+            table.querySelectorAll('.cycle-header').forEach(el => {
+                el.classList.toggle('invisible', el.dataset.col !== cfg.metrics[cfg.current]);
+            });
+            table.querySelectorAll('.cycle-val').forEach(el => {
+                el.classList.toggle('invisible', el.dataset.col !== cfg.metrics[cfg.current]);
+            });
+            table.querySelectorAll('.cycle-dots span').forEach((dot, i) => {
+                dot.classList.toggle('bg-accent-500', i === cfg.current);
+                dot.classList.toggle('bg-base-300', i !== cfg.current);
+                dot.classList.toggle('dark:bg-base-500', i !== cfg.current);
+            });
+        }
+        let billsCollapsed = true;
+        function toggleBillsTable() {
+            billsCollapsed = !billsCollapsed;
+            const table = document.getElementById('bills-table');
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach((row, i) => {
+                if (i >= 5) row.classList.toggle('hidden', billsCollapsed);
+            });
+            const bottomBtn = document.getElementById('bills-toggle');
+            bottomBtn.querySelector('.toggle-label').textContent = billsCollapsed ? 'Show 2 older bills' : 'Show less';
+            bottomBtn.querySelector('.toggle-icon').style.transform = billsCollapsed ? '' : 'rotate(180deg)';
+            const collapseBtn = document.getElementById('bills-collapse');
+            if (billsCollapsed) { collapseBtn.classList.add('hidden'); collapseBtn.classList.remove('flex'); }
+            else { collapseBtn.classList.remove('hidden'); collapseBtn.classList.add('flex'); }
+        }
+
+        /* ── Drawer system ─────────────────────────────── */
+        let activeDrawer = null;
+
+        function showDrawer(drawerId) {
+            const backdrop = document.getElementById('drawer-backdrop');
+            const drawer = document.getElementById(drawerId);
+            activeDrawer = drawerId;
+            backdrop.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                backdrop.classList.remove('opacity-0');
+                drawer.classList.remove('translate-y-full');
+            });
+            document.addEventListener('keydown', handleDrawerEscape);
+        }
+
+        function closeDrawer() {
+            const backdrop = document.getElementById('drawer-backdrop');
+            if (activeDrawer) {
+                document.getElementById(activeDrawer).classList.add('translate-y-full');
+            }
+            backdrop.classList.add('opacity-0');
+            setTimeout(() => { backdrop.classList.add('hidden'); activeDrawer = null; }, 200);
+            document.removeEventListener('keydown', handleDrawerEscape);
+        }
+
+        function handleDrawerEscape(e) {
+            if (e.key === 'Escape' && activeDrawer) {
+                closeDrawer();
+            }
+        }
+
+        /* ── Month detail drawer ─────────────────────────── */
+        let monthDrawerState = { rowIndex: 0 };
+
+        function populateMonthDrawer(row) {
+            const d = JSON.parse(row.getAttribute('data-month'));
+            document.getElementById('month-detail-label').textContent = d.label;
+            document.getElementById('month-detail-consumption').textContent = d.consumption;
+            const ccEl = document.getElementById('month-detail-consump-change');
+            ccEl.textContent = d.consumpChange;
+            ccEl.className = 'font-mono-data text-sm ' + (d.consumpColor === 'emerald' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400');
+            document.getElementById('month-detail-cost').textContent = d.cost;
+            document.getElementById('month-detail-cost-per-unit').textContent = d.costPerUnit;
+            const costChEl = document.getElementById('month-detail-cost-change');
+            costChEl.textContent = d.costChange;
+            costChEl.className = 'font-mono-data text-sm ' + (d.costColor === 'emerald' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400');
+        }
+
+        function updateMonthNavButtons() {
+            const rows = document.querySelectorAll('tr[data-month]');
+            document.getElementById('month-prev').disabled = monthDrawerState.rowIndex <= 0;
+            document.getElementById('month-next').disabled = monthDrawerState.rowIndex >= rows.length - 1;
+        }
+
+        function showMonthDetail(row) {
+            if (window.innerWidth >= 1024) return;
+            const rows = Array.from(document.querySelectorAll('tr[data-month]'));
+            monthDrawerState.rowIndex = rows.indexOf(row);
+            populateMonthDrawer(row);
+            updateMonthNavButtons();
+            showDrawer('month-drawer');
+        }
+
+        function navigateMonthDrawer(dir) {
+            const rows = document.querySelectorAll('tr[data-month]');
+            const newIndex = monthDrawerState.rowIndex + dir;
+            if (newIndex < 0 || newIndex >= rows.length) return;
+            monthDrawerState.rowIndex = newIndex;
+            populateMonthDrawer(rows[newIndex]);
+            updateMonthNavButtons();
+        }
+        /* ── Reading detail drawer ─────────────────────── */
+        let readingDrawerState = { rowIndex: 0 };
+
+        function populateReadingDrawer(row) {
+            const r = JSON.parse(row.getAttribute('data-reading'));
+            document.getElementById('reading-title').textContent = r.date;
+            document.getElementById('reading-value').textContent = r.value;
+            document.getElementById('reading-note').textContent = r.note || '—';
+            document.getElementById('reading-note').className = r.note
+                ? 'text-sm text-base-600 dark:text-base-300'
+                : 'text-sm text-base-300 dark:text-base-500';
+            if (r.attachment) {
+                document.getElementById('reading-attachment').innerHTML =
+                    '<a href="#" class="text-accent-600 dark:text-accent-400 hover:underline inline-flex items-center gap-1">' +
+                    '<svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>' +
+                    '<span class="truncate">' + r.attachment + '</span></a>';
+            } else {
+                document.getElementById('reading-attachment').innerHTML =
+                    '<span class="text-sm text-base-300 dark:text-base-500">—</span>';
+            }
+        }
+
+        function updateReadingNavButtons() {
+            const rows = document.querySelectorAll('#readings-table tbody tr[data-reading]');
+            document.getElementById('reading-prev').disabled = readingDrawerState.rowIndex <= 0;
+            document.getElementById('reading-next').disabled = readingDrawerState.rowIndex >= rows.length - 1;
+        }
+
+        function openReadingDrawer(row) {
+            if (window.innerWidth >= 1024) return;
+            const rows = Array.from(document.querySelectorAll('#readings-table tbody tr[data-reading]'));
+            readingDrawerState.rowIndex = rows.indexOf(row);
+            populateReadingDrawer(row);
+            updateReadingNavButtons();
+            showDrawer('reading-drawer');
+        }
+
+        function navigateReadingDrawer(dir) {
+            const rows = document.querySelectorAll('#readings-table tbody tr[data-reading]');
+            const newIndex = readingDrawerState.rowIndex + dir;
+            if (newIndex < 0 || newIndex >= rows.length) return;
+            readingDrawerState.rowIndex = newIndex;
+            populateReadingDrawer(rows[newIndex]);
+            updateReadingNavButtons();
+        }
+
+        function editReadingFromDrawer() {
+            closeDrawer();
+            setTimeout(() => showDialog('edit-reading-dialog'), 300);
+        }
+
+        function deleteReadingFromDrawer() {
+            closeDrawer();
+            setTimeout(() => showDialog('delete-confirm-dialog'), 300);
+        }
+
+        /* ── Bill detail drawer ───────────────────────── */
+        let billDrawerState = { rowIndex: 0 };
+
+        function populateBillDrawer(row) {
+            const b = JSON.parse(row.getAttribute('data-bill'));
+            document.getElementById('bill-title').textContent = b.date;
+            document.getElementById('bill-amount').textContent = b.amount;
+            document.getElementById('bill-period').textContent = b.period;
+            document.getElementById('bill-note').textContent = b.note || '—';
+            document.getElementById('bill-note').className = b.note
+                ? 'text-sm text-base-600 dark:text-base-300'
+                : 'text-sm text-base-300 dark:text-base-500';
+            if (b.attachment) {
+                document.getElementById('bill-attachment').innerHTML =
+                    '<a href="#" class="text-accent-600 dark:text-accent-400 hover:underline inline-flex items-center gap-1">' +
+                    '<svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>' +
+                    '<span class="truncate">' + b.attachment + '</span></a>';
+            } else {
+                document.getElementById('bill-attachment').innerHTML =
+                    '<span class="text-sm text-base-300 dark:text-base-500">—</span>';
+            }
+        }
+
+        function updateBillNavButtons() {
+            const rows = document.querySelectorAll('#bills-table tbody tr[data-bill]');
+            document.getElementById('bill-prev').disabled = billDrawerState.rowIndex <= 0;
+            document.getElementById('bill-next').disabled = billDrawerState.rowIndex >= rows.length - 1;
+        }
+
+        function openBillDrawer(row) {
+            if (window.innerWidth >= 1024) return;
+            const rows = Array.from(document.querySelectorAll('#bills-table tbody tr[data-bill]'));
+            billDrawerState.rowIndex = rows.indexOf(row);
+            populateBillDrawer(row);
+            updateBillNavButtons();
+            showDrawer('bill-drawer');
+        }
+
+        function navigateBillDrawer(dir) {
+            const rows = document.querySelectorAll('#bills-table tbody tr[data-bill]');
+            const newIndex = billDrawerState.rowIndex + dir;
+            if (newIndex < 0 || newIndex >= rows.length) return;
+            billDrawerState.rowIndex = newIndex;
+            populateBillDrawer(rows[newIndex]);
+            updateBillNavButtons();
+        }
+
+        function editBillFromDrawer() {
+            closeDrawer();
+            setTimeout(() => showDialog('edit-bill-dialog'), 300);
+        }
+
+        function deleteBillFromDrawer() {
+            closeDrawer();
+            setTimeout(() => showDialog('delete-confirm-dialog'), 300);
+        }
+        let readingsCollapsed = true;
+        function toggleReadings() {
+            readingsCollapsed = !readingsCollapsed;
+            const table = document.getElementById('readings-table');
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach((row, i) => {
+                if (i >= 5) row.classList.toggle('hidden', readingsCollapsed);
+            });
+            const bottomBtn = document.getElementById('readings-toggle');
+            bottomBtn.querySelector('.toggle-label').textContent = readingsCollapsed ? 'Show 7 older readings' : 'Show less';
+            bottomBtn.querySelector('.toggle-icon').style.transform = readingsCollapsed ? '' : 'rotate(180deg)';
+            const collapseBtn = document.getElementById('readings-collapse');
+            if (readingsCollapsed) { collapseBtn.classList.add('hidden'); collapseBtn.classList.remove('flex'); }
+            else { collapseBtn.classList.remove('hidden'); collapseBtn.classList.add('flex'); }
+        }
+
+        // Close dropdowns on click outside
+        document.addEventListener('click', function(e) {
+            const desktopDropdown = document.getElementById('utility-dropdown');
+            const desktopTrigger = desktopDropdown?.previousElementSibling;
+            if (desktopDropdown && !desktopDropdown.contains(e.target) && !desktopTrigger?.contains(e.target)) {
+                desktopDropdown.classList.add('hidden');
+            }
+            const mobileDropdown = document.getElementById('utility-dropdown-mobile');
+            if (mobileDropdown && mobileDropdown.dataset.open === 'true' && !mobileDropdown.contains(e.target) && !e.target.closest('[onclick*="utility-dropdown-mobile"]')) {
+                closeMobileDropdown('utility-dropdown-mobile');
+            }
+        });
+
+        // Lock Yearly Summary column widths to prevent layout shift on expand/collapse
+        document.addEventListener('DOMContentLoaded', function() {
+            const ths = document.querySelectorAll('#utility-yearly-table thead th');
+            ths.forEach(th => { th.style.width = th.getBoundingClientRect().width + 'px'; });
+        });
+
+        // Mobile dropdown slide animation
+        function toggleMobileDropdown(id) {
+            const el = document.getElementById(id);
+            if (el.dataset.open === 'true') {
+                closeMobileDropdown(id);
+            } else {
+                el.style.maxHeight = el.scrollHeight + 'px';
+                el.style.opacity = '1';
+                el.style.pointerEvents = 'auto';
+                el.dataset.open = 'true';
+            }
+        }
+
+        function closeMobileDropdown(id) {
+            const el = document.getElementById(id);
+            el.style.maxHeight = '0';
+            el.style.opacity = '0';
+            el.style.pointerEvents = 'none';
+            el.dataset.open = 'false';
+        }
+    </script>
+</body>
+</html>
