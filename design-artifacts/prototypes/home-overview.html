@@ -1,3 +1,11 @@
+<!--
+  REFERENCE DATE: Feb 18, 2026
+  All mock data (dates, YoY periods) is consistent with this reference date.
+  Staleness rules per PRD §3.4: amber = no entry by 2nd of month, red = no entry by 7th.
+  Both badge colors are shown here for visual reference (Electricity=red, Heat=amber), even
+  though at Feb 18 both would technically be red. In the real app, badge color is computed
+  from the current date — amber appears between the 2nd and 7th, red from the 7th onward.
+-->
 <!DOCTYPE html>
 <html lang="en" class="">
 <head>
@@ -214,7 +222,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <!-- Stale badge -->
+                        <!-- Stale badge (amber — illustrative, see reference date comment) -->
                         <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs font-medium rounded-full border border-amber-600 dark:border-amber-400">
                             <span class="w-1.5 h-1.5 bg-amber-500 dark:bg-amber-400 rounded-full animate-pulse"></span>Stale
                         </span>
@@ -288,14 +296,14 @@
                 </div>
                 <div class="flex items-center justify-between sm:block border-t border-base-100 dark:border-base-700 pt-3 sm:border-0 sm:pt-0">
                     <div>
-                        <div class="text-[10px] text-base-300 dark:text-base-500 uppercase tracking-wider mb-1">Avg Cost/kWh (Elec.)</div>
+                        <div class="text-[10px] text-base-300 dark:text-base-500 uppercase tracking-wider mb-1">Avg Monthly Cost</div>
                         <div class="flex items-baseline gap-2">
-                            <span class="font-mono-data text-sm font-medium">3,13</span>
-                            <span class="font-mono-data text-xs text-base-300 dark:text-base-500">vs 3,32</span>
+                            <span class="font-mono-data text-sm font-medium text-emerald-600 dark:text-emerald-400">4.280</span>
+                            <span class="font-mono-data text-xs text-base-300 dark:text-base-500">vs 4.560</span>
                         </div>
                     </div>
                     <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400 sm:mt-0.5 inline-flex items-center gap-0.5">
-                        -5,7%<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                        -6,1%<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                     </div>
                 </div>
             </div>
@@ -315,6 +323,15 @@
                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
                                     YoY
                                 </button>
+                                <!-- Stacked / Grouped toggle -->
+                                <div class="flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5">
+                                    <button onclick="setChartLayout('grouped', this)" class="chart-layout-btn px-1.5 py-1 rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 shadow-sm" title="Grouped">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="10" width="4" height="10" rx="0.5" stroke-width="2"/><rect x="10" y="6" width="4" height="14" rx="0.5" stroke-width="2"/><rect x="17" y="14" width="4" height="6" rx="0.5" stroke-width="2"/></svg>
+                                    </button>
+                                    <button onclick="setChartLayout('stacked', this)" class="chart-layout-btn px-1.5 py-1 rounded-md text-base-400" title="Stacked">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="5" rx="0.5" stroke-width="2"/><rect x="6" y="10.5" width="12" height="5" rx="0.5" stroke-width="2"/><rect x="6" y="17" width="12" height="5" rx="0.5" stroke-width="2"/></svg>
+                                    </button>
+                                </div>
                                 <!-- Mode toggle -->
                                 <div class="flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5">
                                     <button onclick="setChartMode('consumption', this)" class="chart-mode-btn px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm">Consumption</button>
@@ -352,9 +369,9 @@
                     <!-- Chart placeholder -->
                     <div class="h-64 sm:h-80 rounded-xl border-2 border-dashed border-base-200 dark:border-base-600 flex items-center justify-center">
                         <div class="text-center text-base-300 dark:text-base-500">
-                            <div class="text-sm font-medium mb-1">[Grouped Bar Chart — YTD]</div>
+                            <div id="chart-layout-label" class="text-sm font-medium mb-1">[Grouped Bar Chart — YTD]</div>
                             <div class="text-xs">Monthly consumption per utility (kWh, m³, MWh)</div>
-                            <div class="text-xs mt-0.5">Toggle to Cost for monthly cost bars (DKK)</div>
+                            <div class="text-xs mt-0.5">Toggle layout between grouped and stacked bars</div>
                             <div class="flex items-center justify-center gap-4 mt-3">
                                 <div class="flex items-center gap-1.5">
                                     <div class="w-3 h-3 rounded-sm bg-amber-500"></div>
@@ -375,6 +392,11 @@
 
         </div>
 
+        <!-- Add Utility -->
+        <button onclick="showDialog('add-utility-dialog')" class="w-full py-3 text-sm font-medium text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors flex items-center justify-center gap-1.5 mt-2 mb-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Add Utility
+        </button>
 
     </main>
 
@@ -408,7 +430,7 @@
     <div id="add-reading-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-reading-dialog')"></div>
         <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
                 <!-- Mobile drag handle -->
                 <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
                 <!-- Header -->
@@ -448,6 +470,7 @@
                 <!-- Footer -->
                 <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
                     <button onclick="closeDialog('add-reading-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-reading-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg hover:bg-base-50 dark:hover:bg-base-700 transition-colors">Save & Add Another</button>
                     <button onclick="closeDialog('add-reading-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 hover:bg-base-800 dark:hover:bg-accent-700 rounded-lg transition-colors">Save Reading</button>
                 </div>
             </div>
@@ -458,7 +481,7 @@
     <div id="add-bill-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-bill-dialog')"></div>
         <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
                 <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
                 <!-- Header -->
                 <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
@@ -489,6 +512,10 @@
                         </div>
                     </div>
                     <div>
+                        <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Date received</label>
+                        <input type="datetime-local" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                    </div>
+                    <div>
                         <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label>
                         <input type="text" placeholder="e.g. Annual settlement bill" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
                     </div>
@@ -503,6 +530,7 @@
                 <!-- Footer -->
                 <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
                     <button onclick="closeDialog('add-bill-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-bill-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg hover:bg-base-50 dark:hover:bg-base-700 transition-colors">Save & Add Another</button>
                     <button onclick="closeDialog('add-bill-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 hover:bg-base-800 dark:hover:bg-accent-700 rounded-lg transition-colors">Save Bill</button>
                 </div>
             </div>
@@ -548,6 +576,130 @@
             });
             btn.className = 'chart-mode-btn px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm';
         }
+        function selectIcon(btn) {
+            document.querySelectorAll('.utility-icon-btn').forEach(b => {
+                b.className = 'utility-icon-btn flex items-center justify-center w-8 h-8 rounded-lg border-2 border-transparent hover:border-base-300 dark:hover:border-base-500 text-base-600 dark:text-base-300 transition-colors';
+            });
+            btn.className = 'utility-icon-btn flex items-center justify-center w-8 h-8 rounded-lg border-2 border-accent-500 bg-accent-50 dark:bg-accent-900/30 text-base-600 dark:text-base-300 transition-colors';
+            const preview = document.getElementById('icon-preview');
+            preview.innerHTML = btn.innerHTML;
+            preview.className = 'flex items-center justify-center w-[42px] h-[42px] rounded-lg border-2 border-accent-500 bg-accent-50 dark:bg-accent-900/30 cursor-pointer transition-colors';
+        }
+        function selectColor(btn, color) {
+            document.querySelectorAll('.utility-color-btn').forEach(b => {
+                const c = b.dataset.color;
+                b.className = 'utility-color-btn w-7 h-7 rounded-full bg-' + c + '-500 ring-2 ring-offset-2 ring-transparent dark:ring-offset-base-800 hover:ring-' + c + '-300 transition-all';
+            });
+            btn.className = 'utility-color-btn w-7 h-7 rounded-full bg-' + color + '-500 ring-2 ring-offset-2 ring-' + color + '-500 dark:ring-offset-base-800 transition-all';
+        }
+        let currentLayout = 'grouped';
+        function setChartLayout(layout, btn) {
+            currentLayout = layout;
+            document.querySelectorAll('.chart-layout-btn').forEach(b => {
+                b.className = 'chart-layout-btn px-1.5 py-1 rounded-md text-base-400';
+            });
+            btn.className = 'chart-layout-btn px-1.5 py-1 rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 shadow-sm';
+            const label = document.getElementById('chart-layout-label');
+            if (label) {
+                const layoutName = layout === 'grouped' ? 'Grouped' : 'Stacked';
+                label.textContent = '[' + layoutName + ' Bar Chart — YTD]';
+            }
+        }
     </script>
+
+    <!-- Add Utility Dialog -->
+    <div id="add-utility-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-utility-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
+                <!-- Mobile drag handle -->
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <!-- Header -->
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
+                    <h3 class="text-base font-semibold">Add Utility</h3>
+                </div>
+                <!-- Form -->
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
+                    <!-- Icon & Name row -->
+                    <div class="flex items-start gap-3">
+                        <div class="shrink-0">
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Icon <span class="text-red-400">*</span></label>
+                            <button onclick="document.getElementById('icon-picker').classList.toggle('hidden')" id="icon-preview" class="flex items-center justify-center w-[42px] h-[42px] rounded-lg border-2 border-dashed border-base-300 dark:border-base-500 hover:border-accent-500 dark:hover:border-accent-400 bg-base-50 dark:bg-base-900 cursor-pointer transition-colors">
+                                <svg class="w-5 h-5 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            </button>
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Name <span class="text-red-400">*</span></label>
+                            <input type="text" placeholder="e.g. Electricity" class="w-full px-3 py-2.5 text-sm rounded-lg border border-base-200 dark:border-base-600 bg-white dark:bg-base-700 text-base-900 dark:text-base-100 placeholder-base-300 dark:placeholder-base-500 focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500 outline-none">
+                        </div>
+                    </div>
+                    <!-- Icon picker (hidden by default) -->
+                    <div id="icon-picker" class="hidden border border-base-200 dark:border-base-600 rounded-lg p-3 space-y-3">
+                        <div>
+                            <div class="text-[10px] font-medium text-base-400 dark:text-base-500 uppercase tracking-wider mb-2">Icon</div>
+                            <div class="grid grid-cols-8 gap-1.5">
+                                <!-- Bolt / Electricity -->
+                                <button onclick="selectIcon(this)" data-icon="bolt" class="utility-icon-btn flex items-center justify-center w-8 h-8 rounded-lg border-2 border-accent-500 bg-accent-50 dark:bg-accent-900/30 text-base-600 dark:text-base-300 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                </button>
+                                <!-- Droplet / Water -->
+                                <button onclick="selectIcon(this)" data-icon="droplet" class="utility-icon-btn flex items-center justify-center w-8 h-8 rounded-lg border-2 border-transparent hover:border-base-300 dark:hover:border-base-500 text-base-600 dark:text-base-300 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21c-4.97 0-9-4.03-9-9 0-4.632 8.086-11.118 8.427-11.385a.956.956 0 011.146 0C12.914.882 21 7.368 21 12c0 4.97-4.03 9-9 9z"/></svg>
+                                </button>
+                                <!-- Flame / Heat -->
+                                <button onclick="selectIcon(this)" data-icon="flame" class="utility-icon-btn flex items-center justify-center w-8 h-8 rounded-lg border-2 border-transparent hover:border-base-300 dark:hover:border-base-500 text-base-600 dark:text-base-300 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/></svg>
+                                </button>
+                                <!-- Sun / Solar -->
+                                <button onclick="selectIcon(this)" data-icon="sun" class="utility-icon-btn flex items-center justify-center w-8 h-8 rounded-lg border-2 border-transparent hover:border-base-300 dark:hover:border-base-500 text-base-600 dark:text-base-300 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                                </button>
+                                <!-- Wind -->
+                                <button onclick="selectIcon(this)" data-icon="wind" class="utility-icon-btn flex items-center justify-center w-8 h-8 rounded-lg border-2 border-transparent hover:border-base-300 dark:hover:border-base-500 text-base-600 dark:text-base-300 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.59 4.59A2 2 0 1111 8H2m10.59 11.41A2 2 0 1014 16H2m15.73-8.27A2.5 2.5 0 1119.5 12H2"/></svg>
+                                </button>
+                                <!-- Thermometer -->
+                                <button onclick="selectIcon(this)" data-icon="thermometer" class="utility-icon-btn flex items-center justify-center w-8 h-8 rounded-lg border-2 border-transparent hover:border-base-300 dark:hover:border-base-500 text-base-600 dark:text-base-300 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg>
+                                </button>
+                                <!-- Wifi / Internet -->
+                                <button onclick="selectIcon(this)" data-icon="wifi" class="utility-icon-btn flex items-center justify-center w-8 h-8 rounded-lg border-2 border-transparent hover:border-base-300 dark:hover:border-base-500 text-base-600 dark:text-base-300 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12.55a11 11 0 0114.08 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0M12 20h.01"/></svg>
+                                </button>
+                                <!-- Trash / Waste -->
+                                <button onclick="selectIcon(this)" data-icon="trash" class="utility-icon-btn flex items-center justify-center w-8 h-8 rounded-lg border-2 border-transparent hover:border-base-300 dark:hover:border-base-500 text-base-600 dark:text-base-300 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] font-medium text-base-400 dark:text-base-500 uppercase tracking-wider mb-2">Color</div>
+                            <div class="flex gap-2">
+                                <button onclick="selectColor(this, 'amber')" data-color="amber" class="utility-color-btn w-7 h-7 rounded-full bg-amber-500 ring-2 ring-offset-2 ring-amber-500 dark:ring-offset-base-800 transition-all"></button>
+                                <button onclick="selectColor(this, 'blue')" data-color="blue" class="utility-color-btn w-7 h-7 rounded-full bg-blue-500 ring-2 ring-offset-2 ring-transparent dark:ring-offset-base-800 hover:ring-blue-300 transition-all"></button>
+                                <button onclick="selectColor(this, 'orange')" data-color="orange" class="utility-color-btn w-7 h-7 rounded-full bg-orange-500 ring-2 ring-offset-2 ring-transparent dark:ring-offset-base-800 hover:ring-orange-300 transition-all"></button>
+                                <button onclick="selectColor(this, 'emerald')" data-color="emerald" class="utility-color-btn w-7 h-7 rounded-full bg-emerald-500 ring-2 ring-offset-2 ring-transparent dark:ring-offset-base-800 hover:ring-emerald-300 transition-all"></button>
+                                <button onclick="selectColor(this, 'violet')" data-color="violet" class="utility-color-btn w-7 h-7 rounded-full bg-violet-500 ring-2 ring-offset-2 ring-transparent dark:ring-offset-base-800 hover:ring-violet-300 transition-all"></button>
+                                <button onclick="selectColor(this, 'rose')" data-color="rose" class="utility-color-btn w-7 h-7 rounded-full bg-rose-500 ring-2 ring-offset-2 ring-transparent dark:ring-offset-base-800 hover:ring-rose-300 transition-all"></button>
+                                <button onclick="selectColor(this, 'cyan')" data-color="cyan" class="utility-color-btn w-7 h-7 rounded-full bg-cyan-500 ring-2 ring-offset-2 ring-transparent dark:ring-offset-base-800 hover:ring-cyan-300 transition-all"></button>
+                                <button onclick="selectColor(this, 'slate')" data-color="slate" class="utility-color-btn w-7 h-7 rounded-full bg-slate-500 ring-2 ring-offset-2 ring-transparent dark:ring-offset-base-800 hover:ring-slate-300 transition-all"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Unit -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Unit <span class="text-red-400">*</span></label>
+                        <input type="text" placeholder="e.g. kWh, m³, MWh" class="w-full px-3 py-2.5 text-sm rounded-lg border border-base-200 dark:border-base-600 bg-white dark:bg-base-700 text-base-900 dark:text-base-100 placeholder-base-300 dark:placeholder-base-500 focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500 outline-none">
+                    </div>
+                </div>
+                <!-- Footer -->
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('add-utility-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-utility-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 hover:bg-base-800 dark:hover:bg-accent-700 rounded-lg transition-colors">Add Utility</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

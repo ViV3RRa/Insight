@@ -766,67 +766,67 @@
             <table id="bills-table" class="w-full table-fixed">
                 <thead>
                     <tr class="bg-base-50/40 dark:bg-base-900/30">
-                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-base-300 dark:text-base-500 w-36">Date</th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-base-300 dark:text-base-500">Period</th>
                         <th class="px-3 lg:px-6 py-3 text-right text-xs font-medium text-base-300 dark:text-base-500 w-36">Amount</th>
-                        <th class="hidden sm:table-cell px-3 lg:px-6 py-3 text-left text-xs font-medium text-base-300 dark:text-base-500">Period</th>
+                        <th class="hidden lg:table-cell px-3 lg:px-6 py-3 text-left text-xs font-medium text-base-300 dark:text-base-500 w-36">Date received</th>
                         <th class="hidden lg:table-cell px-3 lg:px-6 py-3 text-left text-xs font-medium text-base-300 dark:text-base-500">Note</th>
                         <th class="hidden lg:table-cell px-3 lg:px-6 py-3 text-left text-xs font-medium text-base-300 dark:text-base-500">Attachment</th>
-                        <th class="hidden lg:table-cell px-3 lg:px-6 py-3w-20"></th>
+                        <th class="hidden lg:table-cell px-3 lg:px-6 py-3 w-20"></th>
                     </tr>
                 </thead>
                 <tbody class="border-t border-base-100 dark:border-base-700">
-                    <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"date":"2025-12-15","amount":"12.036 DKK","period":"Jan 2025 – Dec 2025","note":"Annual settlement","attachment":"bill_2025.pdf"}' onclick="openBillDrawer(this)">
-                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-500">2025-12-15</td>
+                    <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"period":"Jan 2025 – Dec 2025","amount":"12.036 DKK","dateReceived":"2025-12-15","note":"Annual settlement","attachment":"bill_2025.pdf"}' onclick="openBillDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2025 – Dec 2025</td>
                         <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm font-medium">12.036 <span class="text-xs text-base-300">DKK</span></td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2025 – Dec 2025</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-400">2025-12-15</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Annual settlement</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5"><button onclick="event.stopPropagation()" class="text-accent-700 dark:text-accent-400 hover:underline text-xs">bill_2025.pdf</button></td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right"><div class="flex items-center justify-end gap-2"><button onclick="event.stopPropagation(); showDialog('edit-bill-dialog')" class="p-1 text-base-300 hover:text-base-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1 text-base-300 hover:text-rose-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td>
                     </tr>
-                    <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"date":"2024-12-18","amount":"12.820 DKK","period":"Jan 2024 – Dec 2024","note":"Annual settlement","attachment":"bill_2024.pdf"}' onclick="openBillDrawer(this)">
-                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-500">2024-12-18</td>
+                    <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"period":"Jan 2024 – Dec 2024","amount":"12.820 DKK","dateReceived":"2024-12-18","note":"Annual settlement","attachment":"bill_2024.pdf"}' onclick="openBillDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2024 – Dec 2024</td>
                         <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm font-medium">12.820 <span class="text-xs text-base-300">DKK</span></td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2024 – Dec 2024</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-400">2024-12-18</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Annual settlement</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5"><button onclick="event.stopPropagation()" class="text-accent-700 dark:text-accent-400 hover:underline text-xs">bill_2024.pdf</button></td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right"><div class="flex items-center justify-end gap-2"><button onclick="event.stopPropagation(); showDialog('edit-bill-dialog')" class="p-1 text-base-300 hover:text-base-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1 text-base-300 hover:text-rose-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td>
                     </tr>
-                    <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"date":"2023-12-20","amount":"13.502 DKK","period":"Jan 2023 – Dec 2023","note":null,"attachment":null}' onclick="openBillDrawer(this)">
-                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-500">2023-12-20</td>
+                    <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"period":"Jan 2023 – Dec 2023","amount":"13.502 DKK","dateReceived":"2023-12-20","note":null,"attachment":null}' onclick="openBillDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2023 – Dec 2023</td>
                         <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm font-medium">13.502 <span class="text-xs text-base-300">DKK</span></td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2023 – Dec 2023</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-400">2023-12-20</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-400">—</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-300">—</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right"><div class="flex items-center justify-end gap-2"><button onclick="event.stopPropagation(); showDialog('edit-bill-dialog')" class="p-1 text-base-300 hover:text-base-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1 text-base-300 hover:text-rose-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td>
                     </tr>
-                    <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"date":"2022-12-19","amount":"14.105 DKK","period":"Jan 2022 – Dec 2022","note":"Annual settlement","attachment":null}' onclick="openBillDrawer(this)">
-                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-500">2022-12-19</td>
+                    <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"period":"Jan 2022 – Dec 2022","amount":"14.105 DKK","dateReceived":"2022-12-19","note":"Annual settlement","attachment":null}' onclick="openBillDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2022 – Dec 2022</td>
                         <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm font-medium">14.105 <span class="text-xs text-base-300">DKK</span></td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2022 – Dec 2022</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-400">2022-12-19</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Annual settlement</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-300">—</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right"><div class="flex items-center justify-end gap-2"><button onclick="event.stopPropagation(); showDialog('edit-bill-dialog')" class="p-1 text-base-300 hover:text-base-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1 text-base-300 hover:text-rose-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td>
                     </tr>
-                    <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"date":"2021-12-17","amount":"10.843 DKK","period":"Jan 2021 – Dec 2021","note":"Annual settlement","attachment":"bill_2021.pdf"}' onclick="openBillDrawer(this)">
-                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-500">2021-12-17</td>
+                    <tr class="border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"period":"Jan 2021 – Dec 2021","amount":"10.843 DKK","dateReceived":"2021-12-17","note":"Annual settlement","attachment":"bill_2021.pdf"}' onclick="openBillDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2021 – Dec 2021</td>
                         <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm font-medium">10.843 <span class="text-xs text-base-300">DKK</span></td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2021 – Dec 2021</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-400">2021-12-17</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Annual settlement</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5"><button onclick="event.stopPropagation()" class="text-accent-700 dark:text-accent-400 hover:underline text-xs">bill_2021.pdf</button></td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right"><div class="flex items-center justify-end gap-2"><button onclick="event.stopPropagation(); showDialog('edit-bill-dialog')" class="p-1 text-base-300 hover:text-base-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1 text-base-300 hover:text-rose-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td>
                     </tr>
-                    <tr class="hidden border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"date":"2020-12-21","amount":"9.766 DKK","period":"Jan 2020 – Dec 2020","note":null,"attachment":null}' onclick="openBillDrawer(this)">
-                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-500">2020-12-21</td>
+                    <tr class="hidden border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"period":"Jan 2020 – Dec 2020","amount":"9.766 DKK","dateReceived":"2020-12-21","note":null,"attachment":null}' onclick="openBillDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2020 – Dec 2020</td>
                         <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm font-medium">9.766 <span class="text-xs text-base-300">DKK</span></td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2020 – Dec 2020</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-400">2020-12-21</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-400">—</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-300">—</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right"><div class="flex items-center justify-end gap-2"><button onclick="event.stopPropagation(); showDialog('edit-bill-dialog')" class="p-1 text-base-300 hover:text-base-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1 text-base-300 hover:text-rose-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td>
                     </tr>
-                    <tr class="hidden border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"date":"2019-12-18","amount":"9.234 DKK","period":"Jan 2019 – Dec 2019","note":null,"attachment":null}' onclick="openBillDrawer(this)">
-                        <td class="px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-500">2019-12-18</td>
+                    <tr class="hidden border-t border-base-100 dark:border-base-700 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-pointer lg:cursor-default transition-colors" data-bill='{"period":"Jan 2019 – Dec 2019","amount":"9.234 DKK","dateReceived":"2019-12-18","note":null,"attachment":null}' onclick="openBillDrawer(this)">
+                        <td class="px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2019 – Dec 2019</td>
                         <td class="px-3 lg:px-6 py-3.5 text-right font-mono-data text-sm font-medium">9.234 <span class="text-xs text-base-300">DKK</span></td>
-                        <td class="hidden sm:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-500">Jan 2019 – Dec 2019</td>
+                        <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 font-mono-data text-sm text-base-400">2019-12-18</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-400">—</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-sm text-base-300">—</td>
                         <td class="hidden lg:table-cell px-3 lg:px-6 py-3.5 text-right"><div class="flex items-center justify-end gap-2"><button onclick="event.stopPropagation(); showDialog('edit-bill-dialog')" class="p-1 text-base-300 hover:text-base-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button onclick="event.stopPropagation(); showDialog('delete-confirm-dialog')" class="p-1 text-base-300 hover:text-rose-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td>
@@ -867,7 +867,7 @@
 
     <!-- Month Detail Drawer (mobile/tablet) -->
     <div id="month-drawer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300 ease-out lg:hidden" role="dialog" aria-modal="true">
-        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[85vh] overflow-y-auto">
+        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[92vh] overflow-y-auto">
             <div class="flex justify-center pt-3 pb-1">
                 <div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div>
             </div>
@@ -911,7 +911,7 @@
 
     <!-- Reading Detail Drawer (mobile/tablet) -->
     <div id="reading-drawer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300 ease-out lg:hidden" role="dialog" aria-modal="true">
-        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[85vh] overflow-y-auto">
+        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[92vh] overflow-y-auto">
             <div class="flex justify-center pt-3 pb-1">
                 <div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div>
             </div>
@@ -947,7 +947,7 @@
 
     <!-- Bill Detail Drawer (mobile/tablet) -->
     <div id="bill-drawer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300 ease-out lg:hidden" role="dialog" aria-modal="true">
-        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[85vh] overflow-y-auto">
+        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[92vh] overflow-y-auto">
             <div class="flex justify-center pt-3 pb-1">
                 <div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div>
             </div>
@@ -955,7 +955,7 @@
                 <button onclick="navigateBillDrawer(-1)" id="bill-prev" class="shrink-0 p-1.5 -ml-1.5 rounded-lg text-base-300 hover:text-base-600 hover:bg-base-100 dark:hover:text-base-300 dark:hover:bg-base-700 transition-colors disabled:opacity-25 disabled:pointer-events-none" disabled>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                 </button>
-                <h3 id="bill-title" class="flex-1 text-center font-semibold text-base truncate min-w-0">2025-12-15</h3>
+                <h3 id="bill-title" class="flex-1 text-center font-semibold text-base truncate min-w-0">Jan 2025 – Dec 2025</h3>
                 <button onclick="navigateBillDrawer(1)" id="bill-next" class="shrink-0 p-1.5 rounded-lg text-base-300 hover:text-base-600 hover:bg-base-100 dark:hover:text-base-300 dark:hover:bg-base-700 transition-colors disabled:opacity-25 disabled:pointer-events-none" disabled>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </button>
@@ -966,8 +966,8 @@
                     <div id="bill-amount" class="font-mono-data text-lg font-medium">12.036 DKK</div>
                 </div>
                 <div>
-                    <div class="text-xs text-base-400 mb-1">Period</div>
-                    <div id="bill-period" class="text-sm">Jan 2025 – Dec 2025</div>
+                    <div class="text-xs text-base-400 mb-1">Date received</div>
+                    <div id="bill-date-received" class="text-sm text-base-500">2025-12-15</div>
                 </div>
                 <div id="bill-note-row">
                     <div class="text-xs text-base-400 mb-1">Note</div>
@@ -989,7 +989,7 @@
     <div id="edit-reading-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('edit-reading-dialog')"></div>
         <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
                 <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
                 <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
                     <h3 class="text-base font-semibold">Edit Reading</h3>
@@ -1018,7 +1018,7 @@
     <div id="edit-bill-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('edit-bill-dialog')"></div>
         <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
                 <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
                 <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
                     <h3 class="text-base font-semibold">Edit Bill</h3>
@@ -1029,6 +1029,7 @@
                         <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Period Start <span class="text-rose-500">*</span></label><input type="date" value="2025-01-01" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
                         <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Period End <span class="text-rose-500">*</span></label><input type="date" value="2025-12-31" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
                     </div>
+                    <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Date received</label><input type="datetime-local" id="edit-bill-date-received" value="2025-12-15T00:00" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
                     <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label><input type="text" value="Annual settlement" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
                     <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Attachment</label>
                         <div class="flex items-center gap-3 p-3 border border-base-200 dark:border-base-600 rounded-lg bg-base-50 dark:bg-base-700/50">
@@ -1073,7 +1074,7 @@
     <div id="add-reading-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-reading-dialog')"></div>
         <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
                 <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
                 <!-- Header -->
                 <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
@@ -1091,6 +1092,7 @@
                 <!-- Footer -->
                 <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
                     <button onclick="closeDialog('add-reading-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-reading-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg hover:bg-base-50 dark:hover:bg-base-700 transition-colors">Save & Add Another</button>
                     <button onclick="closeDialog('add-reading-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 hover:bg-base-800 dark:hover:bg-accent-700 rounded-lg transition-colors">Save Reading</button>
                 </div>
             </div>
@@ -1101,7 +1103,7 @@
     <div id="add-bill-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-bill-dialog')"></div>
         <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
                 <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
                 <!-- Header -->
                 <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
@@ -1114,6 +1116,7 @@
                         <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Period Start <span class="text-rose-500">*</span></label><input type="date" value="2025-01-01" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
                         <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Period End <span class="text-rose-500">*</span></label><input type="date" value="2025-12-31" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
                     </div>
+                    <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Date received</label><input type="datetime-local" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
                     <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label><input type="text" placeholder="e.g. Annual settlement" class="w-full px-3 py-2.5 border border-base-200 dark:border-base-600 rounded-lg bg-white dark:bg-base-900 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
                     <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Attachment</label>
                         <div class="w-full px-3 py-4 border border-dashed border-base-200 dark:border-base-600 rounded-lg bg-base-50 dark:bg-base-700/50 text-center cursor-pointer hover:border-base-300 dark:hover:border-base-500 transition-colors"><svg class="w-5 h-5 mx-auto mb-1 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg><span class="text-xs text-base-400">Drop file or click to upload</span></div>
@@ -1122,6 +1125,7 @@
                 <!-- Footer -->
                 <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
                     <button onclick="closeDialog('add-bill-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-bill-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg hover:bg-base-50 dark:hover:bg-base-700 transition-colors">Save & Add Another</button>
                     <button onclick="closeDialog('add-bill-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 hover:bg-base-800 dark:hover:bg-accent-700 rounded-lg transition-colors">Save Bill</button>
                 </div>
             </div>
@@ -1350,9 +1354,12 @@
 
         function populateBillDrawer(row) {
             const b = JSON.parse(row.getAttribute('data-bill'));
-            document.getElementById('bill-title').textContent = b.date;
+            document.getElementById('bill-title').textContent = b.period;
             document.getElementById('bill-amount').textContent = b.amount;
-            document.getElementById('bill-period').textContent = b.period;
+            document.getElementById('bill-date-received').textContent = b.dateReceived || '—';
+            document.getElementById('bill-date-received').className = b.dateReceived
+                ? 'text-sm text-base-500'
+                : 'text-sm text-base-300 dark:text-base-500';
             document.getElementById('bill-note').textContent = b.note || '—';
             document.getElementById('bill-note').className = b.note
                 ? 'text-sm text-base-600 dark:text-base-300'

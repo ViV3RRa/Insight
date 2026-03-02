@@ -1,3 +1,14 @@
+<!--
+  NON-DKK PLATFORM VARIATIONS
+  This prototype shows a DKK platform (Nordnet ASK). For non-DKK platforms (e.g. EUR),
+  the following conditional elements apply (see PRD §4.3, §6.4, §9.4):
+
+  - Dual-currency display: Values show native currency with DKK equivalent using ≈ prefix
+    (e.g. "€12.450 ≈ 92.814 DKK"). Applies to summary cards, data point values, transaction amounts.
+  - Exchange rate column: Extra column in Transactions table showing the rate and source (auto/manual).
+  - Exchange rate field: Auto-populated in Add/Edit Transaction dialog, editable, with visible source indicator.
+  - Currency suffix: Value inputs and table cells show the platform's native currency code instead of DKK.
+-->
 <!DOCTYPE html>
 <html lang="en" class="">
 <head>
@@ -339,9 +350,15 @@
                 <div class="flex flex-col gap-3 mb-4 sm:mb-5">
                     <div class="flex items-center justify-between">
                         <h3 class="text-sm font-semibold">Performance Overview</h3>
-                        <div class="flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5">
-                            <button class="px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm">Earnings</button>
-                            <button class="px-2.5 py-1 text-xs rounded-md text-base-400">XIRR %</button>
+                        <div class="flex items-center gap-2">
+                            <button onclick="this.classList.toggle('yoy-active'); this.classList.toggle('bg-accent-50'); this.classList.toggle('dark:bg-accent-700/20'); this.classList.toggle('text-accent-600'); this.classList.toggle('dark:text-accent-400'); this.classList.toggle('border-accent-200'); this.classList.toggle('dark:border-accent-600'); this.classList.toggle('text-base-400'); this.classList.toggle('border-base-200'); this.classList.toggle('dark:border-base-600')" class="px-2.5 py-1 text-xs rounded-lg border text-base-400 border-base-200 dark:border-base-600 hover:border-base-300 dark:hover:border-base-500 transition-colors flex items-center gap-1.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                                YoY
+                            </button>
+                            <div class="flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5">
+                                <button class="px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm">Earnings</button>
+                                <button class="px-2.5 py-1 text-xs rounded-md text-base-400">XIRR %</button>
+                            </div>
                         </div>
                     </div>
                     <div class="sm:flex sm:justify-end">
@@ -375,6 +392,7 @@
                     <div class="text-center">
                         <div class="text-base-300 dark:text-base-500 mb-1">[Earnings Line/Area Chart — YTD]</div>
                         <div class="text-xs text-base-200 dark:text-base-600">Earnings over selected period · Toggle to XIRR % for cumulative XIRR</div>
+                        <div class="text-xs text-blue-300 dark:text-blue-600 mt-1">YoY: dashed ghost line for last year</div>
                     </div>
                 </div>
             </div>
@@ -952,7 +970,7 @@
 
     <!-- Transaction Detail Drawer (mobile) -->
     <div id="tx-drawer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300 ease-out lg:hidden" role="dialog" aria-modal="true">
-        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[85vh] overflow-y-auto">
+        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[92vh] overflow-y-auto">
             <div class="flex justify-center pt-3 pb-1">
                 <div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div>
             </div>
@@ -999,7 +1017,7 @@
 
     <!-- Data Point Detail Drawer (mobile) -->
     <div id="dp-drawer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300 ease-out lg:hidden" role="dialog" aria-modal="true">
-        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[85vh] overflow-y-auto">
+        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[92vh] overflow-y-auto">
             <div class="flex justify-center pt-3 pb-1">
                 <div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div>
             </div>
@@ -1041,7 +1059,7 @@
 
     <!-- Performance Row Detail Drawer (mobile) -->
     <div id="perf-drawer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300 ease-out lg:hidden" role="dialog" aria-modal="true">
-        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[85vh] overflow-y-auto">
+        <div class="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[92vh] overflow-y-auto">
             <div class="flex justify-center pt-3 pb-1">
                 <div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div>
             </div>
@@ -1667,7 +1685,7 @@
     <div id="add-datapoint-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-datapoint-dialog')"></div>
         <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
                 <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
                 <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
                     <h3 class="text-base font-semibold">Add Data Point</h3>
@@ -1705,7 +1723,7 @@
     <div id="add-transaction-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-transaction-dialog')"></div>
         <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
                 <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
                 <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
                     <h3 id="tx-dialog-title" class="text-base font-semibold">Add Transaction</h3>
@@ -1768,7 +1786,7 @@
     <div id="edit-transaction-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('edit-transaction-dialog')"></div>
         <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
                 <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
                 <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
                     <h3 class="text-base font-semibold">Edit Transaction</h3>
@@ -1825,7 +1843,7 @@
     <div id="edit-datapoint-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('edit-datapoint-dialog')"></div>
         <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
                 <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
                 <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
                     <h3 class="text-base font-semibold">Edit Data Point</h3>
@@ -1867,7 +1885,7 @@
     <div id="edit-platform-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('edit-platform-dialog')"></div>
         <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
-            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
                 <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
                 <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
                     <h3 class="text-base font-semibold">Edit Platform</h3>

@@ -100,8 +100,14 @@ Default: **YTD**. Selecting a time span recalculates the chart and any associate
 
 Two complementary YoY mechanisms:
 
-**YoY Comparison Summary** — An always-visible card on overview pages showing key metrics compared to the equivalent prior-year period. The comparison period is derived automatically (e.g. "Jan 1 – Feb 17, 2025" for the same YTD window last year). Metrics shown:
+**YoY Comparison Summary** — An always-visible card on overview pages showing key metrics compared to the equivalent prior-year period. The comparison period is derived automatically (e.g. "Jan 1 – Feb 17, 2025" for the same YTD window last year). Metrics are section-specific:
 
+*Home (Utilities) overview:*
+- YTD Total Cost: current vs same YTD period last year, with percentage change.
+- Current Month Cost: current vs same month last year, with percentage change.
+- Avg Monthly Cost: current year average vs prior year average for the same period, with percentage change.
+
+*Portfolio (Investment) overview:*
 - YTD Earnings: current vs same YTD period last year, with percentage change.
 - YTD XIRR: current vs same period last year, with change in percentage points.
 - Current month earnings: current vs same month last year, with percentage change.
@@ -135,7 +141,7 @@ Once a data point or meter reading is added for the current month, the badge dis
 
 Every data entry across the platform — meter readings, data points, transactions, refuelings, maintenance events, bills — has an **optional note field**. This free-text field allows the user to attach context to any observation (e.g. "meter was replaced, reading reset", "bonus deposited", "long road trip").
 
-Notes are displayed alongside the data point in tables and are searchable within a section.
+Notes are displayed alongside the data point in tables.
 
 ### 3.6 Expandable Data Tables
 
@@ -147,6 +153,8 @@ Where raw data is relevant (readings, data points, transactions, maintenance eve
 - Display the note field (if populated) for each row.
 - On mobile, columns that don't fit are replaced by a single **cyclable column** — tap the header to cycle through hidden values (see §8.3 for full pattern).
 - **Mobile row-tap drawers**: On mobile, tapping a table row opens a bottom drawer showing the full record details (all fields that are hidden on mobile) plus Edit and Delete action buttons. This replaces the inline icon buttons used on desktop, giving mobile users full access to record details and actions without cramming icons into narrow rows.
+
+**Note:** Charts and performance analysis sections on detail pages (utility detail, platform detail) are **always visible** — they are not collapsible. Only raw data tables (meter readings, bills, transactions, data points) use the collapse-by-default behavior.
 
 ### 3.7 Locale and Formatting
 
@@ -241,6 +249,8 @@ Currently: **DKK** (home) and **EUR**. The system should be designed to support 
 | `id` | string | PocketBase auto-generated |
 | `name` | string | e.g. "Electricity", "Water", "Heat" |
 | `unit` | string | e.g. "kWh", "m³", "MWh" |
+| `icon` | string | Identifier from a curated icon set (e.g. "bolt", "droplet", "flame", "sun", "wind", "thermometer", "wifi", "trash") |
+| `color` | string | Preset palette color (e.g. "amber", "blue", "orange", "emerald", "violet", "rose", "cyan", "slate"). Used for card accent and chart series color. |
 | `created` | datetime | |
 
 #### 5.1.2 MeterReading
@@ -254,6 +264,7 @@ A point-in-time observation of a utility meter's cumulative value.
 | `value` | number | Cumulative meter reading |
 | `timestamp` | datetime | Defaults to now |
 | `note` | string (optional) | e.g. "meter replaced, reading reset" |
+| `attachment` | file (optional) | Photo of meter display, etc. |
 
 Consumption for a period = current reading − previous reading. The platform computes this automatically.
 
@@ -317,8 +328,7 @@ Navigated to by clicking a utility from the overview. Full-width view with back 
 - Utility name and metadata. Staleness badge if stale (per §3.4).
 - Summary stat cards (same metrics, scoped to this utility).
 - Time span selector.
-- Charts: monthly consumption, monthly cost, cost per unit over time.
-- YoY toggle.
+- Chart area with mode toggle: Consumption / Cost / Cost per Unit. A single chart with embedded time span selector, switching between the three views. YoY overlay toggle (per §3.2).
 - **Inline collapsible year rows**: A data table where each row represents a year, showing:
   - Total consumption for the year.
   - Average monthly consumption.
@@ -327,8 +337,10 @@ Navigated to by clicking a utility from the overview. Full-width view with back 
   - Average monthly cost.
   - Average cost per unit.
   - Annual cost change % (vs. previous year), color-coded: red for increase, green for decrease.
-  - **Expanding a year row** reveals the monthly detail rows for that year:
-    - Date, cumulative meter reading, computed period consumption, amortized cost, cost per unit, note, edit/delete.
+  - **Expanding a year row** reveals computed monthly summary rows for that year. Each row shows:
+    - Month label, consumption (interpolated from meter readings), consumption change % (vs. same month prior year), amortized cost, cost per unit, cost change % (vs. same month prior year).
+    - These are derived aggregations — not raw data records. Individual readings and bills are managed through the separate Meter Readings and Bills tables.
+- **Meter Readings table** (collapsible): date, meter value, note, attachment, edit/delete. Manages raw reading records separately from the computed yearly/monthly summaries above.
 - **Bills table** (collapsible): date, amount, period covered, note, attachment link, edit/delete.
 - "Add Reading" and "Add Bill" buttons.
 
@@ -509,7 +521,9 @@ All summary cards, charts, and platform lists below are scoped to the selected p
      - All-time gain/loss.
      - Clickable → platform detail page (historical view).
 5. **Portfolio allocation** — visual breakdown (donut chart, proportional bar, or similar) showing each platform's share of total portfolio value. Cash platforms and investment platforms visually distinguishable.
-6. **Quick-add buttons** — "Add Platform" (with type selection: investment or cash), "Add Data Point", and "Add Transaction".
+6. **Quick-add buttons** — distributed contextually rather than in a standalone section:
+   - "Add Data Point" and "Add Transaction" appear in the Investment Platforms table header on desktop, and as a full-width button row above the summary cards on mobile/tablet.
+   - "Add Platform" (with type selection: investment or cash) appears as a full-width text link below the platform tables (matching the "Add Utility" pattern on the Home overview).
 
 ### 6.4 Platform Detail Page (Investment)
 
@@ -525,7 +539,7 @@ Full-width view with back button.
 
 **Content (scrollable cards):**
 
-1. **Performance Overview** — Line/area chart with embedded time span selector. Toggle between:
+1. **Performance Overview** — Line/area chart with embedded time span selector and YoY toggle (§3.2). Toggle between:
    - **Earnings**: Monthly earnings over the selected period.
    - **XIRR %**: Cumulative XIRR (inception-to-date) evolving over the selected period as a smooth line chart.
 2. **Performance Analysis** — Tabbed card with Yearly / Monthly tabs. Each tab contains:
@@ -707,7 +721,7 @@ Full-width view with back button.
 
 ### 8.1 Top-Level Structure
 
-- **Desktop**: Horizontal top navigation bar with section links (**Home**, **Portfolio**, **Vehicles**) and a settings icon.
+- **Desktop**: Horizontal top navigation bar with section links (**Home**, **Investment**, **Vehicles**) and a settings icon.
 - **Mobile**: Fixed **bottom tab bar** with section icons and labels (Home, Investment, Vehicles, Settings). The bottom tab bar is always visible for one-thumb navigation and replaces the top nav links on small screens.
 - Additional sections can be added in the future (Subscriptions, Budget, Shared Expenses).
 - Each section has its own overview page as the landing view for that tab.
@@ -757,8 +771,9 @@ The platform supports **light mode** and **dark mode**, toggled via a setting. T
 All dialogs are modal overlays with backdrop blur. Forms validate before submission. Dialogs are responsive:
 
 - **Desktop**: Centered modal with backdrop blur, max-width constrained (e.g. `max-w-md`), rounded corners.
-- **Mobile**: Bottom sheet anchored to the bottom of the screen, sliding up with a drag handle at the top. Rounded top corners only. Max height ~85vh with scroll for overflow.
+- **Mobile**: Bottom sheet anchored to the bottom of the screen, sliding up with a drag handle at the top. Rounded top corners only. Max height ~92vh with scroll for overflow.
 - **Delete confirmations** are always small centered modals on both desktop and mobile (too compact for a bottom sheet).
+- **"Save & Add Another"**: Add dialogs for high-frequency data entry (Data Points, Transactions, Meter Readings, Bills, Refuelings) include a secondary "Save & Add Another" button alongside the primary save. It saves the current record, clears the form, and keeps the dialog open for the next entry.
 
 ### 9.1 Portfolio Dialog (Add / Edit)
 - Name (text, required).
@@ -773,11 +788,13 @@ All dialogs are modal overlays with backdrop blur. Forms validate before submiss
 - When editing: option to **close** the platform (sets status to closed, prompts for closure date and optional closure note).
 
 ### 9.3 Data Point Dialog
+- Platform (select, required — shown only when invoked from portfolio overview; pre-set and hidden when invoked from a platform detail page).
 - Value (number, required — in platform's native currency).
 - Timestamp (datetime-local, default: now).
 - Note (text, optional).
 
 ### 9.4 Transaction Dialog
+- Platform (select, required — shown only when invoked from portfolio overview; pre-set and hidden when invoked from a platform detail page).
 - Type: Deposit / Withdrawal (radio, required).
 - Amount (number, positive, required — in platform's native currency).
 - Exchange rate (number, auto-populated for non-DKK platforms, editable).
@@ -786,6 +803,8 @@ All dialogs are modal overlays with backdrop blur. Forms validate before submiss
 - Attachment (file, optional).
 
 ### 9.5 Utility Dialog (Add / Edit)
+- Icon (icon picker, required — curated set: bolt, droplet, flame, sun, wind, thermometer, wifi, trash).
+- Color (color palette, required — preset swatches: amber, blue, orange, emerald, violet, rose, cyan, slate).
 - Name (text, required).
 - Unit (text, required — e.g. "kWh").
 
@@ -793,11 +812,13 @@ All dialogs are modal overlays with backdrop blur. Forms validate before submiss
 - Value (number, required — cumulative reading).
 - Timestamp (datetime-local, default: now).
 - Note (text, optional).
+- Attachment (file, optional).
 
 ### 9.7 Bill Dialog
 - Amount (number, required).
 - Period start (date, required).
 - Period end (date, required).
+- Date received (datetime-local, optional, default: now).
 - Note (text, optional).
 - Attachment (file, optional).
 
@@ -847,7 +868,7 @@ All dialogs are modal overlays with backdrop blur. Forms validate before submiss
 | `data_points` | platform (relation), value, timestamp, isInterpolated, note | Value in platform's native currency. isInterpolated marks system-generated month-end values. |
 | `transactions` | platform (relation), type, amount, exchangeRate, timestamp, note, attachment | Amount in platform's native currency |
 | `utilities` | name, unit | |
-| `meter_readings` | utility (relation), value, timestamp, note | |
+| `meter_readings` | utility (relation), value, timestamp, note, attachment | |
 | `utility_bills` | utility (relation), amount, periodStart, periodEnd, note, attachment, timestamp | |
 | `vehicles` | name, type, make, model, year, licensePlate, fuelType, status, purchaseDate, purchasePrice, saleDate, salePrice, saleNote, photo | |
 | `refuelings` | vehicle (relation), date, fuelAmount, costPerUnit, totalCost, odometerReading, station, chargedAtHome, note, receipt, tripCounterPhoto | |
