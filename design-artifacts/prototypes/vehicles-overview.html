@@ -1,0 +1,638 @@
+<!--
+  REFERENCE DATE: Mar 2, 2026
+  All mock data (dates, YoY periods) is consistent with this reference date.
+  Vehicles section: 2 active (petrol car + petrol motorbike), 1 sold (electric).
+-->
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicles — Insight</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'DM Sans', system-ui, sans-serif; }
+        .font-mono-data { font-family: 'DM Mono', monospace; font-variant-numeric: tabular-nums; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #c4c4c4; border-radius: 3px; }
+        .dark ::-webkit-scrollbar-thumb { background: #525252; }
+        /* Dialog animations */
+        @media (min-width: 640px) {
+            .dialog-panel { transform: scale(0.95); opacity: 0; transition: transform 150ms ease, opacity 250ms ease; }
+            .dialog-panel.dialog-open { transform: scale(1); opacity: 1; transition: all 200ms ease; }
+        }
+        @media (max-width: 639px) {
+            .dialog-panel { transform: translateY(100%); opacity: 0; transition: transform 250ms cubic-bezier(0.32,0.72,0,1), opacity 350ms ease; }
+            .dialog-panel.dialog-open { transform: translateY(0); opacity: 1; transition: all 300ms cubic-bezier(0.32,0.72,0,1); }
+        }
+        /* Custom select arrow */
+        select.form-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%238a8a8a' viewBox='0 0 24 24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-position: right 1rem center;
+            background-repeat: no-repeat;
+            background-size: 1rem;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: {
+                colors: {
+                    'accent': { 50:'#f0fdf4',100:'#dcfce7',200:'#bbf7d0',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d' },
+                    'white': '#fafcfa',
+                    'base': { 50:'#f7f9f7',100:'#f0f2f0',150:'#e7e9e7',200:'#d3d5d3',300:'#afb1af',400:'#898b89',500:'#6a6c6a',600:'#515351',700:'#3c3e3c',800:'#252725',900:'#161816' }
+                },
+                boxShadow: {
+                    'card':'0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04)',
+                    'card-dark':'0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2)'
+                }
+            }}
+        }
+    </script>
+</head>
+<body class="bg-base-100 dark:bg-base-900 text-base-900 dark:text-base-100 antialiased transition-colors duration-200">
+
+    <!-- Nav -->
+    <nav class="bg-white dark:bg-base-800 shadow-card dark:shadow-card-dark sticky top-0 z-30 relative">
+        <div class="max-w-[1440px] mx-auto px-3 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-10">
+                    <!-- Desktop: Brand + section nav -->
+                    <div class="hidden lg:block text-xl font-bold tracking-tight">Insight</div>
+                    <div class="hidden lg:flex gap-1">
+                        <a href="home-overview.html" class="px-4 py-2 text-sm rounded-lg text-base-400 dark:text-base-400 hover:text-base-600 dark:hover:text-base-200 transition-colors">Home</a>
+                        <a href="portfolio-overview.html" class="px-4 py-2 text-sm rounded-lg text-base-400 dark:text-base-400 hover:text-base-600 dark:hover:text-base-200 transition-colors">Investment</a>
+                        <a href="#" class="px-4 py-2 text-sm rounded-lg font-medium text-accent-700 dark:text-accent-400 bg-accent-50 dark:bg-accent-700/20">Vehicles</a>
+                    </div>
+                    <!-- Mobile/Tablet: Page title in nav -->
+                    <div class="flex lg:hidden items-center gap-2.5">
+                        <div class="min-w-0">
+                            <div class="text-sm font-bold tracking-tight">Vehicles</div>
+                            <div class="text-[11px] text-base-400 mt-0.5">2 active · 1 sold</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Settings (desktop only) -->
+                <div class="hidden lg:flex items-center">
+                    <button onclick="document.documentElement.classList.toggle('dark')" class="w-9 h-9 rounded-xl bg-base-150 dark:bg-base-700 flex items-center justify-center text-base-500 dark:text-base-300 hover:bg-base-200 dark:hover:bg-base-600 transition-colors" title="Settings">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+
+        <!-- Desktop Page Header -->
+        <div class="hidden lg:flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight mb-1">Vehicles</h1>
+                <p class="text-sm text-base-400">2 active · 1 sold · Last refueled Feb 28, 2026</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="showDialog('add-refueling-dialog')" class="px-4 py-2 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg shadow-sm hover:border-base-300 dark:hover:border-base-500 transition-colors">+ Add Refueling</button>
+                <button onclick="showDialog('add-maintenance-dialog')" class="px-4 py-2 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg shadow-sm hover:border-base-300 dark:hover:border-base-500 transition-colors">+ Add Maintenance</button>
+                <button onclick="showDialog('add-vehicle-dialog')" class="px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">+ Add Vehicle</button>
+            </div>
+        </div>
+
+        <!-- Mobile/Tablet action buttons -->
+        <div class="flex gap-2 mb-4 lg:hidden">
+            <button onclick="showDialog('add-refueling-dialog')" class="flex-1 px-4 py-2 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg shadow-card dark:shadow-card-dark hover:border-base-300 dark:hover:border-base-500 transition-colors">+ Add Refueling</button>
+            <button onclick="showDialog('add-vehicle-dialog')" class="flex-1 px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">+ Add Vehicle</button>
+        </div>
+
+        <!-- Active Vehicle Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4 mb-6 lg:mb-8">
+
+            <!-- Family Car (VW Golf, Petrol) -->
+            <a href="vehicle-detail.html" class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark block hover:shadow-lg dark:hover:shadow-[0_1px_3px_rgba(0,0,0,0.4),0_8px_24px_rgba(0,0,0,0.3)] transition-shadow cursor-pointer group overflow-hidden">
+                <!-- Photo Placeholder: sky-blue gradient + car silhouette -->
+                <div class="h-40 bg-gradient-to-br from-sky-50 to-blue-100 dark:from-sky-950/60 dark:to-blue-900/40 relative flex items-center justify-center">
+                    <svg class="w-24 h-24 text-sky-200 dark:text-sky-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.8" d="M19 17H5v-7l3-6h8l3 6v7zm0 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M9 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0"/>
+                    </svg>
+                    <!-- Petrol badge -->
+                    <span class="absolute top-3 right-3 px-2 py-0.5 text-[11px] font-medium rounded-full bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-300 border border-orange-200/80 dark:border-orange-700/60">Petrol</span>
+                    <!-- Hover chevron -->
+                    <div class="absolute bottom-3 right-3 w-7 h-7 rounded-full bg-white/60 dark:bg-base-900/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <svg class="w-3.5 h-3.5 text-base-600 dark:text-base-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                </div>
+                <!-- Card Body -->
+                <div class="p-5">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <div class="text-sm font-semibold">Family Car</div>
+                            <div class="text-xs text-base-400 mt-0.5">VW Golf · 2021 · AB 12 345</div>
+                        </div>
+                        <svg class="w-4 h-4 text-base-200 dark:text-base-600 group-hover:text-base-400 dark:group-hover:text-base-400 transition-colors mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                    <!-- Key metrics -->
+                    <div class="grid grid-cols-2 gap-4 mb-3">
+                        <div>
+                            <div class="text-[10px] uppercase tracking-wider text-base-300 dark:text-base-500 mb-1">2026 Efficiency</div>
+                            <div class="font-mono-data text-xl font-medium">16,2</div>
+                            <div class="text-xs text-base-400">km/l</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] uppercase tracking-wider text-base-300 dark:text-base-500 mb-1">YTD Km</div>
+                            <div class="font-mono-data text-xl font-medium">2.840</div>
+                            <div class="text-xs text-base-400">km driven</div>
+                        </div>
+                    </div>
+                    <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400 inline-flex items-center gap-0.5 mb-3">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
+                        +0,9 km/l vs 2025
+                    </div>
+                    <!-- Footer stats -->
+                    <div class="border-t border-base-100 dark:border-base-700 pt-3 grid grid-cols-3 gap-2 text-xs">
+                        <div>
+                            <div class="text-base-300 dark:text-base-500 mb-0.5">YTD Fuel</div>
+                            <div class="font-mono-data font-medium">1.840</div>
+                        </div>
+                        <div>
+                            <div class="text-base-300 dark:text-base-500 mb-0.5">YTD Total</div>
+                            <div class="font-mono-data font-medium">2.115</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-base-300 dark:text-base-500 mb-0.5">Last fill</div>
+                            <div class="font-mono-data">Feb 28</div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Work Bike (Honda CB500F, Petrol) -->
+            <a href="#" class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark block hover:shadow-lg dark:hover:shadow-[0_1px_3px_rgba(0,0,0,0.4),0_8px_24px_rgba(0,0,0,0.3)] transition-shadow cursor-pointer group overflow-hidden">
+                <!-- Photo Placeholder: slate gradient + motorcycle silhouette -->
+                <div class="h-40 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800/60 dark:to-slate-700/40 relative flex items-center justify-center">
+                    <!-- Motorcycle icon (simplified) -->
+                    <svg class="w-24 h-24 text-slate-200 dark:text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.8" d="M5 17a2 2 0 100-4 2 2 0 000 4zm14 0a2 2 0 100-4 2 2 0 000 4zM5 15h3l3-6h3l3 3 3 2-1 1M8 9l2 6"/>
+                    </svg>
+                    <span class="absolute top-3 right-3 px-2 py-0.5 text-[11px] font-medium rounded-full bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-300 border border-orange-200/80 dark:border-orange-700/60">Petrol</span>
+                    <div class="absolute bottom-3 right-3 w-7 h-7 rounded-full bg-white/60 dark:bg-base-900/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <svg class="w-3.5 h-3.5 text-base-600 dark:text-base-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                </div>
+                <!-- Card Body -->
+                <div class="p-5">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <div class="text-sm font-semibold">Work Bike</div>
+                            <div class="text-xs text-base-400 mt-0.5">Honda CB500F · 2019 · CD 98 765</div>
+                        </div>
+                        <svg class="w-4 h-4 text-base-200 dark:text-base-600 group-hover:text-base-400 dark:group-hover:text-base-400 transition-colors mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-3">
+                        <div>
+                            <div class="text-[10px] uppercase tracking-wider text-base-300 dark:text-base-500 mb-1">2026 Efficiency</div>
+                            <div class="font-mono-data text-xl font-medium">22,7</div>
+                            <div class="text-xs text-base-400">km/l</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] uppercase tracking-wider text-base-300 dark:text-base-500 mb-1">YTD Km</div>
+                            <div class="font-mono-data text-xl font-medium">540</div>
+                            <div class="text-xs text-base-400">km driven</div>
+                        </div>
+                    </div>
+                    <div class="font-mono-data text-xs text-rose-500 dark:text-rose-400 inline-flex items-center gap-0.5 mb-3">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                        -1,1 km/l vs 2025
+                    </div>
+                    <div class="border-t border-base-100 dark:border-base-700 pt-3 grid grid-cols-3 gap-2 text-xs">
+                        <div>
+                            <div class="text-base-300 dark:text-base-500 mb-0.5">YTD Fuel</div>
+                            <div class="font-mono-data font-medium">380</div>
+                        </div>
+                        <div>
+                            <div class="text-base-300 dark:text-base-500 mb-0.5">YTD Total</div>
+                            <div class="font-mono-data font-medium">380</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-base-300 dark:text-base-500 mb-0.5">Last fill</div>
+                            <div class="font-mono-data">Feb 12</div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- Sold Vehicles (collapsible accordion) -->
+        <div>
+            <button onclick="toggleSold()" id="sold-toggle" class="w-full flex items-center justify-between px-4 sm:px-5 py-3.5 bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark hover:bg-base-50 dark:hover:bg-base-750 transition-colors cursor-pointer">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span class="text-sm font-semibold">Sold Vehicles</span>
+                    <span class="text-xs text-base-400 bg-base-100 dark:bg-base-700 px-2 py-0.5 rounded-full font-medium">1</span>
+                </div>
+                <svg id="sold-chevron" class="w-4 h-4 text-base-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="sold-content" class="hidden mt-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
+
+                    <!-- Tesla Model 3 (sold Jun 2024, Electric) -->
+                    <a href="#" class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark block hover:shadow-md dark:hover:shadow-card-dark transition-all cursor-pointer group overflow-hidden opacity-60 hover:opacity-90 transition-opacity">
+                        <!-- Photo Placeholder: grayscale -->
+                        <div class="h-40 bg-gradient-to-br from-base-100 to-base-150 dark:from-base-800 dark:to-base-750 relative flex items-center justify-center">
+                            <svg class="w-24 h-24 text-base-200 dark:text-base-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.8" d="M19 17H5v-7l3-6h8l3 6v7zm0 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M9 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0"/>
+                            </svg>
+                            <!-- Sold badge -->
+                            <span class="absolute top-3 left-3 px-2 py-0.5 text-[11px] font-medium rounded-full bg-base-100 text-base-500 dark:bg-base-700 dark:text-base-400 border border-base-200 dark:border-base-600">Sold</span>
+                            <!-- Electric badge -->
+                            <span class="absolute top-3 right-3 px-2 py-0.5 text-[11px] font-medium rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200/70 dark:border-blue-700/60">Electric</span>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="p-5">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <div class="text-sm font-semibold">Tesla</div>
+                                    <div class="text-xs text-base-400 mt-0.5">Tesla Model 3 · 2020 · Sold Jun 2024</div>
+                                </div>
+                                <svg class="w-4 h-4 text-base-200 dark:text-base-600 group-hover:text-base-400 transition-colors mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 mb-3">
+                                <div>
+                                    <div class="text-[10px] uppercase tracking-wider text-base-300 dark:text-base-500 mb-1">All-Time Eff.</div>
+                                    <div class="font-mono-data text-xl font-medium">6,8</div>
+                                    <div class="text-xs text-base-400">km/kWh</div>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] uppercase tracking-wider text-base-300 dark:text-base-500 mb-1">Km Driven</div>
+                                    <div class="font-mono-data text-xl font-medium">68.400</div>
+                                    <div class="text-xs text-base-400">total km</div>
+                                </div>
+                            </div>
+                            <div class="border-t border-base-100 dark:border-base-700 pt-3 grid grid-cols-2 gap-2 text-xs">
+                                <div>
+                                    <div class="text-base-300 dark:text-base-500 mb-0.5">Lifetime Fuel</div>
+                                    <div class="font-mono-data font-medium">21.800 DKK</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-base-300 dark:text-base-500 mb-0.5">Total Cost</div>
+                                    <div class="font-mono-data font-medium">28.450 DKK</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Mobile Bottom Tab Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-base-800 border-t border-base-150 dark:border-base-700 z-30 lg:hidden">
+        <div class="flex items-center justify-around h-16">
+            <a href="home-overview.html" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span class="text-[10px] font-medium">Home</span>
+            </a>
+            <a href="portfolio-overview.html" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                <span class="text-[10px] font-medium">Investment</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-1 px-4 py-2 text-accent-600 dark:text-accent-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17h2V9l-3-6H6L3 9v8h2m14 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M9 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0"/></svg>
+                <span class="text-[10px] font-medium">Vehicles</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400" onclick="document.documentElement.classList.toggle('dark')">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span class="text-[10px] font-medium">Settings</span>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        /* Sold vehicles accordion */
+        function toggleSold() {
+            const content = document.getElementById('sold-content');
+            const chevron = document.getElementById('sold-chevron');
+            const toggle = document.getElementById('sold-toggle');
+            content.classList.toggle('hidden');
+            chevron.classList.toggle('rotate-180');
+            if (content.classList.contains('hidden')) {
+                toggle.classList.remove('rounded-t-2xl');
+                toggle.classList.add('rounded-2xl');
+            } else {
+                toggle.classList.remove('rounded-2xl');
+                toggle.classList.add('rounded-t-2xl');
+            }
+        }
+
+        /* Dialog system */
+        function showDialog(dialogId) {
+            const dialog = document.getElementById(dialogId);
+            if (!dialog) return;
+            dialog.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                const panel = dialog.querySelector('.dialog-panel');
+                if (panel) panel.classList.add('dialog-open');
+            });
+            document.addEventListener('keydown', handleDialogEscape);
+        }
+
+        function closeDialog(dialogId) {
+            const dialog = document.getElementById(dialogId);
+            if (!dialog) return;
+            const panel = dialog.querySelector('.dialog-panel');
+            if (panel) panel.classList.remove('dialog-open');
+            setTimeout(() => { dialog.classList.add('hidden'); }, 300);
+        }
+
+        function handleDialogEscape(e) {
+            if (e.key === 'Escape') {
+                const dialogs = document.querySelectorAll('[role="dialog"]:not(.hidden)');
+                if (dialogs.length > 0) closeDialog(dialogs[dialogs.length - 1].id);
+                if (!document.querySelectorAll('[role="dialog"]:not(.hidden)').length)
+                    document.removeEventListener('keydown', handleDialogEscape);
+            }
+        }
+
+        /* Compute total cost from fields */
+        function computeTotalCost() {
+            const fuel = parseFloat(document.getElementById('ref-fuel-amount').value) || 0;
+            const cpu  = parseFloat(document.getElementById('ref-cost-per-unit').value) || 0;
+            const total = (fuel * cpu).toFixed(2);
+            document.getElementById('ref-total-cost').value = total > 0 ? total : '';
+        }
+    </script>
+
+    <!-- ================================================================ -->
+    <!-- DIALOGS                                                           -->
+    <!-- ================================================================ -->
+
+    <!-- Add Refueling Dialog -->
+    <div id="add-refueling-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-refueling-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
+                    <h3 class="text-base font-semibold">Add Refueling</h3>
+                </div>
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
+                    <!-- Vehicle -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Vehicle <span class="text-rose-500">*</span></label>
+                        <select class="form-select w-full px-3 py-2.5 pr-10 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                            <option value="" disabled selected>Select vehicle…</option>
+                            <option value="golf">Family Car — VW Golf</option>
+                            <option value="cb500">Work Bike — Honda CB500F</option>
+                        </select>
+                    </div>
+                    <!-- Date -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Date <span class="text-rose-500">*</span></label>
+                        <input type="date" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                    </div>
+                    <!-- Fuel amount + Cost per unit -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Fuel Amount <span class="text-rose-500">*</span></label>
+                            <div class="relative">
+                                <input id="ref-fuel-amount" type="number" step="0.01" min="0" oninput="computeTotalCost()" placeholder="0,00" class="w-full px-3 py-2.5 pr-10 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-base-300 dark:text-base-500 font-mono-data">L</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Cost per Litre <span class="text-rose-500">*</span></label>
+                            <div class="relative">
+                                <input id="ref-cost-per-unit" type="number" step="0.001" min="0" oninput="computeTotalCost()" placeholder="0,000" class="w-full px-3 py-2.5 pr-16 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-base-300 dark:text-base-500 font-mono-data">DKK/L</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Total cost -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Total Cost <span class="text-rose-500">*</span></label>
+                        <div class="relative">
+                            <input id="ref-total-cost" type="number" step="0.01" min="0" placeholder="Auto-calculated or enter manually" class="w-full px-3 py-2.5 pr-14 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-base-300 dark:text-base-500 font-mono-data">DKK</span>
+                        </div>
+                    </div>
+                    <!-- Odometer -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Odometer Reading <span class="text-rose-500">*</span></label>
+                        <div class="relative">
+                            <input type="number" step="1" min="0" placeholder="e.g. 52400" class="w-full px-3 py-2.5 pr-10 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-base-300 dark:text-base-500">km</span>
+                        </div>
+                    </div>
+                    <!-- Station + Note row -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Station</label>
+                            <input type="text" placeholder="e.g. Circle K" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label>
+                            <input type="text" placeholder="Optional…" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                        </div>
+                    </div>
+                    <!-- Attachments -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Attachments</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex flex-col items-center justify-center gap-1 px-3 py-3 border border-dashed border-base-200 dark:border-base-600 rounded-lg bg-base-50 dark:bg-base-700/50 cursor-pointer hover:border-base-300 dark:hover:border-base-500 transition-colors">
+                                <svg class="w-4 h-4 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                                <span class="text-[11px] text-base-400">Receipt</span>
+                                <input type="file" accept="image/*" class="hidden">
+                            </label>
+                            <label class="flex flex-col items-center justify-center gap-1 px-3 py-3 border border-dashed border-base-200 dark:border-base-600 rounded-lg bg-base-50 dark:bg-base-700/50 cursor-pointer hover:border-base-300 dark:hover:border-base-500 transition-colors">
+                                <svg class="w-4 h-4 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><circle cx="12" cy="13" r="3" stroke-width="2"/></svg>
+                                <span class="text-[11px] text-base-400">Odometer Photo</span>
+                                <input type="file" accept="image/*" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('add-refueling-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-refueling-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg hover:bg-base-50 dark:hover:bg-base-700 transition-colors">Save &amp; Add Another</button>
+                    <button onclick="closeDialog('add-refueling-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Add Refueling</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Maintenance Dialog -->
+    <div id="add-maintenance-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-maintenance-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
+                    <h3 class="text-base font-semibold">Add Maintenance</h3>
+                </div>
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Vehicle <span class="text-rose-500">*</span></label>
+                        <select class="form-select w-full px-3 py-2.5 pr-10 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                            <option value="" disabled selected>Select vehicle…</option>
+                            <option value="golf">Family Car — VW Golf</option>
+                            <option value="cb500">Work Bike — Honda CB500F</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Date <span class="text-rose-500">*</span></label>
+                        <input type="date" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Description <span class="text-rose-500">*</span></label>
+                        <input type="text" placeholder="e.g. Annual service, Tire change…" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Cost <span class="text-rose-500">*</span></label>
+                        <div class="relative">
+                            <input type="number" step="0.01" min="0" placeholder="0,00" class="w-full px-3 py-2.5 pr-14 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-base-300 dark:text-base-500 font-mono-data">DKK</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label>
+                        <input type="text" placeholder="Optional…" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Receipt</label>
+                        <div class="w-full px-3 py-4 border border-dashed border-base-200 dark:border-base-600 rounded-lg bg-base-50 dark:bg-base-700/50 text-center cursor-pointer hover:border-base-300 dark:hover:border-base-500 transition-colors">
+                            <svg class="w-5 h-5 mx-auto mb-1 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                            <span class="text-xs text-base-400">Drop file or click to upload</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('add-maintenance-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-maintenance-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Add Maintenance</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Vehicle Dialog -->
+    <div id="add-vehicle-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('add-vehicle-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-lg max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5">
+                    <h3 class="text-base font-semibold">Add Vehicle</h3>
+                </div>
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
+                    <!-- Photo + Name row -->
+                    <div class="flex items-start gap-3">
+                        <div class="shrink-0">
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Photo</label>
+                            <label class="group relative flex items-center justify-center w-[72px] h-[72px] rounded-xl border-2 border-dashed border-base-300 dark:border-base-500 hover:border-accent-500 dark:hover:border-accent-400 bg-base-50 dark:bg-base-900 cursor-pointer transition-colors overflow-hidden">
+                                <svg class="w-6 h-6 text-base-300 dark:text-base-500 group-hover:text-accent-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                <input type="file" accept="image/*" class="hidden">
+                            </label>
+                        </div>
+                        <div class="flex-1 space-y-3">
+                            <div>
+                                <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Name <span class="text-rose-500">*</span></label>
+                                <input type="text" placeholder="e.g. Family Car, Work Bike" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Type <span class="text-rose-500">*</span></label>
+                                    <select class="form-select w-full px-3 py-2.5 pr-8 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                                        <option>Car</option>
+                                        <option>Motorcycle</option>
+                                        <option>Van</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Fuel Type <span class="text-rose-500">*</span></label>
+                                    <select class="form-select w-full px-3 py-2.5 pr-8 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                                        <option>Petrol</option>
+                                        <option>Diesel</option>
+                                        <option>Electric</option>
+                                        <option>Hybrid</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Make, Model, Year -->
+                    <div class="grid grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Make <span class="text-rose-500">*</span></label>
+                            <input type="text" placeholder="e.g. VW" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Model <span class="text-rose-500">*</span></label>
+                            <input type="text" placeholder="e.g. Golf" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Year <span class="text-rose-500">*</span></label>
+                            <input type="number" min="1980" max="2030" placeholder="2021" class="w-full px-3 py-2.5 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                        </div>
+                    </div>
+                    <!-- License plate -->
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">License Plate <span class="text-rose-500">*</span></label>
+                        <input type="text" placeholder="e.g. AB 12 345" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                    </div>
+                    <!-- Purchase date + price (optional) -->
+                    <div class="border-t border-base-100 dark:border-base-700 pt-4">
+                        <div class="text-xs font-medium text-base-400 dark:text-base-500 mb-3">Purchase Details (optional)</div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Purchase Date</label>
+                                <input type="date" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Purchase Price</label>
+                                <div class="relative">
+                                    <input type="number" step="1" min="0" placeholder="0" class="w-full px-3 py-2.5 pr-14 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-base-300 dark:text-base-500 font-mono-data">DKK</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('add-vehicle-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-vehicle-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Add Vehicle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirm Dialog -->
+    <div id="delete-confirm-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm transition-opacity duration-200" onclick="closeDialog('delete-confirm-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-sm max-h-[92vh] overflow-y-auto">
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <div class="px-5 sm:px-6 py-5">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5 text-rose-600 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        </div>
+                        <div>
+                            <h3 id="delete-confirm-title" class="text-base font-semibold mb-1">Delete Vehicle?</h3>
+                            <p id="delete-confirm-summary" class="text-sm text-base-500 dark:text-base-400">This action cannot be undone. All refueling and maintenance records will also be deleted.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3 border-t border-base-100 dark:border-base-700">
+                    <button onclick="closeDialog('delete-confirm-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('delete-confirm-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-colors">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

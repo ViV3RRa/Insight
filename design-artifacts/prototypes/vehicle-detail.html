@@ -1,0 +1,1044 @@
+<!--
+  REFERENCE DATE: Mar 2, 2026
+  Vehicle: Family Car — VW Golf 2021, Petrol, AB 12 345
+  All mock data is consistent with this reference date.
+  ITERATION 1/3: Nav, vehicle header, summary cards, YoY row
+-->
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Car — Insight</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'DM Sans', system-ui, sans-serif; }
+        .font-mono-data { font-family: 'DM Mono', monospace; font-variant-numeric: tabular-nums; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #c4c4c4; border-radius: 3px; }
+        .dark ::-webkit-scrollbar-thumb { background: #525252; }
+        .tab-btn { position: relative; }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: #16a34a; border-radius: 1px; }
+        .dark .tab-btn.active::after { background: #4ade80; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        /* Dialog animations */
+        @media (min-width: 640px) {
+            .dialog-panel { transform: scale(0.95); opacity: 0; transition: transform 150ms ease, opacity 250ms ease; }
+            .dialog-panel.dialog-open { transform: scale(1); opacity: 1; transition: all 200ms ease; }
+        }
+        @media (max-width: 639px) {
+            .dialog-panel { transform: translateY(100%); opacity: 0; transition: transform 250ms cubic-bezier(0.32,0.72,0,1), opacity 350ms ease; }
+            .dialog-panel.dialog-open { transform: translateY(0); opacity: 1; transition: all 300ms cubic-bezier(0.32,0.72,0,1); }
+        }
+        select.form-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%238a8a8a' viewBox='0 0 24 24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-position: right 1rem center;
+            background-repeat: no-repeat;
+            background-size: 1rem;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: {
+                colors: {
+                    'accent': { 50:'#f0fdf4',100:'#dcfce7',200:'#bbf7d0',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d' },
+                    'white': '#fafcfa',
+                    'base': { 50:'#f7f9f7',100:'#f0f2f0',150:'#e7e9e7',200:'#d3d5d3',300:'#afb1af',400:'#898b89',500:'#6a6c6a',600:'#515351',700:'#3c3e3c',800:'#252725',900:'#161816' }
+                },
+                boxShadow: {
+                    'card':'0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04)',
+                    'card-dark':'0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2)'
+                }
+            }}
+        }
+    </script>
+</head>
+<body class="bg-base-100 dark:bg-base-900 text-base-900 dark:text-base-100 antialiased transition-colors duration-200">
+
+    <!-- Nav -->
+    <nav class="bg-white dark:bg-base-800 shadow-card dark:shadow-card-dark sticky top-0 z-30 relative">
+        <div class="max-w-[1440px] mx-auto px-3 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-10">
+                    <!-- Desktop: Brand + section nav -->
+                    <div class="hidden lg:block text-xl font-bold tracking-tight">Insight</div>
+                    <div class="hidden lg:flex gap-1">
+                        <a href="home-overview.html" class="px-4 py-2 text-sm rounded-lg text-base-400 dark:text-base-400 hover:text-base-600 dark:hover:text-base-200 transition-colors">Home</a>
+                        <a href="portfolio-overview.html" class="px-4 py-2 text-sm rounded-lg text-base-400 dark:text-base-400 hover:text-base-600 dark:hover:text-base-200 transition-colors">Investment</a>
+                        <a href="vehicles-overview.html" class="px-4 py-2 text-sm rounded-lg font-medium text-accent-700 dark:text-accent-400 bg-accent-50 dark:bg-accent-700/20">Vehicles</a>
+                    </div>
+                    <!-- Mobile/Tablet: Back + vehicle switcher -->
+                    <div class="flex lg:hidden items-center gap-2.5">
+                        <a href="vehicles-overview.html" class="w-9 h-9 rounded-xl bg-base-50 dark:bg-base-700 flex items-center justify-center text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors shrink-0" title="Back to vehicles">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        </a>
+                        <button onclick="toggleMobileDropdown('vehicle-dropdown-mobile')" class="flex items-center gap-2 min-w-0">
+                            <!-- Mini car icon -->
+                            <div class="w-6 h-6 rounded-full bg-sky-100 dark:bg-sky-900/40 flex items-center justify-center shrink-0">
+                                <svg class="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17H5v-7l3-6h8l3 6v7zm0 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M9 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0"/></svg>
+                            </div>
+                            <div class="min-w-0 text-left">
+                                <div class="text-sm font-bold tracking-tight truncate">Family Car</div>
+                                <div class="text-[11px] text-base-400">VW Golf · Petrol</div>
+                            </div>
+                            <svg class="w-3.5 h-3.5 text-base-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <!-- Settings (desktop only) -->
+                <div class="hidden lg:flex items-center">
+                    <button onclick="document.documentElement.classList.toggle('dark')" class="w-9 h-9 rounded-xl bg-base-150 dark:bg-base-700 flex items-center justify-center text-base-500 dark:text-base-300 hover:bg-base-200 dark:hover:bg-base-600 transition-colors" title="Settings">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Vehicle Dropdown -->
+        <div id="vehicle-dropdown-mobile" class="lg:hidden absolute left-0 right-0 top-full bg-white dark:bg-base-800 border-t border-base-150 dark:border-base-700 shadow-lg z-40 overflow-hidden transition-all duration-200 ease-out" style="max-height:0;opacity:0;pointer-events:none;" data-open="false">
+            <div class="max-w-[1440px] mx-auto">
+                <a href="vehicles-overview.html" class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-base-50 dark:hover:bg-base-700 transition-colors border-b border-base-100 dark:border-base-700">
+                    <svg class="w-4 h-4 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                    <span class="font-medium">All Vehicles</span>
+                </a>
+                <div class="py-1">
+                    <div class="px-4 py-2 text-xs font-medium text-base-300 dark:text-base-500 uppercase tracking-wider">Active</div>
+                    <!-- Family Car (active) -->
+                    <div class="flex items-center gap-3 px-4 py-2.5 bg-accent-50/50 dark:bg-accent-900/15 border-l-2 border-accent-600 dark:border-accent-400">
+                        <div class="w-6 h-6 rounded-full bg-sky-100 dark:bg-sky-900/40 flex items-center justify-center shrink-0">
+                            <svg class="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17H5v-7l3-6h8l3 6v7zm0 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M9 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0"/></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="text-sm font-medium">Family Car</div>
+                            <div class="text-xs text-base-400">VW Golf · 2021 · Petrol</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-mono-data text-sm">16,2 km/l</div>
+                            <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400">+0,9 vs 2025</div>
+                        </div>
+                    </div>
+                    <!-- Work Bike -->
+                    <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-base-50 dark:hover:bg-base-700 transition-colors cursor-pointer">
+                        <div class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800/60 flex items-center justify-center shrink-0">
+                            <svg class="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 17a2 2 0 100-4 2 2 0 000 4zm14 0a2 2 0 100-4 2 2 0 000 4zM5 15h3l3-6h3l3 3 3 2-1 1"/></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="text-sm font-medium">Work Bike</div>
+                            <div class="text-xs text-base-400">Honda CB500F · 2019 · Petrol</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-mono-data text-sm">22,7 km/l</div>
+                        </div>
+                    </a>
+                    <div class="px-4 py-2 text-xs font-medium text-base-300 dark:text-base-500 uppercase tracking-wider mt-1">Sold</div>
+                    <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-base-50 dark:hover:bg-base-700 transition-colors cursor-pointer opacity-60">
+                        <div class="w-6 h-6 rounded-full bg-base-100 dark:bg-base-700 flex items-center justify-center shrink-0">
+                            <svg class="w-3.5 h-3.5 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17H5v-7l3-6h8l3 6v7zm0 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M9 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0"/></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="text-sm font-medium">Tesla <span class="text-xs font-normal text-base-400 ml-1">· Sold</span></div>
+                            <div class="text-xs text-base-400">Tesla Model 3 · 2020</div>
+                        </div>
+                    </a>
+                    <!-- Edit vehicle -->
+                    <div class="border-t border-base-100 dark:border-base-700 mt-1 pt-1">
+                        <button onclick="closeMobileDropdown('vehicle-dropdown-mobile'); showDialog('edit-vehicle-dialog')" class="w-full px-4 py-2.5 flex items-center gap-2 text-sm text-base-400 hover:text-base-600 dark:hover:text-base-300 hover:bg-base-50 dark:hover:bg-base-700/50 transition-colors">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                            Edit Vehicle
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+
+        <!-- Desktop: Vehicle switcher bar + action buttons -->
+        <div class="hidden lg:flex items-center justify-between gap-4 mb-6 lg:mb-8">
+            <div class="flex items-center gap-3">
+                <!-- Back -->
+                <a href="vehicles-overview.html" class="w-9 h-9 rounded-xl bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 shadow-card dark:shadow-card-dark flex items-center justify-center text-base-400 hover:text-base-600 dark:hover:text-base-300 hover:border-base-300 dark:hover:border-base-500 transition-colors" title="Back">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </a>
+                <!-- Vehicle switcher dropdown -->
+                <div class="relative">
+                    <button onclick="toggleVehicleDropdown()" class="flex items-center gap-2.5 px-3 py-1.5 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-xl text-sm font-medium shadow-card dark:shadow-card-dark hover:border-base-300 dark:hover:border-base-500 transition-colors">
+                        <div class="w-6 h-6 rounded-full bg-sky-100 dark:bg-sky-900/40 flex items-center justify-center">
+                            <svg class="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17H5v-7l3-6h8l3 6v7zm0 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M9 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0"/></svg>
+                        </div>
+                        Family Car
+                        <span class="font-normal text-base-400 text-xs">VW Golf · 2021</span>
+                        <svg class="w-3.5 h-3.5 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div id="vehicle-dropdown" class="hidden absolute top-full left-0 mt-1.5 w-72 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-xl shadow-lg z-40 py-1.5 overflow-hidden">
+                        <div class="px-3 py-2 flex items-center gap-2.5 bg-accent-50/50 dark:bg-accent-900/20">
+                            <svg class="w-3.5 h-3.5 text-accent-600 dark:text-accent-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <div class="flex-1 min-w-0">
+                                <div class="text-sm font-medium">Family Car <span class="text-xs font-normal text-base-400">· VW Golf 2021</span></div>
+                            </div>
+                        </div>
+                        <a href="#" class="flex items-center gap-2.5 px-3 py-2 hover:bg-base-50 dark:hover:bg-base-700/50 transition-colors cursor-pointer">
+                            <div class="w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-800/60 flex items-center justify-center shrink-0">
+                                <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 17a2 2 0 100-4 2 2 0 000 4zm14 0a2 2 0 100-4 2 2 0 000 4zM5 15h3l3-6h3l3 3 3 2-1 1"/></svg>
+                            </div>
+                            <span class="text-sm">Work Bike <span class="text-xs text-base-400">· Honda CB500F 2019</span></span>
+                        </a>
+                        <div class="border-t border-base-100 dark:border-base-700 mt-1 pt-1">
+                            <a href="#" class="flex items-center gap-2.5 px-3 py-2 hover:bg-base-50 dark:hover:bg-base-700/50 transition-colors cursor-pointer opacity-60">
+                                <span class="text-sm">Tesla <span class="text-xs text-base-400">· Model 3 2020 · Sold</span></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Desktop action buttons -->
+            <div class="flex items-center gap-3">
+                <button onclick="showDialog('edit-vehicle-dialog')" class="px-3 py-2 text-sm text-base-500 dark:text-base-400 hover:text-base-700 dark:hover:text-base-200 transition-colors flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                    Edit
+                </button>
+                <button onclick="showDialog('add-refueling-dialog')" class="px-4 py-2 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg shadow-sm hover:border-base-300 dark:hover:border-base-500 transition-colors">+ Add Refueling</button>
+                <button onclick="showDialog('add-maintenance-dialog')" class="px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">+ Add Maintenance</button>
+            </div>
+        </div>
+
+        <!-- Mobile action buttons -->
+        <div class="flex gap-2 mb-4 lg:hidden">
+            <button onclick="showDialog('add-refueling-dialog')" class="flex-1 px-4 py-2 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg shadow-card dark:shadow-card-dark hover:border-base-300 dark:hover:border-base-500 transition-colors">+ Add Refueling</button>
+            <button onclick="showDialog('add-maintenance-dialog')" class="flex-1 px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">+ Add Maintenance</button>
+        </div>
+
+        <!-- Vehicle Header Card -->
+        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6 lg:mb-8">
+            <div class="flex flex-col sm:flex-row">
+                <!-- Photo placeholder -->
+                <div class="h-36 sm:w-48 sm:h-auto lg:w-56 bg-gradient-to-br from-sky-50 to-blue-100 dark:from-sky-950/60 dark:to-blue-900/40 flex items-center justify-center shrink-0">
+                    <svg class="w-20 h-20 text-sky-200 dark:text-sky-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.8" d="M19 17H5v-7l3-6h8l3 6v7zm0 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M9 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0"/>
+                    </svg>
+                </div>
+                <!-- Metadata -->
+                <div class="p-5 lg:p-6 flex-1">
+                    <div class="flex items-start justify-between gap-3 mb-3">
+                        <div>
+                            <h1 class="text-xl lg:text-2xl font-bold tracking-tight">Family Car</h1>
+                            <div class="text-sm text-base-500 dark:text-base-400 mt-0.5">VW Golf · 2021</div>
+                        </div>
+                        <!-- Desktop edit button (secondary position) -->
+                        <button onclick="showDialog('edit-vehicle-dialog')" class="hidden sm:flex lg:hidden items-center gap-1.5 px-3 py-1.5 text-xs text-base-500 dark:text-base-400 hover:text-base-700 dark:hover:text-base-200 bg-base-50 dark:bg-base-700 rounded-lg transition-colors">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                            Edit
+                        </button>
+                    </div>
+                    <!-- Metadata chips -->
+                    <div class="flex flex-wrap gap-2">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-lg bg-base-100 dark:bg-base-700 text-base-600 dark:text-base-300">
+                            <svg class="w-3 h-3 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                            AB 12 345
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-lg bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border border-orange-100 dark:border-orange-800/50">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                            Petrol
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-lg bg-base-100 dark:bg-base-700 text-base-600 dark:text-base-300">
+                            <svg class="w-3 h-3 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17H5v-7l3-6h8l3 6v7zm0 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M9 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0"/></svg>
+                            Car
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-lg bg-accent-50 dark:bg-accent-900/20 text-accent-700 dark:text-accent-400">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent-500 dark:bg-accent-400"></span>
+                            Active
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Stat Cards — 7 KPIs -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 lg:gap-4 mb-6 lg:mb-8">
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">All-Time Eff.</div>
+                <div class="font-mono-data text-xl font-medium">15,8</div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">km/l avg</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">2026 Efficiency</div>
+                <div class="font-mono-data text-xl font-medium text-emerald-600 dark:text-emerald-400">16,2</div>
+                <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-md inline-block mt-1.5">+0,9</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">Last 5 Fills</div>
+                <div class="font-mono-data text-xl font-medium">16,7</div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">km/l avg</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">YTD Km</div>
+                <div class="font-mono-data text-xl font-medium">2.840</div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">km driven</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">YTD Fuel Cost</div>
+                <div class="font-mono-data text-xl font-medium">1.840</div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">DKK</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">Avg/Month</div>
+                <div class="font-mono-data text-xl font-medium">920</div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">DKK fuel</div>
+            </div>
+            <div class="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
+                <div class="text-xs text-base-400 mb-2">Avg/Day</div>
+                <div class="font-mono-data text-xl font-medium">30,5</div>
+                <div class="text-xs text-base-300 dark:text-base-500 mt-1.5">DKK fuel</div>
+            </div>
+        </div>
+
+        <!-- YoY Comparison Row -->
+        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark px-4 sm:px-5 py-3.5 mb-6 lg:mb-8">
+            <div class="flex items-center gap-2 mb-2.5">
+                <svg class="w-3.5 h-3.5 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                <span class="text-xs font-medium text-base-400 dark:text-base-500">Year-over-Year · Same period last year (Jan 1 – Mar 1, 2025)</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6">
+                <div class="flex items-center justify-between sm:block">
+                    <div>
+                        <div class="text-[10px] text-base-300 dark:text-base-500 uppercase tracking-wider mb-1">YTD Km Driven</div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="font-mono-data text-sm font-medium">2.840</span>
+                            <span class="font-mono-data text-xs text-base-300 dark:text-base-500">vs 2.610</span>
+                        </div>
+                    </div>
+                    <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400 sm:mt-0.5 inline-flex items-center gap-0.5">
+                        +8,8%<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between sm:block border-t border-base-100 dark:border-base-700 pt-3 sm:border-0 sm:pt-0">
+                    <div>
+                        <div class="text-[10px] text-base-300 dark:text-base-500 uppercase tracking-wider mb-1">YTD Fuel Cost</div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="font-mono-data text-sm font-medium">1.840 DKK</span>
+                            <span class="font-mono-data text-xs text-base-300 dark:text-base-500">vs 1.720</span>
+                        </div>
+                    </div>
+                    <div class="font-mono-data text-xs text-rose-500 dark:text-rose-400 sm:mt-0.5 inline-flex items-center gap-0.5">
+                        +7,0%<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between sm:block border-t border-base-100 dark:border-base-700 pt-3 sm:border-0 sm:pt-0">
+                    <div>
+                        <div class="text-[10px] text-base-300 dark:text-base-500 uppercase tracking-wider mb-1">Efficiency</div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="font-mono-data text-sm font-medium">16,2 km/l</span>
+                            <span class="font-mono-data text-xs text-base-300 dark:text-base-500">vs 15,3</span>
+                        </div>
+                    </div>
+                    <div class="font-mono-data text-xs text-emerald-600 dark:text-emerald-400 sm:mt-0.5 inline-flex items-center gap-0.5">
+                        +0,9 km/l<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════════════════════
+             CHARTS — collapsible section
+             ════════════════════════════════════════════════════════════ -->
+        <div class="mb-6 lg:mb-8">
+            <button onclick="toggleCharts()" id="charts-toggle" class="w-full flex items-center justify-between px-4 sm:px-5 py-3.5 bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark hover:bg-base-50 dark:hover:bg-base-750 transition-colors cursor-pointer">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-base-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    <span class="text-sm font-semibold">Performance Charts</span>
+                </div>
+                <svg id="charts-chevron" class="w-4 h-4 text-base-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+
+            <div id="charts-content" class="hidden mt-4 space-y-4">
+
+                <!-- Chart controls: time span + YoY -->
+                <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark p-4 sm:p-5">
+                    <div class="flex flex-col gap-3 mb-5">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-semibold">Fuel Efficiency Over Time</h3>
+                            <button onclick="this.classList.toggle('yoy-on'); this.classList.toggle('bg-accent-50'); this.classList.toggle('dark:bg-accent-700/20'); this.classList.toggle('text-accent-600'); this.classList.toggle('dark:text-accent-400'); this.classList.toggle('border-accent-200'); this.classList.toggle('dark:border-accent-600'); this.classList.toggle('text-base-400'); this.classList.toggle('border-base-200'); this.classList.toggle('dark:border-base-600')" class="px-2.5 py-1 text-xs rounded-lg border text-base-400 border-base-200 dark:border-base-600 hover:border-base-300 dark:hover:border-base-500 transition-colors flex items-center gap-1.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                                YoY
+                            </button>
+                        </div>
+                        <!-- Time span selector -->
+                        <div class="sm:flex sm:justify-end">
+                            <select class="min-[410px]:hidden w-full px-3 py-2 text-sm bg-base-100 dark:bg-base-700 border border-base-200 dark:border-base-600 rounded-lg text-base-900 dark:text-base-100 focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500">
+                                <option>3M</option><option>6M</option><option selected>YTD</option><option>1Y</option><option>2Y</option><option>All</option>
+                            </select>
+                            <div class="hidden min-[410px]:flex items-center bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5 w-full sm:w-fit">
+                                <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">3M</button>
+                                <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">6M</button>
+                                <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md bg-white dark:bg-base-600 text-base-900 dark:text-base-100 font-medium shadow-sm text-center">YTD</button>
+                                <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">1Y</button>
+                                <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">2Y</button>
+                                <button class="flex-1 sm:flex-none sm:px-2.5 py-1 text-xs rounded-md text-base-400 hover:text-base-600 dark:hover:text-base-200 text-center">All</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Chart placeholder -->
+                    <div class="h-52 flex items-center justify-center text-sm border border-dashed border-base-150 dark:border-base-700 rounded-xl bg-base-50/30 dark:bg-base-900/30">
+                        <div class="text-center">
+                            <div class="text-base-300 dark:text-base-500 mb-1">[Line Chart]</div>
+                            <div class="text-xs text-base-200 dark:text-base-600">km/l per refueling · dots + rolling avg line</div>
+                            <div class="text-xs text-blue-300 dark:text-blue-600 mt-1">YoY: dashed ghost line for last year</div>
+                        </div>
+                    </div>
+                    <!-- Legend -->
+                    <div class="flex flex-wrap items-center gap-4 mt-3">
+                        <div class="flex items-center gap-1.5 text-xs text-base-400"><span class="w-3 h-0.5 bg-accent-500 rounded inline-block"></span>Per refueling</div>
+                        <div class="flex items-center gap-1.5 text-xs text-base-400"><span class="w-3 h-0.5 bg-accent-600 rounded inline-block"></span>Rolling avg (5)</div>
+                    </div>
+                </div>
+
+                <!-- Monthly fuel cost + Monthly km (2 charts side by side on tablet+) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark p-4 sm:p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-semibold">Monthly Fuel Cost</h3>
+                            <button onclick="this.classList.toggle('yoy-on'); this.classList.toggle('text-accent-600'); this.classList.toggle('dark:text-accent-400'); this.classList.toggle('text-base-400')" class="px-2.5 py-1 text-xs rounded-lg border border-base-200 dark:border-base-600 text-base-400 hover:border-base-300 dark:hover:border-base-500 transition-colors flex items-center gap-1.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                                YoY
+                            </button>
+                        </div>
+                        <div class="h-44 flex items-center justify-center border border-dashed border-base-150 dark:border-base-700 rounded-xl bg-base-50/30 dark:bg-base-900/30">
+                            <div class="text-center">
+                                <div class="text-xs text-base-300 dark:text-base-500">[Bar Chart]</div>
+                                <div class="text-xs text-base-200 dark:text-base-600 mt-1">DKK per month · YoY ghost bars</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark p-4 sm:p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-semibold">Monthly Km Driven</h3>
+                            <button onclick="this.classList.toggle('yoy-on'); this.classList.toggle('text-accent-600'); this.classList.toggle('dark:text-accent-400'); this.classList.toggle('text-base-400')" class="px-2.5 py-1 text-xs rounded-lg border border-base-200 dark:border-base-600 text-base-400 hover:border-base-300 dark:hover:border-base-500 transition-colors flex items-center gap-1.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                                YoY
+                            </button>
+                        </div>
+                        <div class="h-44 flex items-center justify-center border border-dashed border-base-150 dark:border-base-700 rounded-xl bg-base-50/30 dark:bg-base-900/30">
+                            <div class="text-center">
+                                <div class="text-xs text-base-300 dark:text-base-500">[Bar Chart]</div>
+                                <div class="text-xs text-base-200 dark:text-base-600 mt-1">km per month · YoY ghost bars</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Maintenance cost timeline -->
+                <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark p-4 sm:p-5">
+                    <h3 class="text-sm font-semibold mb-4">Maintenance Cost</h3>
+                    <div class="h-40 flex items-center justify-center border border-dashed border-base-150 dark:border-base-700 rounded-xl bg-base-50/30 dark:bg-base-900/30">
+                        <div class="text-center">
+                            <div class="text-xs text-base-300 dark:text-base-500">[Dot/Lollipop Chart]</div>
+                            <div class="text-xs text-base-200 dark:text-base-600 mt-1">Each event as a dot on a timeline, DKK on y-axis</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /charts-content -->
+        </div><!-- /charts accordion -->
+
+        <!-- ════════════════════════════════════════════════════════════
+             TABS: Performance table | Refueling log | Maintenance log
+             ════════════════════════════════════════════════════════════ -->
+        <div class="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6 lg:mb-8">
+            <!-- Tab bar -->
+            <div class="flex items-center border-b border-base-150 dark:border-base-700 px-3 lg:px-6">
+                <button id="tab-btn-perf" class="tab-btn active px-4 py-4 text-sm font-medium text-accent-700 dark:text-accent-400" onclick="switchTab('perf')">Performance</button>
+                <button id="tab-btn-fuel" class="tab-btn px-4 py-4 text-sm text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors" onclick="switchTab('fuel')">Refueling</button>
+                <button id="tab-btn-maint" class="tab-btn px-4 py-4 text-sm text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors" onclick="switchTab('maint')">Maintenance</button>
+            </div>
+
+            <!-- ── Performance tab ── -->
+            <div id="tab-perf" class="tab-content active p-4 sm:p-6">
+                <!-- Yearly breakdown table -->
+                <div class="overflow-x-auto -mx-4 sm:-mx-6 px-3 sm:px-6">
+                    <table class="w-full text-sm sm:min-w-[560px]">
+                        <thead>
+                            <tr class="border-b border-base-150 dark:border-base-700">
+                                <th class="text-left font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Year</th>
+                                <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Km Driven</th>
+                                <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Fuel Used</th>
+                                <th class="text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Efficiency</th>
+                                <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Fuel Cost</th>
+                                <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Maint. Cost</th>
+                                <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Total Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors">
+                                <td class="px-4 py-3 font-medium">2026 (YTD)</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">2.840</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">175,3 L</td>
+                                <td class="px-4 py-3 text-right font-mono-data font-medium text-emerald-600 dark:text-emerald-400">16,2</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">1.840</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">275</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium">2.115</td>
+                            </tr>
+                            <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors">
+                                <td class="px-4 py-3 font-medium">2025</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">18.240</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">1.210,8 L</td>
+                                <td class="px-4 py-3 text-right font-mono-data font-medium">15,3</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">12.840</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">1.850</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium">14.690</td>
+                            </tr>
+                            <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors">
+                                <td class="px-4 py-3 font-medium">2024</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">17.820</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">1.188,0 L</td>
+                                <td class="px-4 py-3 text-right font-mono-data font-medium">15,0</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">11.920</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">3.200</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium">15.120</td>
+                            </tr>
+                            <tr class="border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors">
+                                <td class="px-4 py-3 font-medium">2023</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">16.100</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data text-base-500 dark:text-base-400">1.073,3 L</td>
+                                <td class="px-4 py-3 text-right font-mono-data font-medium">15,0</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">10.210</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">680</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data font-medium">10.890</td>
+                            </tr>
+                            <!-- Totals row -->
+                            <tr class="bg-base-50/60 dark:bg-base-900/40 font-medium">
+                                <td class="px-4 py-3">All Time</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">55.000</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">3.647,4 L</td>
+                                <td class="px-4 py-3 text-right font-mono-data">15,8</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">36.810</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">6.005</td>
+                                <td class="hidden sm:table-cell px-4 py-3 text-right font-mono-data">42.815</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ── Refueling log tab ── -->
+            <div id="tab-fuel" class="tab-content">
+                <div class="px-3 lg:px-6 py-4 flex items-center justify-between border-b border-base-100 dark:border-base-700">
+                    <span class="text-xs text-base-400">3 records · Jan – Feb 2026</span>
+                    <button onclick="showDialog('add-refueling-dialog')" class="px-3 py-1.5 text-xs font-medium text-base-600 dark:text-base-300 bg-base-50 dark:bg-base-700 rounded-lg hover:bg-base-100 dark:hover:bg-base-600 transition-colors">+ Add Refueling</button>
+                </div>
+                <div class="overflow-x-auto">
+                <table class="w-full text-sm sm:min-w-[720px]">
+                    <thead>
+                        <tr class="border-b border-base-150 dark:border-base-700 bg-base-50/40 dark:bg-base-900/30">
+                            <th class="text-left font-medium text-base-300 dark:text-base-500 px-4 lg:px-6 py-3 text-xs">Date</th>
+                            <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Fuel (L)</th>
+                            <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">DKK/L</th>
+                            <th class="text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Total</th>
+                            <th class="hidden sm:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Odometer</th>
+                            <th class="hidden lg:table-cell text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Efficiency</th>
+                            <th class="hidden sm:table-cell text-left font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Station</th>
+                            <th class="w-20"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Row 1 -->
+                        <tr class="group border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors">
+                            <td class="px-4 lg:px-6 py-3.5 font-medium">Feb 28, 2026</td>
+                            <td class="hidden sm:table-cell px-4 py-3.5 text-right font-mono-data text-base-500 dark:text-base-400">54,2</td>
+                            <td class="hidden sm:table-cell px-4 py-3.5 text-right font-mono-data text-base-500 dark:text-base-400">10,89</td>
+                            <td class="px-4 py-3.5 text-right font-mono-data font-medium">590</td>
+                            <td class="hidden sm:table-cell px-4 py-3.5 text-right font-mono-data text-base-500 dark:text-base-400">52.400</td>
+                            <td class="hidden lg:table-cell px-4 py-3.5 text-right font-mono-data text-emerald-600 dark:text-emerald-400">16,6</td>
+                            <td class="hidden sm:table-cell px-4 py-3.5 text-base-500 dark:text-base-400 text-sm">Circle K · Lyngby</td>
+                            <td class="px-4 py-3.5">
+                                <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button onclick="showDialog('edit-refueling-dialog')" class="p-1.5 text-base-400 hover:text-base-600 dark:hover:text-base-200 rounded-lg hover:bg-base-100 dark:hover:bg-base-700 transition-colors" title="Edit">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    </button>
+                                    <button onclick="confirmDelete('Refueling','590 DKK on Feb 28')" class="p-1.5 text-base-400 hover:text-rose-500 dark:hover:text-rose-400 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors" title="Delete">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Row 2 -->
+                        <tr class="group border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors">
+                            <td class="px-4 lg:px-6 py-3.5 font-medium">Feb 10, 2026</td>
+                            <td class="hidden sm:table-cell px-4 py-3.5 text-right font-mono-data text-base-500 dark:text-base-400">60,8</td>
+                            <td class="hidden sm:table-cell px-4 py-3.5 text-right font-mono-data text-base-500 dark:text-base-400">10,74</td>
+                            <td class="px-4 py-3.5 text-right font-mono-data font-medium">653</td>
+                            <td class="hidden sm:table-cell px-4 py-3.5 text-right font-mono-data text-base-500 dark:text-base-400">51.400</td>
+                            <td class="hidden lg:table-cell px-4 py-3.5 text-right font-mono-data text-emerald-600 dark:text-emerald-400">16,4</td>
+                            <td class="hidden sm:table-cell px-4 py-3.5 text-base-500 dark:text-base-400 text-sm">Q8 · Hillerød</td>
+                            <td class="px-4 py-3.5">
+                                <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button onclick="showDialog('edit-refueling-dialog')" class="p-1.5 text-base-400 hover:text-base-600 dark:hover:text-base-200 rounded-lg hover:bg-base-100 dark:hover:bg-base-700 transition-colors" title="Edit">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    </button>
+                                    <button onclick="confirmDelete('Refueling','653 DKK on Feb 10')" class="p-1.5 text-base-400 hover:text-rose-500 dark:hover:text-rose-400 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors" title="Delete">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Row 3 -->
+                        <tr class="group border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors">
+                            <td class="px-4 lg:px-6 py-3.5 font-medium">Jan 15, 2026</td>
+                            <td class="hidden sm:table-cell px-4 py-3.5 text-right font-mono-data text-base-500 dark:text-base-400">60,3</td>
+                            <td class="hidden sm:table-cell px-4 py-3.5 text-right font-mono-data text-base-500 dark:text-base-400">9,90</td>
+                            <td class="px-4 py-3.5 text-right font-mono-data font-medium">597</td>
+                            <td class="hidden sm:table-cell px-4 py-3.5 text-right font-mono-data text-base-500 dark:text-base-400">50.410</td>
+                            <td class="hidden lg:table-cell px-4 py-3.5 text-right font-mono-data">—</td>
+                            <td class="hidden sm:table-cell px-4 py-3.5 text-base-500 dark:text-base-400 text-sm">Shell · Hellerup</td>
+                            <td class="px-4 py-3.5">
+                                <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button onclick="showDialog('edit-refueling-dialog')" class="p-1.5 text-base-400 hover:text-base-600 dark:hover:text-base-200 rounded-lg hover:bg-base-100 dark:hover:bg-base-700 transition-colors" title="Edit">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    </button>
+                                    <button onclick="confirmDelete('Refueling','597 DKK on Jan 15')" class="p-1.5 text-base-400 hover:text-rose-500 dark:hover:text-rose-400 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors" title="Delete">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
+            <!-- ── Maintenance log tab ── -->
+            <div id="tab-maint" class="tab-content">
+                <div class="px-3 lg:px-6 py-4 flex items-center justify-between border-b border-base-100 dark:border-base-700">
+                    <span class="text-xs text-base-400">1 record · Jan – Feb 2026</span>
+                    <button onclick="showDialog('add-maintenance-dialog')" class="px-3 py-1.5 text-xs font-medium text-base-600 dark:text-base-300 bg-base-50 dark:bg-base-700 rounded-lg hover:bg-base-100 dark:hover:bg-base-600 transition-colors">+ Add Maintenance</button>
+                </div>
+                <div class="overflow-x-auto">
+                <table class="w-full text-sm sm:min-w-[560px]">
+                    <thead>
+                        <tr class="border-b border-base-150 dark:border-base-700 bg-base-50/40 dark:bg-base-900/30">
+                            <th class="text-left font-medium text-base-300 dark:text-base-500 px-4 lg:px-6 py-3 text-xs">Date</th>
+                            <th class="text-left font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Description</th>
+                            <th class="text-right font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Cost</th>
+                            <th class="hidden sm:table-cell text-left font-medium text-base-300 dark:text-base-500 px-4 py-3 text-xs">Note</th>
+                            <th class="w-20"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="group border-b border-base-100 dark:border-base-700/50 hover:bg-accent-50/20 dark:hover:bg-accent-900/10 transition-colors">
+                            <td class="px-4 lg:px-6 py-3.5 font-medium">Feb 5, 2026</td>
+                            <td class="px-4 py-3.5 text-base-700 dark:text-base-300">Annual service + brake fluid</td>
+                            <td class="px-4 py-3.5 text-right font-mono-data font-medium">275</td>
+                            <td class="hidden sm:table-cell px-4 py-3.5 text-xs text-base-400">VW dealership · Includes oil + filter</td>
+                            <td class="px-4 py-3.5">
+                                <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button onclick="showDialog('edit-maintenance-dialog')" class="p-1.5 text-base-400 hover:text-base-600 dark:hover:text-base-200 rounded-lg hover:bg-base-100 dark:hover:bg-base-700 transition-colors" title="Edit">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    </button>
+                                    <button onclick="confirmDelete('Maintenance','Annual service on Feb 5')" class="p-1.5 text-base-400 hover:text-rose-500 dark:hover:text-rose-400 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors" title="Delete">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Mobile Bottom Tab Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-base-800 border-t border-base-150 dark:border-base-700 z-30 lg:hidden">
+        <div class="flex items-center justify-around h-16">
+            <a href="home-overview.html" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span class="text-[10px] font-medium">Home</span>
+            </a>
+            <a href="portfolio-overview.html" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                <span class="text-[10px] font-medium">Investment</span>
+            </a>
+            <a href="vehicles-overview.html" class="flex flex-col items-center gap-1 px-4 py-2 text-accent-600 dark:text-accent-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17h2V9l-3-6H6L3 9v8h2m14 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M9 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0"/></svg>
+                <span class="text-[10px] font-medium">Vehicles</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-1 px-4 py-2 text-base-400" onclick="document.documentElement.classList.toggle('dark')">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span class="text-[10px] font-medium">Settings</span>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        /* Dialog system */
+        function showDialog(id) {
+            const dialog = document.getElementById(id);
+            if (!dialog) return;
+            dialog.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                const panel = dialog.querySelector('.dialog-panel');
+                if (panel) panel.classList.add('dialog-open');
+            });
+            document.addEventListener('keydown', handleDialogEscape);
+        }
+        function closeDialog(id) {
+            const dialog = document.getElementById(id);
+            if (!dialog) return;
+            const panel = dialog.querySelector('.dialog-panel');
+            if (panel) panel.classList.remove('dialog-open');
+            setTimeout(() => dialog.classList.add('hidden'), 300);
+        }
+        function handleDialogEscape(e) {
+            if (e.key === 'Escape') {
+                const open = document.querySelectorAll('[role="dialog"]:not(.hidden)');
+                if (open.length) closeDialog(open[open.length - 1].id);
+                if (!document.querySelectorAll('[role="dialog"]:not(.hidden)').length)
+                    document.removeEventListener('keydown', handleDialogEscape);
+            }
+        }
+        /* Vehicle dropdown */
+        function toggleVehicleDropdown() {
+            const dd = document.getElementById('vehicle-dropdown');
+            dd.classList.toggle('hidden');
+            if (!dd.classList.contains('hidden')) {
+                setTimeout(() => document.addEventListener('click', closeVehicleDropdown, { once: true }), 0);
+            }
+        }
+        function closeVehicleDropdown(e) {
+            const dd = document.getElementById('vehicle-dropdown');
+            if (dd && !dd.contains(e.target)) dd.classList.add('hidden');
+        }
+        /* Mobile dropdown */
+        function toggleMobileDropdown(id) {
+            const el = document.getElementById(id);
+            if (el.dataset.open === 'true') { closeMobileDropdown(id); }
+            else {
+                el.style.maxHeight = el.scrollHeight + 'px';
+                el.style.opacity = '1';
+                el.style.pointerEvents = 'auto';
+                el.dataset.open = 'true';
+            }
+        }
+        function closeMobileDropdown(id) {
+            const el = document.getElementById(id);
+            el.style.maxHeight = '0';
+            el.style.opacity = '0';
+            el.style.pointerEvents = 'none';
+            el.dataset.open = 'false';
+        }
+        document.addEventListener('click', function(e) {
+            const d = document.getElementById('vehicle-dropdown-mobile');
+            if (d && d.dataset.open === 'true' && !d.contains(e.target) && !e.target.closest('[onclick*="vehicle-dropdown-mobile"]'))
+                closeMobileDropdown('vehicle-dropdown-mobile');
+        });
+        /* Delete confirmation */
+        function confirmDelete(entityType, summary) {
+            document.getElementById('delete-confirm-title').textContent = 'Delete ' + entityType + '?';
+            document.getElementById('delete-confirm-summary').textContent = summary;
+            showDialog('delete-confirm-dialog');
+        }
+        /* Compute refueling total */
+        function computeTotal() {
+            const fuel = parseFloat(document.getElementById('ref-fuel').value) || 0;
+            const cpu  = parseFloat(document.getElementById('ref-cpu').value)  || 0;
+            const el   = document.getElementById('ref-total');
+            if (fuel && cpu) el.value = (fuel * cpu).toFixed(2);
+        }
+        /* Charts accordion */
+        function toggleCharts() {
+            const content = document.getElementById('charts-content');
+            const chevron = document.getElementById('charts-chevron');
+            const toggle  = document.getElementById('charts-toggle');
+            content.classList.toggle('hidden');
+            chevron.classList.toggle('rotate-180');
+            toggle.classList.toggle('rounded-2xl', content.classList.contains('hidden'));
+            toggle.classList.toggle('rounded-t-2xl', !content.classList.contains('hidden'));
+        }
+        /* Tab switching */
+        function switchTab(name) {
+            ['perf','fuel','maint'].forEach(t => {
+                document.getElementById('tab-' + t).classList.remove('active');
+                const btn = document.getElementById('tab-btn-' + t);
+                btn.classList.remove('active','font-medium','text-accent-700','dark:text-accent-400');
+                btn.classList.add('text-base-400');
+            });
+            document.getElementById('tab-' + name).classList.add('active');
+            const activeBtn = document.getElementById('tab-btn-' + name);
+            activeBtn.classList.add('active','font-medium','text-accent-700');
+            activeBtn.classList.remove('text-base-400');
+        }
+    </script>
+
+    <!-- ================================================================ -->
+    <!-- DIALOGS                                                          -->
+    <!-- ================================================================ -->
+
+    <!-- Add Refueling Dialog -->
+    <div id="add-refueling-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm" onclick="closeDialog('add-refueling-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5"><h3 class="text-base font-semibold">Add Refueling</h3></div>
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Date <span class="text-rose-500">*</span></label>
+                        <input type="date" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Fuel (L) <span class="text-rose-500">*</span></label>
+                            <input id="ref-fuel" type="number" step="0.01" min="0" oninput="computeTotal()" placeholder="0,00" class="w-full px-3 py-2.5 pr-8 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">DKK / L <span class="text-rose-500">*</span></label>
+                            <input id="ref-cpu" type="number" step="0.001" min="0" oninput="computeTotal()" placeholder="0,000" class="w-full px-3 py-2.5 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Total Cost (DKK) <span class="text-rose-500">*</span></label>
+                        <div class="relative">
+                            <input id="ref-total" type="number" step="0.01" min="0" placeholder="Auto-calculated" class="w-full px-3 py-2.5 pr-14 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-base-300 dark:text-base-500 font-mono-data">DKK</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Odometer <span class="text-rose-500">*</span></label>
+                        <div class="relative">
+                            <input type="number" step="1" min="0" placeholder="e.g. 52400" class="w-full px-3 py-2.5 pr-10 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-base-300 dark:text-base-500">km</span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Station</label>
+                            <input type="text" placeholder="e.g. Circle K" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label>
+                            <input type="text" placeholder="Optional…" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Attachments</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex flex-col items-center gap-1 px-3 py-3 border border-dashed border-base-200 dark:border-base-600 rounded-lg bg-base-50 dark:bg-base-700/50 cursor-pointer hover:border-base-300 dark:hover:border-base-500 transition-colors">
+                                <svg class="w-4 h-4 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                                <span class="text-[11px] text-base-400">Receipt</span>
+                                <input type="file" accept="image/*" class="hidden">
+                            </label>
+                            <label class="flex flex-col items-center gap-1 px-3 py-3 border border-dashed border-base-200 dark:border-base-600 rounded-lg bg-base-50 dark:bg-base-700/50 cursor-pointer hover:border-base-300 dark:hover:border-base-500 transition-colors">
+                                <svg class="w-4 h-4 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><circle cx="12" cy="13" r="3" stroke-width="2"/></svg>
+                                <span class="text-[11px] text-base-400">Odometer Photo</span>
+                                <input type="file" accept="image/*" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('add-refueling-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-refueling-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg hover:bg-base-50 dark:hover:bg-base-700 transition-colors">Save &amp; Add Another</button>
+                    <button onclick="closeDialog('add-refueling-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Add Refueling</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Refueling Dialog (same fields, pre-populated) -->
+    <div id="edit-refueling-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm" onclick="closeDialog('edit-refueling-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5"><h3 class="text-base font-semibold">Edit Refueling</h3></div>
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
+                    <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Date <span class="text-rose-500">*</span></label><input type="date" value="2026-02-28" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Fuel (L) <span class="text-rose-500">*</span></label><input type="number" value="54.2" class="w-full px-3 py-2.5 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"></div>
+                        <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">DKK / L <span class="text-rose-500">*</span></label><input type="number" value="10.89" class="w-full px-3 py-2.5 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"></div>
+                    </div>
+                    <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Total Cost (DKK) <span class="text-rose-500">*</span></label><div class="relative"><input type="number" value="590" class="w-full px-3 py-2.5 pr-14 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-base-300 dark:text-base-500 font-mono-data">DKK</span></div></div>
+                    <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Odometer <span class="text-rose-500">*</span></label><div class="relative"><input type="number" value="52400" class="w-full px-3 py-2.5 pr-10 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-base-300 dark:text-base-500">km</span></div></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Station</label><input type="text" value="Circle K · Lyngby" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"></div>
+                        <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label><input type="text" placeholder="Optional…" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                    </div>
+                </div>
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-between gap-3">
+                    <button onclick="confirmDelete('Refueling','590 DKK on Feb 28'); closeDialog('edit-refueling-dialog')" class="px-4 py-2.5 text-sm font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-colors">Delete</button>
+                    <div class="flex items-center gap-3">
+                        <button onclick="closeDialog('edit-refueling-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                        <button onclick="closeDialog('edit-refueling-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Maintenance Dialog -->
+    <div id="add-maintenance-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm" onclick="closeDialog('add-maintenance-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5"><h3 class="text-base font-semibold">Add Maintenance</h3></div>
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
+                    <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Date <span class="text-rose-500">*</span></label><input type="date" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"></div>
+                    <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Description <span class="text-rose-500">*</span></label><input type="text" placeholder="e.g. Annual service, Tire change…" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                    <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Cost (DKK) <span class="text-rose-500">*</span></label><div class="relative"><input type="number" step="0.01" min="0" placeholder="0,00" class="w-full px-3 py-2.5 pr-14 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-base-300 dark:text-base-500 font-mono-data">DKK</span></div></div>
+                    <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label><input type="text" placeholder="Optional…" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                    <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Receipt</label><div class="w-full px-3 py-4 border border-dashed border-base-200 dark:border-base-600 rounded-lg bg-base-50 dark:bg-base-700/50 text-center cursor-pointer hover:border-base-300 dark:hover:border-base-500 transition-colors"><svg class="w-5 h-5 mx-auto mb-1 text-base-300 dark:text-base-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg><span class="text-xs text-base-400">Drop file or click to upload</span></div></div>
+                </div>
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3">
+                    <button onclick="closeDialog('add-maintenance-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('add-maintenance-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg hover:bg-base-50 dark:hover:bg-base-700 transition-colors">Save &amp; Add Another</button>
+                    <button onclick="closeDialog('add-maintenance-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Add Maintenance</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Maintenance Dialog -->
+    <div id="edit-maintenance-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm" onclick="closeDialog('edit-maintenance-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5"><h3 class="text-base font-semibold">Edit Maintenance</h3></div>
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
+                    <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Date <span class="text-rose-500">*</span></label><input type="date" value="2026-02-05" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"></div>
+                    <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Description <span class="text-rose-500">*</span></label><input type="text" value="Annual service + brake fluid" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"></div>
+                    <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Cost (DKK) <span class="text-rose-500">*</span></label><div class="relative"><input type="number" value="275" class="w-full px-3 py-2.5 pr-14 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-base-300 dark:text-base-500 font-mono-data">DKK</span></div></div>
+                    <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Note</label><input type="text" value="VW dealership · Includes oil + filter" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"></div>
+                </div>
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-between gap-3">
+                    <button onclick="confirmDelete('Maintenance','Annual service on Feb 5'); closeDialog('edit-maintenance-dialog')" class="px-4 py-2.5 text-sm font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-colors">Delete</button>
+                    <div class="flex items-center gap-3">
+                        <button onclick="closeDialog('edit-maintenance-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                        <button onclick="closeDialog('edit-maintenance-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Vehicle Dialog -->
+    <div id="edit-vehicle-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm" onclick="closeDialog('edit-vehicle-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-lg max-h-[92vh] sm:max-h-[90vh] overflow-y-auto">
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <div class="px-5 sm:px-6 pb-4 pt-2 sm:pt-5"><h3 class="text-base font-semibold">Edit Vehicle</h3></div>
+                <div class="px-5 sm:px-6 pb-6 space-y-4">
+                    <!-- Photo + name -->
+                    <div class="flex items-start gap-3">
+                        <div class="shrink-0">
+                            <label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Photo</label>
+                            <label class="group relative flex items-center justify-center w-[72px] h-[72px] rounded-xl border-2 border-dashed border-base-300 dark:border-base-500 hover:border-accent-500 dark:hover:border-accent-400 bg-sky-50 dark:bg-sky-950/30 cursor-pointer transition-colors overflow-hidden">
+                                <svg class="w-8 h-8 text-sky-200 dark:text-sky-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 17H5v-7l3-6h8l3 6v7zm0 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M9 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0"/></svg>
+                                <input type="file" accept="image/*" class="hidden">
+                            </label>
+                        </div>
+                        <div class="flex-1 space-y-3">
+                            <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Name <span class="text-rose-500">*</span></label><input type="text" value="Family Car" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"></div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Type</label><select class="form-select w-full px-3 py-2.5 pr-8 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"><option selected>Car</option><option>Motorcycle</option><option>Van</option><option>Other</option></select></div>
+                                <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Fuel Type</label><select class="form-select w-full px-3 py-2.5 pr-8 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"><option selected>Petrol</option><option>Diesel</option><option>Electric</option><option>Hybrid</option></select></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Make</label><input type="text" value="VW" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"></div>
+                        <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Model</label><input type="text" value="Golf" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"></div>
+                        <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Year</label><input type="number" value="2021" class="w-full px-3 py-2.5 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"></div>
+                    </div>
+                    <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">License Plate</label><input type="text" value="AB 12 345" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"></div>
+                    <!-- Mark as sold -->
+                    <div class="border-t border-base-100 dark:border-base-700 pt-4">
+                        <button id="sell-toggle" onclick="toggleSellFields()" class="px-3 py-1.5 text-xs font-medium rounded-lg bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/30 transition-colors">Mark as Sold…</button>
+                        <div id="sell-fields" class="hidden mt-4 space-y-3">
+                            <div class="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg text-xs text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">Selling this vehicle will move it to the Sold section. All records are preserved.</div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Sale Date <span class="text-rose-500">*</span></label><input type="date" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 transition-colors"></div>
+                                <div><label class="block text-xs font-medium text-base-500 dark:text-base-400 mb-1.5">Sale Price (DKK)</label><div class="relative"><input type="number" placeholder="0" class="w-full px-3 py-2.5 pr-14 text-sm font-mono-data bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-base-300 dark:text-base-500 font-mono-data">DKK</span></div></div>
+                            </div>
+                            <div><label class="block text-xs font-medium text-base-400 dark:text-base-500 mb-1.5">Sale Note</label><input type="text" placeholder="e.g. Private sale, dealer trade-in…" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-base-900 border border-base-200 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 placeholder:text-base-300 dark:placeholder:text-base-500 transition-colors"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-between gap-3">
+                    <button onclick="confirmDelete('Vehicle','Family Car and all its records'); closeDialog('edit-vehicle-dialog')" class="px-4 py-2.5 text-sm font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-colors">Delete Vehicle</button>
+                    <div class="flex items-center gap-3">
+                        <button onclick="closeDialog('edit-vehicle-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                        <button id="edit-vehicle-save" onclick="closeDialog('edit-vehicle-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg hover:bg-base-800 dark:hover:bg-accent-700 transition-colors">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirm Dialog -->
+    <div id="delete-confirm-dialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/40 sm:backdrop-blur-sm" onclick="closeDialog('delete-confirm-dialog')"></div>
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4">
+            <div class="dialog-panel bg-white dark:bg-base-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-sm max-h-[92vh] overflow-y-auto">
+                <div class="sm:hidden flex justify-center pt-3 pb-1"><div class="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"></div></div>
+                <div class="px-5 sm:px-6 py-5">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5 text-rose-600 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        </div>
+                        <div>
+                            <h3 id="delete-confirm-title" class="text-base font-semibold mb-1">Delete?</h3>
+                            <p id="delete-confirm-summary" class="text-sm text-base-500 dark:text-base-400">This action cannot be undone.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-5 sm:px-6 py-4 flex items-center justify-end gap-3 border-t border-base-100 dark:border-base-700">
+                    <button onclick="closeDialog('delete-confirm-dialog')" class="px-4 py-2.5 text-sm font-medium text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100 transition-colors">Cancel</button>
+                    <button onclick="closeDialog('delete-confirm-dialog')" class="px-5 py-2.5 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-colors">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* Sell fields toggle in edit-vehicle dialog */
+        function toggleSellFields() {
+            const fields = document.getElementById('sell-fields');
+            const btn    = document.getElementById('sell-toggle');
+            const save   = document.getElementById('edit-vehicle-save');
+            const open   = fields.classList.toggle('hidden');
+            if (!open) { // now visible
+                btn.textContent = 'Cancel';
+                btn.classList.replace('bg-rose-50','bg-base-100');
+                btn.classList.replace('dark:bg-rose-900/20','dark:bg-base-700');
+                btn.classList.replace('text-rose-600','text-base-500');
+                btn.classList.replace('dark:text-rose-400','dark:text-base-400');
+                save.textContent = 'Mark as Sold';
+                save.classList.replace('bg-base-900','bg-rose-600');
+                save.classList.replace('dark:bg-accent-600','dark:bg-rose-600');
+                save.classList.replace('hover:bg-base-800','hover:bg-rose-700');
+                save.classList.replace('dark:hover:bg-accent-700','dark:hover:bg-rose-700');
+            } else { // hidden again
+                btn.textContent = 'Mark as Sold…';
+                btn.classList.replace('bg-base-100','bg-rose-50');
+                btn.classList.replace('dark:bg-base-700','dark:bg-rose-900/20');
+                btn.classList.replace('text-base-500','text-rose-600');
+                btn.classList.replace('dark:text-base-400','dark:text-rose-400');
+                save.textContent = 'Save Changes';
+                save.classList.replace('bg-rose-600','bg-base-900');
+                save.classList.replace('dark:bg-rose-600','dark:bg-accent-600');
+                save.classList.replace('hover:bg-rose-700','hover:bg-base-800');
+                save.classList.replace('dark:hover:bg-rose-700','dark:hover:bg-accent-700');
+            }
+        }
+    </script>
+
+</body>
+</html>
