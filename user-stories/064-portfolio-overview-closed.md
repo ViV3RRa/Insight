@@ -78,6 +78,25 @@ Note: platform name uses `text-base-700` instead of `text-base-900` for addition
 - [ ] Closed platforms are excluded from portfolio totals (handled by aggregation, not this component)
 - [ ] Uses shared DataTable and PlatformIcon — no inline markup
 - [ ] PRD §14 criterion 14: Closed platforms appear muted and excluded from current totals
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PortfolioOverviewClosed.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked query results (closed platform rows render with muted styling)
+- Test loading state (skeleton/spinner shown while queries are pending)
+- Test that section is hidden when no closed platforms exist (count is 0)
+- Test error state (ErrorState component when query fails)
+- Test that section header shows "Closed Platforms" with correct count badge
+- Test that entire section uses opacity-60 for muted appearance
+- Test that hover transitions to opacity-80
+- Test that table shows 4 columns: Platform, Final Value, Gain/Loss, Closed
+- Test that platform name uses muted text color (text-base-700)
+- Test that Gain/Loss uses colored text (emerald/rose)
+- Test that rows are clickable and navigate to historical platform detail
+- Test mobile column cycling for Gain/Loss and Closed date
 
 ## Technical Notes
 - This section is part of `src/components/portfolio/PortfolioOverview.tsx`

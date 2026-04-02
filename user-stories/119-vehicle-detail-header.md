@@ -80,6 +80,21 @@ As the Insight platform user, I want a vehicle detail page header showing the ve
 - [ ] Action buttons in header (desktop) and full-width (mobile)
 - [ ] Vehicle switcher allows direct navigation between vehicles
 - [ ] PRD §7.5: Vehicle detail header with photo, name, metadata
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders correctly with mocked vehicle data
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/VehicleDetailHeader.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test vehicle name and make/model/year subtitle render correctly
+- Test photo area shows vehicle photo when available, placeholder silhouette when not
+- Test FuelTypeBadge renders with correct fuel type
+- Test metadata chips: license plate, fuel type badge, status indicator
+- Test sold vehicle shows sale date, price, and note
+- Test active vehicle shows green "Active" status with dot indicator
+- Test action buttons render ("+ Add Refueling", "+ Add Maintenance")
+- Test side-by-side layout on sm+ (flex-row) and stacked on mobile (flex-col)
 
 ## Technical Notes
 - File: `src/components/vehicles/VehicleDetail.tsx` (header section)

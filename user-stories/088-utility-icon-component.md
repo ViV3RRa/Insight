@@ -50,6 +50,19 @@ None — this story IS a shared component
 - [ ] Dark mode colors use appropriate opacity/shade variants
 - [ ] Falls back gracefully for unknown icon/color strings
 - [ ] Container uses rounded-lg styling
+- [ ] All tests pass and meet coverage target
+- [ ] Component behavior verified by tests covering all icon/color combinations and size variants
+
+## Testing Requirements
+- **Test file**: `src/components/shared/UtilityIcon.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 80%+ line coverage
+- Test all 8 icon identifiers render the correct lucide-react icon (bolt->Zap, droplet->Droplet, flame->Flame, sun->Sun, wind->Wind, thermometer->Thermometer, wifi->Wifi, trash->Trash2)
+- Test all 8 color values apply correct background and text color classes
+- Test size variants: sm (w-6 h-6), md (w-8 h-8), lg (w-10 h-10)
+- Test default size is md when no size prop provided
+- Test dark mode color classes are applied (e.g., `dark:bg-amber-900/30`)
+- Test fallback behavior for unknown icon/color strings
 
 ## Technical Notes
 - File: `src/components/shared/UtilityIcon.tsx`

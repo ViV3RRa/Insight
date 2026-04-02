@@ -73,6 +73,17 @@ As the Insight platform user, I want the entire Home section to be fully functio
 - [ ] All touch targets ≥ 44×44px
 - [ ] Charts scale without overflow
 - [ ] PRD §14 criterion 45: Fully functional on mobile browsers
+- [ ] Responsive behavior verified through existing component tests with responsive class assertions
+
+## Testing Requirements
+- **Test file**: N/A — visual regression / manual verification story
+- Responsive behavior verified through existing component tests with responsive class assertions
+- No dedicated test file; responsive correctness is ensured by:
+  - Component tests in US-089 through US-101 asserting responsive Tailwind classes (e.g., `grid-cols-1`, `sm:grid-cols-3`, `lg:hidden`, `lg:flex`)
+  - Manual testing at 320px, 375px, 414px, 768px viewport widths
+  - Verifying no horizontal scrolling at any viewport
+  - Verifying all touch targets meet 44x44px minimum
+  - Verifying bottom padding clears mobile tab bar (pb-24)
 
 ## Technical Notes
 - Polish/audit pass, not new features

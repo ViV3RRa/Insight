@@ -117,6 +117,25 @@ The PortfolioSwitcher renders in the mobile nav slot showing the current portfol
 - [ ] All sections use their respective shared components
 - [ ] PRD §6.3 item 6: Quick-add buttons distributed contextually
 - [ ] PRD §14 criterion 23: Portfolio overview shows all required elements
+- [ ] All tests pass and meet coverage target
+- [ ] Integration test verifies all sections compose correctly
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PortfolioOverview.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW — this is an integration-level test
+- **Coverage target**: 80%+ line coverage
+- Test that all sections render in the correct order (summary cards, YoY, accordion, platforms, cash, closed, allocation)
+- Test that data flows through from portfolio queries to child sections
+- Test loading state (page-level loading when portfolio data is pending)
+- Test empty state (new portfolio with no platforms shows appropriate empty state)
+- Test error state (ErrorState when portfolio query fails)
+- Test that desktop header shows h1 "Investment Portfolio" + PortfolioSwitcher
+- Test that mobile action buttons render (lg:hidden) with full-width layout
+- Test that "+ Add Data Point" opens the DataPointDialog
+- Test that "+ Add Transaction" opens the TransactionDialog
+- Test that "+ Add Platform" opens the PlatformDialog
+- Test that data refreshes when active portfolio changes
+- Test page layout classes (max-w-[1440px], correct padding, pb-24 for mobile)
 
 ## Technical Notes
 - File: `src/components/portfolio/PortfolioOverview.tsx`

@@ -109,6 +109,23 @@ None — this story IS a shared component
 - [ ] Dark mode ring uses dark:ring-white/10
 - [ ] All sizes use flex-shrink-0 to prevent compression in flex layouts
 - [ ] Image loading errors fall back to the letter display
+- [ ] All tests pass and meet coverage target
+- [ ] Fallback behavior (missing image, load error) is tested
+
+## Testing Requirements
+- **Test file**: `src/components/shared/PlatformIcon.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied
+- Test image renders with correct `src` and `alt` attributes when `imageUrl` is provided
+- Test fallback displays the first letter of the platform name when no image URL is provided
+- Test image `onError` triggers fallback to letter display
+- Test all three sizes render at correct dimensions: sm (w-5 h-5), md (w-7 h-7), lg (w-10 h-10)
+- Test fallback font size scales with icon size: text-[10px] (sm), text-xs (md), text-sm (lg)
+- Test fallback background color is applied (either from `color` prop or deterministic hash)
 
 ## Technical Notes
 - File to create: `src/components/shared/PlatformIcon.tsx`

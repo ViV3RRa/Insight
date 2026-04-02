@@ -80,6 +80,16 @@ Main content area:
 - [ ] Nav is sticky and stays at top when scrolling
 - [ ] Works in both light and dark mode
 - [ ] Visual output matches prototype screenshots: overview-desktop-top (any section)
+- [ ] All tests pass and meet coverage target
+
+## Testing Requirements
+- **Test file**: `src/components/layout/AppShell.test.tsx`
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+
+- Test rendering of navigation links
+- Test active route highlighting
+- Test responsive visibility classes
+- Test navigation triggers route changes
 
 ## Technical Notes
 - Files to create: `src/components/layout/AppShell.tsx`

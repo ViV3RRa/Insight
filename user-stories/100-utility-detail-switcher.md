@@ -63,6 +63,23 @@ As the Insight platform user, I want a dropdown on the utility detail page to sw
 - [ ] Click-outside dismisses dropdown
 - [ ] Uses shared DropdownSwitcher and UtilityIcon
 - [ ] PRD §8.2: Detail page entity switcher for direct navigation
+- [ ] All tests pass and meet coverage target
+- [ ] Component rendering verified by tests covering dropdown behavior, navigation, and item display
+
+## Testing Requirements
+- **Test file**: `src/components/home/UtilityDetailSwitcher.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test utility name acts as dropdown trigger with chevron
+- Test dropdown shows "Home Overview" link at top
+- Test all utilities listed with icons, names, units, and current period values
+- Test current utility highlighted with accent styling
+- Test clicking another utility navigates to its detail page
+- Test staleness badges appear on stale utilities in the dropdown
+- Test edit button at bottom opens UtilityDialog in edit mode
+- Test click-outside dismisses dropdown
+- Test desktop: absolute dropdown panel (w-80)
+- Test loading state while utilities are fetched
 
 ## Technical Notes
 - Part of `src/components/home/UtilityDetail.tsx` header

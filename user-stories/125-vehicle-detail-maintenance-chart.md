@@ -41,6 +41,17 @@ As the Insight platform user, I want a maintenance cost timeline chart so that I
 - [ ] Bar per month or year
 - [ ] Responsive
 - [ ] PRD §7.5: Maintenance cost timeline
+- [ ] All tests pass and meet coverage target
+- [ ] Chart renders with mocked maintenance data
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/VehicleMaintenanceChart.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test chart renders with maintenance cost data (monthly or yearly bars)
+- Test bar chart displays costs over time
+- Test chart renders without errors when no maintenance events exist
+- Test responsive behavior
 
 ## Technical Notes
 - File: `src/components/vehicles/VehicleMaintenanceChart.tsx`

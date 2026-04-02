@@ -60,6 +60,23 @@ No additional layout markup needed beyond the section wrapper and card shell.
 - [ ] Responsive: bar and legend adapt to mobile widths
 - [ ] Uses shared ProportionalBar component — no inline allocation markup
 - [ ] PRD §14 criterion 20: Portfolio allocation visualization shows each platform's share
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PortfolioOverviewAllocation.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked query results (ProportionalBar renders with correct segments)
+- Test loading state (skeleton/spinner shown while allocation data is pending)
+- Test empty state (EmptyState component when no allocation data exists)
+- Test error state (ErrorState component when query fails)
+- Test that each active platform has a proportional segment in the bar
+- Test that legend shows color square, platform name, DKK value, and percentage
+- Test that cash platforms display a "Cash" badge next to their name in the legend
+- Test that closed platforms are excluded from the visualization
+- Test that percentages sum to approximately 100%
+- Test responsive behavior (bar and legend adapt to mobile widths)
 
 ## Technical Notes
 - This section is part of `src/components/portfolio/PortfolioOverview.tsx`

@@ -31,6 +31,12 @@ N/A — configuration story
 - [ ] Font weights 400, 500, 600, 700 are available for DM Sans
 - [ ] Font weights 400, 500 are available for DM Mono
 - [ ] Fonts load with `swap` display strategy (no FOIT)
+- [ ] All tests pass and meet coverage target
+
+## Testing Requirements
+- **Test file**: N/A — configuration story, validated by build succeeding
+- Font loading validated by build process and visual verification in component tests
+- Correct `<link>` tags and `preconnect` hints verified by inspecting `index.html`
 
 ## Technical Notes
 - Add the Google Fonts `<link>` to `index.html` `<head>` (preferred for fast loading)

@@ -39,6 +39,17 @@ N/A — store story. The visual effect is the `dark` class toggling all `dark:` 
 - [ ] Body background smoothly transitions between light and dark
 - [ ] `useThemeStore()` returns current theme and toggle function
 - [ ] PRD §14 criterion 46: Light mode and dark mode are both functional and togglable
+- [ ] All tests pass and meet coverage target
+
+## Testing Requirements
+- **Test file**: `src/stores/themeStore.test.ts`
+- **Approach**: Unit test Zustand store + DOM class verification
+- **Coverage target**: 90%+
+- Test initial state (light)
+- Test `setTheme("dark")` applies `dark` class to documentElement
+- Test `setTheme("light")` removes `dark` class
+- Test `toggleTheme()` switches between light and dark
+- Test theme persists across store calls
 
 ## Technical Notes
 - File to create: `src/stores/themeStore.ts`

@@ -4,6 +4,7 @@
 As the Insight platform user, I want a dialog to record meter readings so that I can quickly enter cumulative meter values with timestamps, notes, and optional photo attachments.
 
 ## Dependencies
+- US-013: Button Component
 - US-028: Dialog Shell Component
 - US-030: Form Input Components
 - US-031: File Upload Component
@@ -78,6 +79,26 @@ As the Insight platform user, I want a dialog to record meter readings so that I
 - [ ] Mobile: bottom sheet (optimized for quick entry)
 - [ ] PRD §9.6: Meter reading dialog fields match spec
 - [ ] PRD §14 criterion 2: User can register meter readings
+- [ ] All tests pass and meet coverage target
+- [ ] Dialog behavior verified by tests covering create/edit modes, validation, and submission
+
+## Testing Requirements
+- **Test file**: `src/components/home/dialogs/MeterReadingDialog.test.tsx` (co-located)
+- **Approach**: React Testing Library with mocked services via MSW
+- **Coverage target**: 80%+ line coverage
+- Test create mode opens with empty form and timestamp defaulting to now
+- Test edit mode opens pre-populated with existing reading values
+- Test utility select shown when invoked from overview (no utilityId prop), hidden when from detail page (utilityId provided)
+- Test value field is required — validation error if empty or negative
+- Test value field shows unit suffix matching selected utility's unit
+- Test timestamp defaults to current datetime
+- Test note field is optional (form submits without it)
+- Test attachment file upload works (accepts image files, max 5MB)
+- Test "Save & Add Another" saves, clears form (keeping utility), resets timestamp to now
+- Test "Save & Add Another" not shown in edit mode
+- Test save calls `meterReadingService.create()` / `.update()` with correct data
+- Test cancel button closes dialog without saving
+- Test error handling when save fails
 
 ## Technical Notes
 - File: `src/components/home/dialogs/MeterReadingDialog.tsx`

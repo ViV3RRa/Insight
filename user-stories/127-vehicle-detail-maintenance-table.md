@@ -59,6 +59,22 @@ As the Insight platform user, I want a collapsible maintenance log table on the 
 - [ ] Delete opens confirmation
 - [ ] Sorted by date descending
 - [ ] PRD §7.5: Maintenance log table
+- [ ] All tests pass and meet coverage target
+- [ ] Table renders with mocked maintenance events
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/VehicleMaintenanceTable.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test table renders all maintenance events with correct columns (Date, Description, Cost, Note)
+- Test cost displayed in DKK format
+- Test notes rendered as italic muted text
+- Test receipt link shown when file attached
+- Test table is collapsible and collapsed by default
+- Test count badge in header matches event count
+- Test row actions (edit/delete) appear on hover
+- Test sorted by date descending
+- Test loading and empty states
 
 ## Technical Notes
 - Part of `src/components/vehicles/VehicleDetail.tsx`

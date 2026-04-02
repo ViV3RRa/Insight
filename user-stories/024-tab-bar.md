@@ -91,6 +91,32 @@ None — this story IS a shared component
 - [ ] Dark mode styles apply correctly (accent-400 for active, base-400 for inactive)
 - [ ] Smooth transition on hover/active state changes (duration-150)
 - [ ] Component accepts an array of tab definitions with labels and values
+- [ ] All tests pass and meet coverage target
+- [ ] Accessibility audit passes (axe-core or equivalent)
+
+## Testing Requirements
+- **Test file**: `src/components/shared/TabBar.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied (dark: prefix variants)
+- **Component-specific test cases:**
+  - Verify all tabs render with correct labels from the `tabs` prop array
+  - Verify active tab has `text-accent-700 dark:text-accent-400` and `tab-btn active` classes
+  - Verify inactive tabs have `text-base-400` class and no `active` class
+  - Verify clicking an inactive tab calls `onChange` with the correct tab value
+  - Verify clicking the already-active tab does not trigger `onChange`
+  - Verify full-width `border-b border-base-150 dark:border-base-700` separator renders
+  - Verify `rightContent` slot renders when prop is provided, absent when omitted
+  - Verify tab buttons use `text-sm font-medium` classes
+  - Verify container has `role="tablist"` attribute
+  - Verify each tab button has `role="tab"` attribute
+  - Verify active tab has `aria-selected="true"` and inactive tabs have `aria-selected="false"`
+  - Verify arrow key navigation between tabs using `userEvent.keyboard`
+  - Verify dark mode classes for active and inactive states
+  - Snapshot test for a 2-tab and 3-tab configuration
 
 ## Technical Notes
 - File to create: `src/components/shared/TabBar.tsx`

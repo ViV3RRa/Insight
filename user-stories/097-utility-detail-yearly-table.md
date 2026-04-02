@@ -125,6 +125,25 @@ Monthly rows are clickable on mobile (`cursor-pointer` on `< lg`) but `lg:cursor
 - [ ] PRD §5.4: Inline collapsible year rows with yearly totals, averages, and YoY change
 - [ ] PRD §14 criterion 8: Utility detail shows year rows expandable to monthly detail
 - [ ] PRD §14 criterion 9: Annual consumption/cost change % calculated and color-coded
+- [ ] All tests pass and meet coverage target
+- [ ] Component rendering verified by tests covering year/month rows, expansion, and mobile interactions
+
+## Testing Requirements
+- **Test file**: `src/components/home/UtilityYearlyTable.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test card header shows "Yearly Summary"
+- Test one row per calendar year with all required metrics
+- Test current year labeled "YYYY (YTD)"
+- Test expanding a year row reveals monthly summary rows
+- Test change percentages color-coded: red for increase, green for decrease
+- Test first year handles null change % gracefully (no prior year data)
+- Test mobile column cycling for secondary columns
+- Test mobile: tapping a monthly row opens month detail drawer
+- Test month detail drawer shows all metrics and prev/next navigation
+- Test month detail drawer has no Edit/Delete buttons (computed aggregations)
+- Test loading state
+- Test empty state (no data)
 
 ## Technical Notes
 - File: `src/components/home/UtilityYearlyTable.tsx`

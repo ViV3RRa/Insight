@@ -71,6 +71,24 @@ The PortfolioSwitcher wraps the shared `DropdownSwitcher` with portfolio-specifi
 - [ ] Click-outside dismisses the dropdown
 - [ ] Dark mode styles apply correctly
 - [ ] PRD §14 criterion 11: Default portfolio is pre-selected; user can switch between portfolios
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PortfolioSwitcher.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked query results (portfolio list renders correctly)
+- Test loading state (skeleton/spinner shown while portfolios query is pending)
+- Test empty state (no portfolios scenario handled gracefully)
+- Test error state (ErrorState component when portfolio query fails)
+- Test that all portfolio options render with name and owner
+- Test that the active/default portfolio shows a check icon
+- Test that clicking an inactive portfolio fires the selection callback
+- Test that the "Add Portfolio" action renders at the bottom with plus icon
+- Test that the edit button (Pencil icon) appears on each portfolio item
+- Test click-outside dismisses the dropdown
+- Test that switching portfolio updates Zustand store
 
 ## Technical Notes
 - File to create: `src/components/portfolio/PortfolioSwitcher.tsx`

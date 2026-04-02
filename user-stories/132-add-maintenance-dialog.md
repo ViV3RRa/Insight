@@ -4,6 +4,7 @@
 As the Insight platform user, I want a dialog to record maintenance events so that I can track service history and costs for each vehicle.
 
 ## Dependencies
+- US-013: Button Component
 - US-028: Dialog Shell Component
 - US-030: Form Input Components
 - US-031: File Upload Component
@@ -56,6 +57,23 @@ Standard dialog layout with form fields in `space-y-4`.
 - [ ] Desktop: centered modal. Mobile: bottom sheet.
 - [ ] PRD §9.10: Maintenance dialog fields match spec
 - [ ] PRD §14 criterion 32: User can register maintenance events
+- [ ] All tests pass and meet coverage target
+- [ ] Dialog renders correctly in both create and edit modes
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/dialogs/MaintenanceDialog.test.tsx` (co-located)
+- **Approach**: React Testing Library with mocked services via MSW
+- **Coverage target**: 80%+ line coverage
+- Test required fields validated: date, description, cost
+- Test date defaults to today in create mode
+- Test cost field has DKK suffix
+- Test receipt upload works (5MB limit, accepts image and PDF)
+- Test "Save & Add Another" saves, clears form (keeping vehicle), resets date to today
+- Test "Save & Add Another" not shown in edit mode
+- Test edit mode pre-populates with existing maintenance event values
+- Test vehicle select shown when opened from overview, hidden from detail
+- Test cancel/close dismisses dialog without saving
+- Test validation errors displayed for missing required fields
 
 ## Technical Notes
 - File: `src/components/vehicles/dialogs/MaintenanceDialog.tsx`

@@ -48,6 +48,23 @@ The period label is derived from `getYoYRange()` utility (US-012).
 - [ ] Uses the shared YoYComparisonRow component — no inline YoY markup
 - [ ] Values update when the active portfolio changes
 - [ ] PRD §3.2: YoY comparison summary is always visible on overview pages
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PortfolioOverviewYoY.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked query results (3 comparison rows render correct values)
+- Test loading state (skeleton/spinner shown while aggregation queries are pending)
+- Test empty state (graceful handling when no prior year data exists)
+- Test error state (ErrorState component when query fails)
+- Test that YTD Earnings row shows current vs prior year with percentage change
+- Test that YTD XIRR row shows current vs prior year with change in percentage points (pp suffix)
+- Test that Month Earnings row shows current month vs same month last year
+- Test that period label dynamically reflects the current date range
+- Test responsive layout (3-column grid on desktop, vertical stack on mobile)
+- Test that the section is always visible (not collapsible)
 
 ## Technical Notes
 - This is a section within `src/components/portfolio/PortfolioOverview.tsx`

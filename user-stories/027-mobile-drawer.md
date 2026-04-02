@@ -169,6 +169,26 @@ As the Insight platform user, I want to tap a table row on mobile to see full re
 - [ ] Edit button triggers onEdit callback
 - [ ] Delete button triggers onDelete callback
 - [ ] Dark mode styles apply correctly
+- [ ] All tests pass and meet coverage target
+- [ ] Accessibility: drawer content is reachable via keyboard
+
+## Testing Requirements
+- **Test file**: `src/components/shared/MobileDrawer.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied
+- Test drawer opens when `isOpen` is true (translateY(0)) and hides when false (translateY(100%))
+- Test backdrop click triggers `onClose` callback
+- Test content (fields as label/value pairs) renders correctly inside the drawer
+- Test prev/next navigation buttons call `onPrev`/`onNext` callbacks
+- Test prev button is disabled (opacity-30) when `hasPrev` is false
+- Test next button is disabled (opacity-30) when `hasNext` is false
+- Test Edit button triggers `onEdit` callback
+- Test Delete button triggers `onDelete` callback
+- Test drag handle element is present
 
 ## Technical Notes
 - File to create: `src/components/shared/MobileDrawer.tsx`

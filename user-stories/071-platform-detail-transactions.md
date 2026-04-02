@@ -93,6 +93,27 @@ This column is only rendered when `platform.currency !== "DKK"`.
 - [ ] Uses shared CollapsibleSection, DataTable, TransactionTypeBadge, CurrencyDisplay
 - [ ] PRD §14 criterion 16: User can register transactions with exchange rate, notes, attachments
 - [ ] PRD §14 criterion 43: Collapsible data tables collapsed by default
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PlatformDetailTransactions.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked query results (transaction rows render correct values)
+- Test loading state (skeleton/spinner shown while transaction queries are pending)
+- Test empty state (EmptyState component when no transactions exist)
+- Test error state (ErrorState component when query fails)
+- Test that transactions table is wrapped in CollapsibleSection, collapsed by default
+- Test that CollapsibleSection shows "Transactions" title with record count badge
+- Test that type column shows green badge for Deposit, red for Withdrawal via TransactionTypeBadge
+- Test that Amount uses CurrencyDisplay for native + DKK equivalent
+- Test that Exchange Rate column appears only for non-DKK platforms
+- Test that attachment column shows Paperclip icon when file exists
+- Test that edit button opens TransactionDialog pre-filled
+- Test that delete button opens confirmation dialog
+- Test that "+ Add Transaction" button triggers dialog
+- Test that rows are sorted by date descending
 
 ## Technical Notes
 - This section is within `src/components/portfolio/PlatformDetail.tsx`

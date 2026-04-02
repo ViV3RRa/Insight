@@ -17,7 +17,9 @@
       "Bash(wc -l *.html)",
       "Bash(find /Users/sKrogh/Projects/privat/Insight -type f \\\\\\(-iname *.png -o -iname *.jpg -o -iname *.jpeg -o -iname *.webp -o -iname *.gif -o -iname *.svg \\\\\\))",
       "Bash(file /Users/sKrogh/Projects/privat/Insight/design-artifacts/prototypes/screenshots/home/*.png)",
-      "Bash(find /Users/sKrogh/Projects/privat/Insight -type f -name *.json ! -path */.git/* ! -path */.playwright*)"
+      "Bash(find /Users/sKrogh/Projects/privat/Insight -type f -name *.json ! -path */.git/* ! -path */.playwright*)",
+      "Bash(ls:*)",
+      "Bash(grep -l \"Testing Requirements\" /Users/sKrogh/Projects/privat/Insight/user-stories/*.md)"
     ]
   },
   "teammateMode": "tmux"

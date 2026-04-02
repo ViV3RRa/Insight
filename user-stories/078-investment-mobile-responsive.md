@@ -98,6 +98,18 @@ Always-visible: Period, Earnings
 - [ ] Charts scale gracefully without overflow
 - [ ] PRD §8.3: Responsive design fully functional on mobile
 - [ ] PRD §14 criterion 45: Application fully functional on mobile browsers
+- [ ] Responsive behavior verified through existing component tests with responsive class assertions
+- [ ] No horizontal overflow detected at any tested viewport width
+
+## Testing Requirements
+- **Test file**: N/A — visual regression / manual verification story
+- Responsive behavior verified through existing component tests with responsive class assertions
+- Consider snapshot tests for key responsive breakpoints (320px, 375px, 414px, 768px)
+- Existing component tests (US-055 through US-077) should assert correct responsive Tailwind classes (e.g., `grid-cols-2`, `lg:grid-cols-6`, `lg:hidden`, `hidden lg:flex`)
+- Mobile column cycling tests covered in US-062, US-060, US-061 component tests
+- MobileDrawer integration tests covered in US-070, US-071 component tests
+- Touch target size (44x44px minimum) verified via computed style assertions in component tests
+- Bottom padding (pb-24) verified in US-066 page assembly test
 
 ## Technical Notes
 - This story is a polish/audit pass, not new feature development

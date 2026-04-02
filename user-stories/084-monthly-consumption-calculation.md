@@ -56,14 +56,32 @@ N/A — backend/data layer story
 - [ ] Same-month readings: consumption is the delta, no interpolation needed
 - [ ] Cross-month readings: consumption correctly split proportionally by days
 - [ ] Multiple readings per month: all deltas within the month aggregated correctly
-- [ ] Example: reading of 1000 on Jan 15, reading of 1100 on Feb 15 → ~48 kWh to January (16 days), ~52 kWh to February (15 days)
+- [ ] Example: reading of 1000 on Jan 15, reading of 1100 on Feb 15 → 51.61 kWh to January (16/31 days), 48.39 kWh to February (15/31 days)
 - [ ] Example: readings of 1000 on Jan 5, 1050 on Jan 20, 1100 on Feb 5 → January gets 50 + interpolated portion, February gets remainder
 - [ ] Empty readings array returns empty consumption array
 - [ ] Single reading returns empty consumption (need at least 2 for a delta)
-- [ ] Negative deltas handled gracefully (meter reset scenario — flagged but not rejected)
+- [ ] Negative delta between consecutive readings (meter reset/replacement) returns `null` for that interval — flagged for user review, not silently calculated
+- [ ] When a reading's `note` contains "reset" or similar, the negative delta is expected and should not produce an error
 - [ ] `isInterpolated` flag correctly set when month-boundary interpolation is used
 - [ ] `getConsumptionForPeriod` correctly sums monthly consumption within the date range
 - [ ] PRD §14 criterion 4: Monthly consumption correctly derived including multiple readings per month
+- [ ] All tests pass and meet coverage target
+- [ ] All AC items with specific input/output values verified by test cases
+
+## Testing Requirements
+- **Test file**: `src/utils/consumption.test.ts` (co-located)
+- **Approach**: Pure function unit tests — no mocking required
+- **Coverage target**: 100% of exported functions
+- All AC items with specific input/output values become test cases
+- Test same-month delta: two readings in same month produce simple delta
+- Test cross-month proportional split: reading of 1000 on Jan 15, 1100 on Feb 15 = 51.61 to January (16/31 days), 48.39 to February (15/31 days)
+- Test multiple readings per month: readings of 1000 Jan 5, 1050 Jan 20, 1100 Feb 5 — January gets 50 + interpolated portion, February gets remainder
+- Test empty readings array returns empty consumption array
+- Test single reading returns empty consumption (need at least 2 for a delta)
+- Test negative delta between consecutive readings returns null for that interval
+- Test `isInterpolated` flag correctly set when month-boundary interpolation is used
+- Test `getConsumptionForPeriod` correctly sums monthly consumption within date range
+- Test edge cases: readings on month boundaries, very short intervals, very long intervals
 
 ## Technical Notes
 - File to create: `src/utils/consumption.ts`

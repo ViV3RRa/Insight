@@ -46,6 +46,21 @@ N/A — backend/data layer story
 - [ ] Returns 0 or empty when insufficient data
 - [ ] Handles non-chronological refueling entries (sorts internally)
 - [ ] PRD §14 criterion 35: Yearly and YTD km derived from odometer readings
+- [ ] All tests pass and meet coverage target
+- [ ] Each AC input/output example is a dedicated test case
+
+## Testing Requirements
+- **Test file**: `src/utils/vehicleMetrics.test.ts` (co-located)
+- **Approach**: Pure function unit tests — no mocking required
+- **Coverage target**: 100% of exported functions
+- All AC items with specific input -> output values become test cases
+- Test total km: last odometer minus first odometer across all refuelings
+- Test `< 2` refuelings returns 0
+- Test yearly km breakdown computed correctly across year boundaries
+- Test YTD km from Jan 1 to most recent refueling
+- Test monthly km breakdown for charting
+- Test non-chronological refueling entries are sorted internally before calculation
+- Test empty refuelings array returns 0 or empty array as appropriate
 
 ## Technical Notes
 - File: `src/utils/vehicleMetrics.ts`

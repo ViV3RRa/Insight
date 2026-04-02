@@ -2,16 +2,16 @@
 
 ## Summary
 
-**Total stories: 142**
+**Total stories: 148**
 
-Organized into 8 implementation phases, each building on the previous.
+Organized into 9 implementation phases, each building on the previous. **Testing is baked into every story** — each story that produces testable code includes a `## Testing Requirements` section. There is no separate testing phase.
 
 ---
 
 ## Stories by Phase
 
-### Phase 1: Foundation & Shared Components (001–040) — 40 stories
-Project scaffolding, design tokens, auth, navigation, and all reusable shared components.
+### Phase 1: Foundation & Shared Components (001–040, 148) — 41 stories
+Project scaffolding, design tokens, auth, navigation, test infrastructure, and all reusable shared components.
 
 | Range | Description | Count |
 |-------|-------------|-------|
@@ -19,6 +19,7 @@ Project scaffolding, design tokens, auth, navigation, and all reusable shared co
 | 007–010 | App shell, theme, settings | 4 |
 | 011–012 | Formatters and time utilities | 2 |
 | 013–040 | Shared UI components | 28 |
+| 148 | Test infrastructure (Vitest, RTL, MSW, factories, mocks) | 1 |
 
 ### Phase 2: Investment — Data Layer (041–054) — 14 stories
 TypeScript types, CRUD services, and all calculation modules for the investment domain.
@@ -94,34 +95,58 @@ Integration, cross-section features, and final validation.
 | 141 | Performance optimization | 1 |
 | 142 | Final acceptance criteria validation | 1 |
 
+### Phase 9: PocketBase Backend (143–147) — 5 stories
+PocketBase bootstrap, automated migrations, collection schemas, relations, file fields, and API access rules.
+
+| Range | Description | Count |
+|-------|-------------|-------|
+| 143 | Settings collection schema | 1 |
+| 144 | Investment collections (portfolios, platforms, data_points, transactions, exchange_rates) | 1 |
+| 145 | Home collections (utilities, meter_readings, utility_bills) | 1 |
+| 146 | Vehicles collections (vehicles, refuelings, maintenance_events) | 1 |
+| 147 | PocketBase bootstrap & migration setup (binary, npm scripts, migration infrastructure) | 1 |
+
 ---
 
 ## Dependency Graph Summary
 
 ```
+Phase 9: PocketBase Backend
+  147 (Bootstrap) ─→ 143 (Settings) ──────→ US-010 (Settings Service)
+                   ─→ 144 (Investment) ───→ US-042–046 (Investment Services)
+                   ─→ 145 (Home) ─────────→ US-081–083 (Home Services)
+                   ─→ 146 (Vehicles) ─────→ US-108–110 (Vehicle Services)
+
 Phase 1: Foundation & Shared Components
-  └─ Phase 2: Investment Data Layer
+  └─ Phase 2: Investment Data Layer (depends on 144)
        └─ Phase 3: Investment UI
-  └─ Phase 4: Home Data Layer
+  └─ Phase 4: Home Data Layer (depends on 145)
        └─ Phase 5: Home UI
-  └─ Phase 6: Vehicles Data Layer
+  └─ Phase 6: Vehicles Data Layer (depends on 146)
        └─ Phase 7: Vehicles UI
   └─────────────────────────────────────── Phase 8: Cross-Cutting & Polish
+
+Phase 1 includes:
+  148 (Test Infrastructure) ─→ all stories use test factories, mocks, and renderWithProviders
 ```
 
 **Key dependency chains:**
 
+- **PocketBase bootstrap** (147) must come first — it sets up the binary, npm scripts, and migration infrastructure
+- **PocketBase collections** (143–146) are migration files that depend on 147 and must exist before their section's service stories can function
 - **Shared components** (013–040) are prerequisites for ALL UI stories
 - **TypeScript types** (041, 080, 107) are prerequisites for their section's services and calculations
-- **Services** depend on types + PocketBase client (004)
+- **Services** depend on types + PocketBase client (004) + PocketBase collections (143–146)
 - **Calculations** depend on types (pure functions, no service dependencies)
 - **UI page sections** depend on shared components + section services/calculations
 - **Page assemblies** depend on all their section components
 - **Dialogs** depend on dialog shell (028) + form inputs (030) + services
 - **Polish stories** (mobile, dark mode) depend on page assemblies
 - **Cross-cutting stories** (135–142) depend on all section UI being complete
+- **Test infrastructure** (148) depends only on US-001 — set up early in Phase 1 so all subsequent stories can write tests immediately
+- **Every story writes its own tests** as part of its definition of done — no separate testing phase
 
-**Phases 2–3, 4–5, and 6–7 can be developed in parallel** once Phase 1 is complete.
+**Phase 9 can start after US-001 (Project Scaffolding) completes** and then run in parallel with the rest of Phase 1 (US-002–040). PocketBase setup and frontend scaffolding are independent after the initial project structure exists. Each domain's collections must be ready before that domain's service stories begin. `npm run dev` starts both servers together.
 
 ---
 
@@ -130,9 +155,11 @@ Phase 1: Foundation & Shared Components
 | Size | Definition | Count | Stories |
 |------|-----------|-------|---------|
 | **S** | Single component or function, < 2 hours | 52 | Simple components, badges, toggles, individual service CRUD, utility functions |
-| **M** | Multiple functions or moderate UI, 2–4 hours | 48 | Complex components, calculation modules, dialog forms, chart components |
-| **L** | Full page section or complex logic, 4–8 hours | 32 | Page assemblies, XIRR solver, consumption interpolation, demo mode, overview pages |
+| **M** | Multiple functions or moderate UI, 2–4 hours | 49 | Complex components, calculation modules, dialog forms, chart components |
+| **L** | Full page section or complex logic, 4–8 hours | 33 | Page assemblies, XIRR solver, consumption interpolation, demo mode, overview pages, test infrastructure |
 | **XL** | Major integration or audit, 1–2 days | 10 | Mobile responsive polish, dark mode polish, accessibility audit, performance optimization, acceptance validation |
+
+**Note:** Each story's time estimate includes writing its tests. Testing is not a separate time allocation — it's part of the story.
 
 ---
 

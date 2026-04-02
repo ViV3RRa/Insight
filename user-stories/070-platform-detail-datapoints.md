@@ -83,6 +83,26 @@ The `CollapsibleSection` wraps the `DataTable`. When expanded, the table appears
 - [ ] Uses shared CollapsibleSection, DataTable, CurrencyDisplay — no inline markup
 - [ ] PRD §14 criterion 15: User can register data points
 - [ ] PRD §14 criterion 43: Collapsible data tables collapsed by default
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PlatformDetailDataPoints.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked query results (data point rows render correct values)
+- Test loading state (skeleton/spinner shown while data point queries are pending)
+- Test empty state (EmptyState component when no data points exist)
+- Test error state (ErrorState component when query fails)
+- Test that data table is wrapped in CollapsibleSection, collapsed by default
+- Test that CollapsibleSection shows "Data Points" title with record count badge
+- Test that table shows 5 rows by default with "Show all N" toggle
+- Test that interpolated data points show amber "est." badge in Source column
+- Test that manual data points show "Manual" text in Source column
+- Test that edit button opens DataPointDialog pre-filled with record data
+- Test that delete button opens confirmation dialog
+- Test that "+ Add Data Point" button triggers dialog
+- Test that rows are sorted by date descending
 
 ## Technical Notes
 - This section is within `src/components/portfolio/PlatformDetail.tsx`

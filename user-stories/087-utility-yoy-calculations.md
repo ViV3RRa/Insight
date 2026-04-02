@@ -74,6 +74,25 @@ N/A — backend/data layer story
 - [ ] Aggregate home YoY sums across all utilities correctly
 - [ ] Change percentages handle zero previous values gracefully (return null, not Infinity)
 - [ ] PRD §14 criteria 8-9: Yearly summaries with YoY change percentages
+- [ ] All tests pass and meet coverage target
+- [ ] All AC items with specific input/output values verified by test cases
+
+## Testing Requirements
+- **Test file**: `src/utils/utilityYoY.test.ts` (co-located)
+- **Approach**: Pure function unit tests — no mocking required
+- **Coverage target**: 100% of exported functions
+- All AC items with specific input/output values become test cases
+- Test YTD Total Cost comparison: current year YTD vs same YTD period last year
+- Test Current Month Cost comparison: current month vs same month last year
+- Test Avg Monthly Cost comparison: current year average vs prior year average for same period
+- Test percentage change returns null when prior year data is unavailable
+- Test zero previous value returns null (not Infinity)
+- Test annual consumption change % calculated correctly per year
+- Test annual cost change % calculated correctly per year
+- Test monthly summaries include consumption and cost change % vs same month prior year
+- Test yearly summaries include all metrics from PRD SS5.4
+- Test `calculateHomeYoY` aggregates across all utilities correctly
+- Test edge cases: single year of data, empty metrics, partial year data
 
 ## Technical Notes
 - File to modify: `src/utils/utilityCosts.ts`

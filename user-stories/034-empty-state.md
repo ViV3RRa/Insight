@@ -92,6 +92,23 @@ As the Insight platform user, I want clear empty states when a section or table 
 - [ ] Both variants are centered with appropriate vertical padding
 - [ ] Dark mode styles apply correctly (accent-900/30 bg, accent-400 text)
 - [ ] Component accepts icon, heading, description, and optional onAction callback
+- [ ] All tests pass and meet coverage target
+- [ ] Both variant A (page) and variant B (section) have dedicated test coverage
+
+## Testing Requirements
+- **Test file**: `src/components/shared/EmptyState.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied
+- Test icon and message text render correctly for both variants
+- Test page variant renders heading, description, icon in accent circle, and CTA button
+- Test section variant renders gray icon and message without CTA button
+- Test optional action button fires `onAction` callback when clicked
+- Test component renders without action button when `onAction` is not provided
+- Test that the correct icon component is rendered (passed via `icon` prop)
 
 ## Technical Notes
 - File to create: `src/components/shared/EmptyState.tsx`

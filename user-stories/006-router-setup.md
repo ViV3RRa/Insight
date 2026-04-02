@@ -38,6 +38,15 @@ N/A — routing/infrastructure story
 - [ ] Browser back/forward navigation works
 - [ ] Direct URL access works (e.g., navigating directly to `/investment`)
 - [ ] Unknown routes redirect to `/home`
+- [ ] All tests pass and meet coverage target
+
+## Testing Requirements
+- **Test file**: `src/Router.test.tsx` (or wherever the router is defined)
+- **Approach**: React Testing Library with MemoryRouter
+- Test each route renders the correct page component
+- Test unauthenticated user redirects to login
+- Test 404/unknown routes
+- Test navigation between sections
 
 ## Technical Notes
 - Files to modify: `src/App.tsx`, `src/main.tsx`

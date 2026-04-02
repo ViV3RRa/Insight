@@ -61,6 +61,20 @@ Replace last 2 cards with:
 - [ ] Values show "N/A" when insufficient data
 - [ ] Uses shared StatCard
 - [ ] PRD §7.5: Summary stat cards match spec
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders correct number of stat cards for active vs sold vehicles
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/VehicleStatCards.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test 7 stat cards rendered for active vehicles
+- Test efficiency unit matches fuel type (km/l for Petrol/Diesel, km/kWh for Electric)
+- Test all-time, year, and rolling-5 efficiency values displayed
+- Test YTD km, fuel cost, avg/month, avg/day values rendered
+- Test sold vehicles show total cost of ownership card
+- Test "N/A" shown when insufficient data for a metric
+- Test responsive grid: 2 cols mobile, 4 sm, 7 lg
 
 ## Technical Notes
 - Part of `src/components/vehicles/VehicleDetail.tsx`

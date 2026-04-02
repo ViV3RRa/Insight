@@ -4,6 +4,7 @@
 As the Insight platform user, I want a dialog to create and edit portfolios so that I can manage multiple named portfolios with different owners.
 
 ## Dependencies
+- US-013: Button Component
 - US-028: Dialog Shell Component
 - US-030: Form Input Components
 - US-042: Portfolio CRUD Service
@@ -77,6 +78,24 @@ As the Insight platform user, I want a dialog to create and edit portfolios so t
 - [ ] Mobile: bottom sheet anchored to bottom
 - [ ] PRD §9.1: Portfolio dialog fields match spec
 - [ ] PRD §14 criterion 10: User can create, edit, and delete portfolios with name and owner
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/dialogs/PortfolioDialog.test.tsx` (co-located)
+- **Approach**: React Testing Library with mocked services via MSW
+- **Coverage target**: 80%+ line coverage
+- Test create mode: empty form renders with "Add Portfolio" title, required field validation, successful submission calls portfolioService.create()
+- Test edit mode: pre-populated fields render with "Edit Portfolio" title, updates only changed fields via portfolioService.update()
+- Test cancellation: dialog closes, no service calls, no side effects
+- Test error handling: service failure shows error toast, dialog stays open
+- Test form validation: Name required (error if empty on submit), Owner required (error if empty on submit)
+- Test loading state on submit button during mutation
+- Test that "Is default" checkbox shown only in edit mode
+- Test that "Is default" checkbox is disabled when this is the only default portfolio
+- Test that dialog closes and portfolio list refreshes on successful save
+- Test desktop rendering (centered modal with backdrop blur)
+- Test mobile rendering (bottom sheet anchored to bottom)
 
 ## Technical Notes
 - File: `src/components/portfolio/dialogs/PortfolioDialog.tsx`

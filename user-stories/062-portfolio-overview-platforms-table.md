@@ -94,6 +94,24 @@ The table card wraps the DataTable. Clickable rows use `cursor-pointer` and the 
 - [ ] Staleness badges appear for platforms missing current month data
 - [ ] Uses shared DataTable, PlatformIcon, CurrencyDisplay, StalenessIndicator — no inline markup
 - [ ] PRD §14 criteria 23, 42: Platform list with staleness indicators
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PortfolioOverviewPlatformsTable.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked query results (platform rows render correct values)
+- Test loading state (skeleton/spinner shown while platform queries are pending)
+- Test empty state (EmptyState component when no investment platforms exist)
+- Test error state (ErrorState component when query fails)
+- Test that card header shows "Investment Platforms" with correct count badge
+- Test that desktop action buttons ("+ Add Data Point", "+ Add Transaction") render in card header
+- Test that platform rows show icon, name, currency, value, earnings, gain/loss, XIRR, and updated date
+- Test that staleness indicators appear for platforms missing current month data
+- Test that rows are clickable and trigger navigation callback
+- Test mobile column cycling order: XIRR, Month Earnings, All-Time Gain/Loss, Updated
+- Test that CurrencyDisplay shows native + DKK equivalent for non-DKK platforms
 
 ## Technical Notes
 - This section is part of `src/components/portfolio/PortfolioOverview.tsx` (platforms section)

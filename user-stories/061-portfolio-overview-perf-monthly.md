@@ -73,6 +73,25 @@ As the Insight platform user, I want a monthly performance analysis tab with bar
 - [ ] Dot indicator below the mobile column header shows active position
 - [ ] All rows update simultaneously when cycling columns
 - [ ] Uses shared DataTable and MobileColumnCycler — no inline table markup
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PortfolioOverviewPerfMonthly.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked query results (month rows render correct values)
+- Test loading state (skeleton/spinner shown while data queries are pending)
+- Test empty state (EmptyState component when no monthly data available)
+- Test error state (ErrorState component when query fails)
+- Test that bar chart renders with one bar per month in green/red coloring
+- Test that chart follows the ChartModeToggle state shared with the yearly tab
+- Test that period labels use "MMM YYYY" format (e.g., "Feb 2026")
+- Test that Earnings values use colored text (emerald/rose based on sign)
+- Test that Monthly XIRR values display as percentages
+- Test mobile column cycling order: Monthly XIRR, Starting Value, Ending Value, Net Deposits
+- Test dot indicator below mobile column header shows active position
+- Test that all rows update simultaneously when cycling columns
 
 ## Technical Notes
 - Monthly data computed from portfolio aggregation for each calendar month

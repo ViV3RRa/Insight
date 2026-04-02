@@ -72,6 +72,23 @@ As the Insight platform user, I want a collapsible refueling log table on the ve
 - [ ] Sorted by date descending
 - [ ] PRD §7.5: Refueling log table with all required columns
 - [ ] PRD §14 criterion 36: Vehicle detail shows collapsible data tables
+- [ ] All tests pass and meet coverage target
+- [ ] Table renders with mocked refueling records
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/VehicleRefuelingTable.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test table renders all refueling records with correct columns
+- Test fuel column shows amount with correct unit (L or kWh based on fuelType)
+- Test efficiency derived from odometer delta / fuel consumed
+- Test first refueling shows dash for efficiency (no prior odometer)
+- Test EV vehicles show home-charging indicator column
+- Test table is collapsible and collapsed by default
+- Test count badge in header matches record count
+- Test row actions (edit/delete) appear on hover
+- Test sorted by date descending
+- Test loading and empty states
 
 ## Technical Notes
 - Part of `src/components/vehicles/VehicleDetail.tsx`

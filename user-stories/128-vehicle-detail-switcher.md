@@ -44,6 +44,20 @@ Same pattern as platform switcher (US-072) and utility switcher (US-100), with v
 - [ ] Mobile: full-width slide-down
 - [ ] Click-outside dismisses
 - [ ] PRD §8.2: Detail page entity switcher
+- [ ] All tests pass and meet coverage target
+- [ ] Switcher renders and navigates correctly with mocked vehicle list
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/VehicleSwitcher.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test vehicle name renders as dropdown trigger
+- Test "Vehicles Overview" link present at top of dropdown
+- Test vehicles grouped into Active and Sold sections
+- Test current vehicle highlighted in dropdown
+- Test edit vehicle button at bottom of dropdown
+- Test click-outside dismisses dropdown
+- Test selecting a vehicle navigates to correct route
 
 ## Technical Notes
 - Part of `src/components/vehicles/VehicleDetail.tsx` header

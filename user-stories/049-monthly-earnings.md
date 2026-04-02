@@ -66,6 +66,19 @@ N/A — backend/data layer story
 - [ ] Correctly identifies and uses month-end boundary values from data points
 - [ ] Correctly sums deposits and withdrawals within the month boundaries
 - [ ] PRD §14 criterion 19: Monthly earnings are computed and displayed as first-class metric
+- [ ] All tests pass and meet 100% coverage of exported functions
+
+## Testing Requirements
+- **Test file**: `src/utils/calculations.test.ts` (co-located, shared with other calculation stories)
+- **Approach**: Pure function unit tests — no mocking required
+- **Coverage target**: 100% of exported functions
+- Test (10000, 10500, 200, 0) returns 300 (gained 300 after accounting for 200 deposit)
+- Test (10000, 9800, 0, 0) returns -200 (lost 200, no deposits)
+- Test (10000, 10000, 500, 0) returns -500 (flat value with 500 deposit means -500 earnings)
+- Test (10000, 11000, 500, 200) returns 700 (11000 - 10000 - (500 - 200) = 700)
+- Test computeMonthlyEarningsForPlatform returns null when boundary values are missing
+- Test first month handling: startingValue=0 when no prior month-end exists
+- Test edge cases: null returns, empty arrays
 
 ## Technical Notes
 - File to modify: `src/utils/calculations.ts` — add monthly earnings functions alongside any existing calculation utilities

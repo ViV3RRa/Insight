@@ -51,6 +51,12 @@ N/A — configuration story. This is the SINGLE SOURCE OF TRUTH for all design t
 - [ ] All keyframe animations are defined and usable
 - [ ] Dialog animation classes work for both desktop and mobile breakpoints
 - [ ] Dark mode classes properly toggle when `dark` class is on `<html>`
+- [ ] All tests pass and meet coverage target
+
+## Testing Requirements
+- **Test file**: N/A — configuration story, validated by build succeeding
+- Tailwind config validated by build process and component tests using design tokens
+- Keyframe animations and custom CSS classes validated visually through component tests in later stories
 
 ## Technical Notes
 - Files to create/modify: `tailwind.config.js`, `src/index.css`

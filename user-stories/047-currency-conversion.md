@@ -57,6 +57,21 @@ N/A — backend/data layer story
 - [ ] `getDKKEquivalent()` returns both the converted amount and the rate used
 - [ ] DKK pass-through works for all functions without triggering rate lookups
 - [ ] PRD §14 criterion 26: Non-DKK values display with DKK equivalent
+- [ ] All tests pass and meet 100% coverage of exported functions
+
+## Testing Requirements
+- **Test file**: `src/utils/currency.test.ts` (co-located)
+- **Approach**: Pure function unit tests — **mock exchange rate service** for rate lookups
+- **Coverage target**: 100% of exported functions
+- All AC items with specific input/output values are direct test cases
+- Test convertToDKK multiplies amount by rate for non-DKK currencies
+- Test DKK pass-through: convertToDKK with currency "DKK" returns amount directly (no rate lookup)
+- Test convertFromDKK divides amount by rate for non-DKK currencies
+- Test convertFromDKK with currency "DKK" returns amount directly (no rate lookup)
+- Test returns null when no exchange rate is available for the currency/date
+- Test convertToDKKBatch deduplicates rate lookups for the same currency+date combination
+- Test getDKKEquivalent returns both the converted amount and the rate used
+- Test edge cases: null returns, zero amounts
 
 ## Technical Notes
 - File to create: `src/utils/currency.ts`

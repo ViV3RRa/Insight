@@ -6,6 +6,7 @@ As the Insight platform user, I want exchange rates to be automatically fetched 
 ## Dependencies
 - US-004: PocketBase Client and Auth Service
 - US-041: Investment TypeScript Types
+- US-144: PocketBase Schema — Investment Collections
 
 ## Requirements
 - Create `src/services/exchangeRates.ts` with the following functions:
@@ -14,7 +15,7 @@ As the Insight platform user, I want exchange rates to be automatically fetched 
 - `getAll()`: Fetch all exchange rates for the current user. Sort by `date` descending (most recent first).
 - `getByDateRange(fromCurrency: string, start: string, end: string)`: Fetch rates for a currency pair within a date range.
 - `getOne(id: string)`: Fetch a single exchange rate by ID. Verify ownership.
-- `create(data: ExchangeRateCreate)`: Create a new exchange rate record. Set `owner` to current user.
+- `create(data: ExchangeRateCreate)`: Create a new exchange rate record. Set `ownerId` to current user.
 - `update(id: string, data: Partial<ExchangeRateCreate>)`: Update an exchange rate. When the user overrides an auto-fetched rate, set `source` to `"manual"`.
 - `delete(id: string)`: Delete an exchange rate record. Verify ownership.
 
@@ -48,7 +49,7 @@ As the Insight platform user, I want exchange rates to be automatically fetched 
 - Currently: EUR to DKK. The system should support additional `fromCurrency` values without structural changes.
 
 **Data isolation:**
-- All queries filter by `owner = currentUserId`.
+- All queries filter by `ownerId = currentUserId`.
 
 ## Shared Components Used
 N/A — backend/data layer story
@@ -68,14 +69,33 @@ N/A — backend/data layer story
 - [ ] `delete()` removes a rate record
 - [ ] Rate fetching is non-blocking (does not freeze the UI)
 - [ ] Rate fetching gracefully handles API failures (returns null, does not throw)
-- [ ] All operations filter by owner for data isolation
+- [ ] All operations filter by ownerId for data isolation
 - [ ] PRD §14 criterion 25: Exchange rates are auto-fetched, visible, and overridable
+- [ ] All tests pass and meet 90%+ line coverage target
+- [ ] Zod schema parsing is verified for all service responses
+
+## Testing Requirements
+- **Test file**: `src/services/exchangeRates.test.ts` (co-located)
+- **Approach**: Mock PocketBase via MSW; test CRUD operations, ownership filtering, Zod parsing, error handling
+- **Coverage target**: 90%+ line coverage
+- Test getRate returns exact date match from stored rates
+- Test getRate falls back to closest previous date when no exact match exists
+- Test getRate triggers auto-fetch when no stored rate exists (API fallback)
+- Test fetchRate returns null on API failure (does not throw)
+- Test saveRate/create prevents duplicate entries for the same currency+date
+- Test DKK-to-DKK returns rate 1.0 without any lookup
+- Test user update of auto-fetched rate changes source to "manual"
+- Test fetchMonthlyRates fetches rates for missing months
+- Verify all queries filter by `ownerId`
+- Verify Zod schema parsing catches malformed responses
+- Test error cases: not found, unauthorized
 
 ## Technical Notes
 - File to create: `src/services/exchangeRates.ts`
 - PocketBase collection name: `exchange_rates` (PRD §10)
 - Read functions are TanStack Query queryFns; `create`, `update`, `delete` are mutationFns.
-- Suggested query keys: `['exchangeRates', fromCurrency, date]` for single rate lookups; `['exchangeRates', fromCurrency]` for list. `fetchRate` is a TanStack Query mutation or prefetch.
+- Suggested query keys: `['exchangeRates', fromCurrency, date]` for single rate lookups; `['exchangeRates', fromCurrency]` for list.
+- `fetchRate()` is a **TanStack Query mutation** (not a prefetch). On API failure, it returns `null` gracefully — never throws. The caller can fall back to the most recent cached rate or prompt the user for manual entry.
 - The in-memory cache note still applies for bulk calculations within a single render cycle — do not replace that with TanStack Query.
 - Collection fields: fromCurrency, toCurrency, rate, date, source (PRD §10)
 - Recommended public API: `https://api.frankfurter.app/{date}?from={currency}&to=DKK` — free, no API key, ECB data
@@ -85,3 +105,4 @@ N/A — backend/data layer story
 - Consider caching recently looked-up rates in memory to avoid repeated PocketBase queries during bulk calculations (e.g. portfolio aggregation hitting the same rate many times)
 - Monthly rate fetching can be triggered lazily: check if the rate for the current month's 1st exists, and if not, fetch it
 - Error handling: API fetch failures should log a warning and return null — never throw from fetch operations. CRUD errors (not found, unauthorized) should throw.
+- All responses are parsed through Zod schemas (e.g., `exchangeRateSchema.parse(response)`) before returning — this validates the response shape and produces branded ID types at runtime

@@ -130,6 +130,33 @@ None — this story IS a shared component
 - [ ] All variants support sm, md, lg sizes
 - [ ] Dark mode styles apply correctly for all variants
 - [ ] Component accepts and forwards standard button HTML attributes
+- [ ] Button is activated by both Enter and Space keys when focused
+- [ ] Focus indicator is visible for keyboard users (outline or ring style)
+- [ ] Icon-only buttons have an `aria-label` prop for screen reader accessibility
+- [ ] Disabled buttons have `aria-disabled="true"` and cannot receive focus via Tab
+- [ ] All tests pass and meet coverage target
+- [ ] Accessibility audit passes (axe-core or equivalent)
+
+## Testing Requirements
+- **Test file**: `src/components/shared/Button.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied (dark: prefix variants)
+- **Component-specific test cases:**
+  - Render all four variants (primary, secondary, ghost, destructive) and verify correct class sets
+  - Render all three sizes (sm, md, lg) and verify padding/text-size classes
+  - Verify disabled state applies `opacity-50`, `pointer-events-none`, and `aria-disabled="true"`
+  - Verify loading state shows spinner SVG with `animate-spin`, applies `opacity-75`, and disables pointer events
+  - Verify icon-only button requires and renders `aria-label` for screen reader accessibility
+  - Verify `onClick` handler fires on click, Enter key, and Space key via `userEvent`
+  - Verify `onClick` does NOT fire when disabled or loading
+  - Verify `fullWidth` prop applies `w-full` class
+  - Verify standard HTML button attributes (type, name, etc.) are forwarded to the DOM element
+  - Verify focus ring/outline is visible for keyboard users
+  - Snapshot test for each variant to catch unintended style regressions
 
 ## Technical Notes
 - File to create: `src/components/shared/Button.tsx`

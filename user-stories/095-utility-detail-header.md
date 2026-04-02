@@ -100,6 +100,21 @@ As the Insight platform user, I want a detail page header for each utility showi
 - [ ] Staleness badge visible in switcher when utility is stale
 - [ ] Uses shared StatCard, ChangeIndicator, StalenessIndicator, UtilityIcon, DropdownSwitcher
 - [ ] PRD §5.4: Utility detail header and stat cards match spec
+- [ ] All tests pass and meet coverage target
+- [ ] Component rendering verified by tests covering header, stat cards, and interactions
+
+## Testing Requirements
+- **Test file**: `src/components/home/UtilityDetailHeader.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test switcher bar shows utility name, icon, color, and updated date
+- Test staleness badge appears when utility is stale
+- Test desktop action buttons render: "+ Add Reading" (secondary) and "+ Add Bill" (primary)
+- Test 6 stat cards render with correct labels and values (This Month, This Month Cost, vs Last Month, YTD Consumption, YTD Cost, Cost per Unit)
+- Test "vs Last Month" card uses ChangeIndicator with correct color (green for decrease, red for increase)
+- Test grid responsive classes: 2 cols on mobile, 3 on sm, 6 on lg
+- Test loading state renders skeleton placeholders
+- Test with missing/null metric data (e.g., no readings yet)
 
 ## Technical Notes
 - File: `src/components/home/UtilityDetail.tsx` (header section)

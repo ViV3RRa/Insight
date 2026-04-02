@@ -84,6 +84,28 @@ None — this story IS a shared component
 - [ ] `invertColor` prop swaps the color logic (positive = rose, negative = emerald)
 - [ ] Dark mode uses emerald-400 and rose-400 respectively
 - [ ] Component renders inline and flows naturally in surrounding text/rows
+- [ ] All tests pass and meet coverage target
+- [ ] Accessibility audit passes (axe-core or equivalent)
+
+## Testing Requirements
+- **Test file**: `src/components/shared/ChangeIndicator.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied (dark: prefix variants)
+- **Component-specific test cases:**
+  - Positive value: verify up arrow SVG is rendered and container has `text-emerald-600` class
+  - Negative value: verify down arrow SVG is rendered and container has `text-rose-600` class
+  - Zero value: verify no arrow is rendered and container has `text-base-400` class
+  - Verify `invertColor` prop swaps colors: positive value renders `text-rose-600`, negative renders `text-emerald-600`
+  - Verify arrow SVG dimensions are `w-3 h-3` with `strokeWidth="2.5"`
+  - Verify layout uses `inline-flex items-center gap-0.5`
+  - Verify value text has `font-mono-data text-xs font-medium` classes
+  - Verify `formattedValue` prop overrides default formatting when provided
+  - Verify `suffix` prop (e.g., "pp") appends to the displayed value
+  - Verify dark mode classes: `dark:text-emerald-400` for positive, `dark:text-rose-400` for negative
+  - Snapshot test for positive, negative, zero, and inverted variants
 
 ## Technical Notes
 - File to create: `src/components/shared/ChangeIndicator.tsx`

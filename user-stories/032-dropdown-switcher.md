@@ -176,6 +176,26 @@ None — this story IS a shared component
 - [ ] Clicking an item calls onSelect and closes the dropdown
 - [ ] Dropdown scrolls if items exceed max-h-80 (desktop)
 - [ ] Dark mode styles apply correctly
+- [ ] All tests pass and meet coverage target
+- [ ] Keyboard interactions (Escape to close) are tested
+
+## Testing Requirements
+- **Test file**: `src/components/shared/DropdownSwitcher.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied
+- Test current selection is displayed in the trigger button
+- Test clicking the trigger opens the dropdown menu
+- Test selecting an option fires `onSelect` with the correct ID and closes the dropdown
+- Test clicking outside the dropdown closes it
+- Test Escape key closes the dropdown
+- Test chevron rotates when dropdown opens (rotate(180deg)) and resets when closed
+- Test section headers render with correct uppercase styling
+- Test active item has accent highlight styling (`bg-accent-50/50`, `border-l-2 border-accent-600`)
+- Test overview link renders at the top of the list
 
 ## Technical Notes
 - File to create: `src/components/shared/DropdownSwitcher.tsx`

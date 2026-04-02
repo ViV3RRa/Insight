@@ -40,6 +40,19 @@ N/A — optimization story
 - [ ] No memory leaks from chart rerenders
 - [ ] Bundle size reasonable (< 500kb gzipped)
 - [ ] PRD §13: Charts render smoothly with 7+ years of data
+- [ ] Performance benchmarks documented and all targets met
+- [ ] Bundle size analysis confirms < 500kb gzipped
+
+## Testing Requirements
+- **Test file**: N/A — audit/verification story
+- **Approach**: Testing IS the deliverable — performance benchmarks and profiling
+- Run Lighthouse performance audit on all main pages; target score >= 90
+- Analyze bundle size with `vite-bundle-visualizer` or equivalent; confirm < 500kb gzipped total
+- Profile render performance: charts with 84+ data points must render in < 500ms
+- Profile time span selector change: chart re-render must complete in < 200ms
+- Profile XIRR calculation: must complete in < 100ms per platform with 7+ years of data
+- Verify no memory leaks from chart re-renders using Chrome DevTools memory profiling
+- Test page load to interactive: < 2 seconds on reasonable hardware
 
 ## Technical Notes
 - Profile with React DevTools and Chrome Performance tab

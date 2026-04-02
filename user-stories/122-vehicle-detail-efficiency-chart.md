@@ -57,6 +57,19 @@ As the Insight platform user, I want a fuel efficiency chart on the vehicle deta
 - [ ] YoY toggle overlays prior year as dashed line
 - [ ] Responsive, no overflow
 - [ ] PRD §7.5: Fuel efficiency over time chart
+- [ ] All tests pass and meet coverage target
+- [ ] Chart renders with mocked refueling data
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/VehicleEfficiencyChart.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test chart renders with per-refueling efficiency data points
+- Test Y-axis label matches fuel type unit (km/l or km/kWh)
+- Test TimeSpanSelector renders with vehicles variant (3M, 6M, YTD, 1Y, 2Y, All)
+- Test YoY toggle overlays prior year as dashed line when enabled
+- Test chart renders without errors when no data available
+- Test responsive behavior (no overflow)
 
 ## Technical Notes
 - File: `src/components/vehicles/VehicleEfficiencyChart.tsx`

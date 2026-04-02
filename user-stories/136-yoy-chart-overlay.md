@@ -61,6 +61,19 @@ As the Insight platform user, I want to toggle a year-over-year overlay on chart
 - [ ] Overlay disappears when toggle is off
 - [ ] PRD §3.2: YoY chart overlay as a lens, not permanent
 - [ ] PRD §14 criterion 40: YoY toggle overlays prior year on charts
+- [ ] All tests pass and meet coverage target
+- [ ] Integration tests verify YoY overlay behavior across all chart types
+
+## Testing Requirements
+- **Test file**: `src/test/integration/yoy-chart-overlay.test.tsx`
+- **Approach**: Integration tests verifying cross-component behavior
+- Test toggle enables prior year overlay on bar charts (semi-transparent bars rendered)
+- Test toggle disables prior year overlay (overlay elements removed from DOM)
+- Test prior year data renders with distinct styling (opacity 0.3 for bars, strokeDasharray + opacity 0.4 for lines)
+- Test prior year data is correctly aligned by month (e.g., Jan current year aligns with Jan prior year)
+- Test graceful handling when no prior year data exists (overlay not shown, no errors)
+- Test toggle state is independent per chart (toggling one chart does not affect others)
+- Test overlay renders correctly on line charts (dashed ghost line)
 
 ## Technical Notes
 - Integration/audit story — verify each chart component

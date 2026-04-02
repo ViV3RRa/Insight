@@ -84,6 +84,25 @@ bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow
 - [ ] Mobile: secondary columns cycle via MobileColumnCycler
 - [ ] Uses shared TabBar, ChartModeToggle, and DataTable components — no inline markup for these patterns
 - [ ] PRD §6.4 item 2: Tabbed card with Yearly/Monthly tabs, bar chart, and summary table
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PortfolioOverviewPerfYearly.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked query results (year rows render correct values)
+- Test loading state (skeleton/spinner shown while data queries are pending)
+- Test empty state (EmptyState component when no yearly data available)
+- Test error state (ErrorState component when query fails)
+- Test that TabBar shows Yearly and Monthly tabs with Yearly active by default
+- Test that ChartModeToggle switches chart between Earnings and XIRR views
+- Test that bar chart renders with green/red coloring and value labels
+- Test that summary table shows all yearly columns with correct formatting
+- Test that totals row appears at the bottom with all-time aggregates
+- Test that current year is labeled "(YTD)"
+- Test that mobile secondary columns cycle via MobileColumnCycler
+- Test that Earnings and Earnings % use colored text (emerald/rose)
 
 ## Technical Notes
 - This section lives within the performance accordion content in `src/components/portfolio/PortfolioOverview.tsx`

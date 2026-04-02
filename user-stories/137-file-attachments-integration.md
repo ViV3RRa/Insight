@@ -65,6 +65,21 @@ As the Insight platform user, I want file attachments to work consistently acros
 - [ ] File URLs correct via PocketBase file API
 - [ ] PRD §3.3: File attachments on all applicable record types
 - [ ] PRD §14 criterion 41: File attachments work on all applicable types
+- [ ] All tests pass and meet coverage target
+- [ ] Integration tests verify file attachment behavior on all applicable record types
+
+## Testing Requirements
+- **Test file**: `src/test/integration/file-attachments.test.tsx`
+- **Approach**: Integration tests verifying cross-component behavior
+- Test file upload works on transaction records (statement/confirmation attachments)
+- Test file upload works on meter reading records (photo of meter display)
+- Test file upload works on utility bill records (scanned bill/PDF)
+- Test file upload works on refueling records (receipt photo, trip counter photo)
+- Test file upload works on maintenance event records (receipt image)
+- Test image file preview renders thumbnail correctly
+- Test non-image file (PDF) renders download link instead of thumbnail
+- Test file download link generates correct PocketBase file URL
+- Test file delete/replace in edit mode removes old attachment
 
 ## Technical Notes
 - Integration/verification story — all file handling infrastructure exists in services (US-031, individual CRUD services)

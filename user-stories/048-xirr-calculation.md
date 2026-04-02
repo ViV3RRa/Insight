@@ -95,17 +95,36 @@ N/A — backend/data layer story
 - [ ] `calculateXIRR` correctly solves the XIRR equation using Newton-Raphson
 - [ ] Known test case: invest 10,000 on Jan 1, receive 11,000 on Dec 31 = ~10% XIRR
 - [ ] Known test case: invest 10,000 on Jan 1, deposit 5,000 on Jul 1, end value 16,000 on Dec 31 — XIRR matches Excel/Google Sheets XIRR function
+- [ ] Test case: deposit 10,000 on Jan 1, value 10,500 on Jul 1 → XIRR ≈ 10.25% (validates against known Excel result)
+- [ ] Test case: deposit 10,000 on Jan 1, withdrawal 2,000 on Apr 1, value 8,500 on Dec 31 → XIRR ≈ 5.83%
 - [ ] `buildCashFlows` correctly constructs cash flows: starting value negative, deposits negative, withdrawals positive, ending value positive
 - [ ] Returns `null` for fewer than 2 cash flows
 - [ ] Returns `null` when Newton-Raphson does not converge
 - [ ] Returns `null` when all cash flows are on the same date
 - [ ] Returns `null` when all cash flows have the same sign
-- [ ] Handles edge case of zero starting value with deposits correctly
+- [ ] Handles zero starting value without division-by-zero error
 - [ ] Convergence tolerance is 1e-7 or better
 - [ ] Maximum 100 iterations before returning null
 - [ ] Does not throw exceptions — always returns number or null
 - [ ] Results match Excel/Google Sheets XIRR within 0.01% for standard test cases
 - [ ] PRD §14 criterion 17: XIRR correctly incorporates data points and transactions as cash flows
+- [ ] All tests pass and meet 100% coverage of exported functions
+
+## Testing Requirements
+- **Test file**: `src/utils/xirr.test.ts` (co-located)
+- **Approach**: Pure function unit tests — no mocking required
+- **Coverage target**: 100% of exported functions
+- Test known case: invest 10K on Jan 1, receive 11K on Dec 31 — XIRR approximately 10%
+- Test known case: invest 10K on Jan 1, deposit 5K on Jul 1, end value 16K on Dec 31 — XIRR matches Excel
+- Test known case: deposit 10K on Jan 1, value 10.5K on Jul 1 — XIRR approximately 10.25%
+- Test known case: deposit 10K on Jan 1, withdrawal 2K on Apr 1, value 8.5K on Dec 31 — XIRR approximately 5.83%
+- Test fewer than 2 cash flows returns null
+- Test all cash flows on same date returns null
+- Test all cash flows have same sign returns null
+- Test non-convergence returns null
+- Test zero starting value does not cause division-by-zero error
+- Test function never throws — always returns number or null
+- **Results must match Excel within 0.01%**
 
 ## Technical Notes
 - File to create: `src/utils/xirr.ts`

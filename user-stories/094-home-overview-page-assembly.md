@@ -77,6 +77,23 @@ Title: "Home", subtitle: "3 utilities tracked"
 - [ ] Data refreshes when a new reading, bill, or utility is added
 - [ ] PRD §5.3: Home overview layout matches spec
 - [ ] PRD §14 criterion 7: Home overview shows summary cards per utility and combined charts
+- [ ] All tests pass and meet coverage target
+- [ ] Page assembly verified by integration-level test covering section composition and data flow
+
+## Testing Requirements
+- **Test file**: `src/components/home/HomeOverview.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test all sections render in correct order (header, mobile buttons, summary cards, YoY row, chart, add utility link)
+- Test page header shows "Home" title and subtitle with utility count
+- Test data fetching triggers on mount (TanStack Query integration)
+- Test "+ Add Reading" button opens MeterReadingDialog
+- Test "+ Add Bill" button opens BillDialog
+- Test "+ Add Utility" link opens UtilityDialog
+- Test data refreshes after adding a new reading, bill, or utility
+- Test loading state while data is being fetched
+- Test error state when data fetch fails
+- Test page uses max-w-[1440px] container
 
 ## Technical Notes
 - File: `src/components/home/HomeOverview.tsx`

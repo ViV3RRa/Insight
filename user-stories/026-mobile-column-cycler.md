@@ -126,6 +126,24 @@ None — this story IS a shared component
 - [ ] Values transition smoothly (transition-opacity duration-150)
 - [ ] Active dot w-1 h-1 rounded-full bg-accent-500
 - [ ] Inactive dots w-1 h-1 rounded-full bg-base-300 dark:bg-base-500
+- [ ] All tests pass and meet coverage target
+- [ ] Accessibility: interactive elements are keyboard-accessible
+
+## Testing Requirements
+- **Test file**: `src/components/shared/MobileColumnCycler.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied
+- Test current column label displays correctly in the header
+- Test clicking the header advances to the next column index
+- Test cycling wraps around from the last column back to the first
+- Test dot indicator count matches the number of columns provided
+- Test active dot receives `bg-accent-500` class while inactive dots receive `bg-base-300`
+- Test all cell values render in the grid overlay and only the active value has opacity 1
+- Test that both `MobileColumnCyclerHeader` and `MobileColumnCyclerCell` export correctly
 
 ## Technical Notes
 - File to create: `src/components/shared/MobileColumnCycler.tsx`

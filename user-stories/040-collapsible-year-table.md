@@ -201,6 +201,27 @@ As the Insight platform user, I want a yearly summary table for utilities where 
 - [ ] Multiple year rows can be expanded simultaneously
 - [ ] Years are sorted descending (most recent first)
 - [ ] Dark mode styles apply correctly
+- [ ] All tests pass and meet coverage target
+- [ ] Expand/collapse interactions are tested for multiple year rows
+
+## Testing Requirements
+- **Test file**: `src/components/shared/CollapsibleYearTable.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied
+- Test year rows are collapsed by default (monthly rows not visible)
+- Test clicking a year row expands it to show monthly rows beneath
+- Test clicking an expanded year row collapses it back (monthly rows hidden)
+- Test year summary row shows aggregate totals (consumption, cost, averages)
+- Test monthly rows display correct values (month label, consumption, cost, cost/unit, change %)
+- Test current year row displays "(YTD)" suffix
+- Test years are sorted descending (most recent first)
+- Test multiple year rows can be expanded simultaneously
+- Test change percentages use invertColor logic (increase = red, decrease = green)
+- Test null change values render gracefully (no indicator shown)
 
 ## Technical Notes
 - File to create: `src/components/shared/CollapsibleYearTable.tsx`

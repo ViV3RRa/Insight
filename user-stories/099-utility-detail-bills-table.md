@@ -92,6 +92,26 @@ As the Insight platform user, I want a collapsible bills table on the utility de
 - [ ] "Show N older bills" toggle at bottom with chevron icon (rotates 180deg when expanded)
 - [ ] When expanded, a "Show less" link appears in the header area
 - [ ] Uses shared DataTable
+- [ ] All tests pass and meet coverage target
+- [ ] Component rendering verified by tests covering data display, interactions, and edge states
+
+## Testing Requirements
+- **Test file**: `src/components/home/UtilityBillsTable.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test card header shows "Bills" title, count badge, and "+ Add Bill" button (primary variant)
+- Test 5 rows visible by default with "Show N older bills" toggle
+- Test period column shows combined coverage range (e.g., "Jan 2025 - Dec 2025")
+- Test amount shows bill total in DKK with font-mono-data font-medium
+- Test date received column renders (desktop only)
+- Test notes display as text-sm text-base-500 or dash when empty
+- Test attachment column shows accent-colored link or dash
+- Test "+ Add Bill" button fires callback to open BillDialog
+- Test edit button opens BillDialog pre-filled
+- Test delete button opens confirmation dialog
+- Test rows sorted by periodStart descending
+- Test "Show N older bills" toggle expands/collapses
+- Test empty state (no bills)
 
 ## Technical Notes
 - This section is within `src/components/home/UtilityDetail.tsx`

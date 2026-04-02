@@ -83,6 +83,21 @@ As the Insight platform user, I want sold vehicles displayed with muted styling 
 - [ ] Only rendered if sold vehicles exist
 - [ ] PRD §7.4 item 2: Sold vehicles muted with required metrics
 - [ ] PRD §14 criterion 29: Sold vehicles muted with total cost of ownership
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders correctly with mocked sold vehicle data
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/SoldVehicleCard.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test muted opacity classes applied (opacity-60)
+- Test "Sold" badge visible at top-left of photo area
+- Test grayscale gradient background applied
+- Test total cost of ownership displayed
+- Test sale date displayed and formatted correctly
+- Test card is clickable and links to vehicle detail page
+- Test sold vehicles section not rendered when no sold vehicles exist
+- Test CollapsibleSection collapsed by default
 
 ## Technical Notes
 - File: `src/components/vehicles/SoldVehicleCard.tsx`

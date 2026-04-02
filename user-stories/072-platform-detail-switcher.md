@@ -85,6 +85,26 @@ Full-width slide-down from nav, same content as desktop.
 - [ ] Closed platforms shown with muted styling
 - [ ] Uses shared DropdownSwitcher and PlatformIcon — no inline dropdown markup
 - [ ] PRD §8.2: Detail page entity switcher for direct navigation
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PlatformDetailSwitcher.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked query results (platform dropdown items render correctly)
+- Test loading state (skeleton/spinner shown while platform queries are pending)
+- Test empty state (graceful handling when portfolio has only one platform)
+- Test error state (ErrorState component when query fails)
+- Test that platform name acts as a dropdown trigger with chevron
+- Test that "Portfolio Overview" link renders at the top of the dropdown
+- Test that platforms are grouped by: Active Platforms, Cash Accounts, Closed
+- Test that current platform is highlighted with accent styling
+- Test that clicking another platform fires the selection/navigation callback
+- Test that investment items show current value and return % (colored)
+- Test that cash items show current value only (no return %)
+- Test that edit button at the bottom opens PlatformDialog in edit mode
+- Test click-outside dismisses the dropdown
 
 ## Technical Notes
 - The DropdownSwitcher is used in the header of `src/components/portfolio/PlatformDetail.tsx`

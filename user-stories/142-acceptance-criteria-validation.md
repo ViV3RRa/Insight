@@ -97,6 +97,13 @@ N/A — validation story
 - [ ] Any failures have associated bug tickets or fix stories created
 - [ ] Validation covers all three sections: Home, Investment, Vehicles
 - [ ] Cross-cutting features verified across all sections
+- [ ] Validation report documents pass/fail status for all 50 criteria with evidence
+
+## Testing Requirements
+- **Test file**: N/A — this story IS the testing deliverable
+- **Approach**: Systematic manual and automated validation of all 50 PRD acceptance criteria
+- This story represents the final acceptance testing gate — no additional test requirements beyond those embedded in the criteria themselves
+- The validation report at `docs/acceptance-validation.md` serves as the test evidence artifact
 
 ## Technical Notes
 - This is a manual testing/verification story, not implementation

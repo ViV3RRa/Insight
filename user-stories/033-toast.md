@@ -163,6 +163,26 @@ None — this story IS a shared component
 - [ ] Multiple toasts stack vertically with gap-2
 - [ ] z-[70] stacking context (above dialogs)
 - [ ] `useToastStore` exposes `toast.success()`, `toast.info()`, `toast.error()`, `toast.undo()` callable from anywhere without context
+- [ ] All tests pass and meet coverage target
+- [ ] Timer-based auto-dismiss is tested with fake timers
+
+## Testing Requirements
+- **Test file**: `src/components/shared/Toast.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied
+- Test success variant renders with emerald CheckCircle icon
+- Test error variant renders with rose AlertCircle icon
+- Test info variant renders with blue Info icon
+- Test undo variant renders with Trash2 icon and clickable "Undo" link
+- Test auto-dismiss after 4 seconds using `vi.useFakeTimers()` and `vi.advanceTimersByTime(4000)`
+- Test manual dismiss via close button removes the toast immediately
+- Test undo button calls the `onUndo` callback before dismissing
+- Test multiple toasts stack vertically (render multiple, verify all are present)
+- Test `useToastStore` methods (`toast.success()`, `toast.error()`, etc.) add toasts to the queue
 
 ## Technical Notes
 - Files to create: `src/components/shared/Toast.tsx`, `src/stores/toastStore.ts`

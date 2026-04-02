@@ -7,11 +7,12 @@ As the Insight platform user, I want a settings page so that I can configure my 
 - US-004: PocketBase Client and Auth Service (must be completed first)
 - US-007: App Shell — Desktop Top Navigation (must be completed first)
 - US-009: Theme Provider (must be completed first)
+- US-143: PocketBase Schema — Settings Collection
 
 ## Requirements
 - Create `src/services/settings.ts`: CRUD for user settings in PocketBase
-  - `getSettings(userId)`: Fetch current settings
-  - `updateSettings(userId, data)`: Update settings
+  - `getOrCreateSettings(): Promise<Settings>`: Fetch the current user's settings. If no settings record exists (first login), create one with defaults (`dateFormat: "YYYY-MM-DD"`, `theme: "light"`, `demoMode: false`) and return it. Uses the authenticated user's ID from the PocketBase client — callers do not pass `userId`.
+  - `updateSettings(data: Partial<SettingsCreate>): Promise<Settings>`: Update the current user's settings. Uses authenticated user's ID internally.
   - Settings fields (PRD §3.8, §10):
     - `dateFormat`: `"YYYY-MM-DD"` or `"DD/MM/YYYY"` (default: `"YYYY-MM-DD"`)
     - `theme`: `"light"` or `"dark"` (default: `"light"`)
@@ -45,11 +46,20 @@ None — the Settings page is built with raw Tailwind (it's a simple form page, 
 - [ ] Settings persist to PocketBase and survive page reload
 - [ ] `useSettingsStore()` provides current settings to any component
 - [ ] PRD §14 criterion 48: Date format is configurable
+- [ ] All tests pass and meet coverage target
+
+## Testing Requirements
+- **Test files**: `src/services/settings.test.ts`, `src/components/layout/Settings.test.tsx`, `src/stores/settingsStore.test.ts`
+- **Service tests**: Mock PocketBase via MSW. Test `getOrCreateSettings()` upsert pattern (returns existing or creates with defaults). Test `updateSettings()` partial updates.
+- **Component tests**: RTL — date format toggle, theme toggle, demo mode toggle, DKK read-only display. Test that toggling theme calls both store and mutation.
+- **Store tests**: Test hydration from PocketBase, `setDateFormat`, `setTheme`, `setDemoMode`, initial defaults.
+- **Coverage target**: 90%+
 
 ## Technical Notes
 - Files to create: `src/services/settings.ts`, `src/components/layout/Settings.tsx`, `src/stores/settingsStore.ts`
 - PocketBase collection: `settings` with fields: userId, dateFormat, theme, demoMode
-- Create settings record on first login if it doesn't exist (upsert pattern)
+- `getOrCreateSettings()` implements the upsert pattern: query for existing settings → if none found, create with defaults → return the record. This runs on app init and guarantees a settings record always exists.
 - On app init: fetch settings via `useQuery({ queryKey: ['settings'], queryFn: settingsService.getSettings })` and hydrate the Zustand store
 - Settings changes: optimistically update Zustand store immediately, then persist via `useMutation` calling `settingsService.updateSettings`
 - Theme toggle calls `useThemeStore().setTheme()` AND triggers the settings mutation
+- All responses are parsed through Zod schemas (e.g., `settingsSchema.parse(response)`) before returning — this validates the response shape and produces branded ID types at runtime

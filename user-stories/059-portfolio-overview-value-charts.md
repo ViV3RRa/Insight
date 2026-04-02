@@ -65,6 +65,23 @@ Each grid cell contains one `ChartCard`. On mobile, charts stack vertically. On 
 - [ ] Charts render smoothly with 7+ years of data (PRD §13)
 - [ ] Uses shared ChartCard component — no inline chart card markup
 - [ ] Dark mode styles apply correctly to chart backgrounds and text
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PortfolioOverviewValueCharts.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked query results (both charts render with data)
+- Test loading state (skeleton/spinner shown while data queries are pending)
+- Test empty state (EmptyState component when no chart data available)
+- Test error state (ErrorState component when query fails)
+- Test that Chart A (stacked area) renders with per-platform breakdown
+- Test that Chart B (performance bars) renders with green/red bar coloring
+- Test that Chart B mode toggle switches between Earnings and XIRR views
+- Test that time span selector changes update both charts
+- Test responsive layout (side-by-side on desktop, stacked on mobile)
+- Test grid classes (grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6)
 
 ## Technical Notes
 - Charts are rendered using Recharts library

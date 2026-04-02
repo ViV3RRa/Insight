@@ -117,6 +117,32 @@ As the Insight platform user, I want an always-visible year-over-year comparison
 - [ ] Mobile metrics use flex justify-between with value left and change right
 - [ ] Component accepts an array of metric objects with label, current, previous, and change values
 - [ ] Dark mode styles apply correctly
+- [ ] All tests pass and meet coverage target
+- [ ] Accessibility audit passes (axe-core or equivalent)
+
+## Testing Requirements
+- **Test file**: `src/components/shared/YoYComparisonRow.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied (dark: prefix variants)
+- **Component-specific test cases:**
+  - Verify card shell renders with `bg-white rounded-2xl shadow-card` classes
+  - Verify header shows ArrowLeftRight icon and period label text
+  - Verify 3 metrics render in a `sm:grid-cols-3` grid on desktop
+  - Verify each metric shows uppercase label (`text-[10px] font-medium uppercase tracking-wider`)
+  - Verify current value displays in `font-mono-data text-lg font-medium`
+  - Verify previous value shows "vs {value}" text in `font-mono-data text-xs text-base-300`
+  - Verify ChangeIndicator component is used for percentage change display
+  - Verify positive change renders green ChangeIndicator (emerald)
+  - Verify negative change renders red ChangeIndicator (rose)
+  - Verify `invertColor` flag is passed through to ChangeIndicator for cost metrics
+  - Verify mobile layout renders vertical stack with `border-t border-base-100` dividers between metrics
+  - Verify component handles empty metrics array gracefully (no crash)
+  - Verify dark mode classes: `dark:bg-base-800`, `dark:text-white`, `dark:border-base-700`
+  - Snapshot test for desktop and mobile layouts
 
 ## Technical Notes
 - File to create: `src/components/shared/YoYComparisonRow.tsx`

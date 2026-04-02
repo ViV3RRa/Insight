@@ -164,6 +164,38 @@ As the Insight platform user, I want a consistent data table for displaying raw 
 - [ ] Notes display as italic text-xs text-base-300 below the primary cell value
 - [ ] Show-more toggle appears when rows exceed the default display limit
 - [ ] Dark mode styles apply correctly
+- [ ] All tests pass and meet coverage target
+- [ ] Accessibility audit passes (axe-core or equivalent)
+
+## Testing Requirements
+- **Test file**: `src/components/shared/DataTable.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied (dark: prefix variants)
+- **Component-specific test cases:**
+  - Verify column headers render with correct labels from `columns` prop
+  - Verify all data rows render with correct cell content from `data` prop
+  - Verify empty state: no rows rendered when `data` is an empty array (no crash)
+  - Verify header row uses `text-xs font-medium text-base-300` with `border-b border-base-200`
+  - Verify body rows use `border-b border-base-100` with `hover:bg-accent-50/20`
+  - Verify numeric cells are right-aligned with `font-mono-data` class when `align: 'right'` is set
+  - Verify sortable column headers show sort direction indicator (chevron icon)
+  - Verify clicking a sortable header toggles sort direction and re-orders rows
+  - Verify totals row renders with `bg-base-50/60 font-medium` when `totals` prop is provided
+  - Verify totals row is absent when `totals` prop is omitted
+  - Verify edit/delete action buttons appear per row on desktop (`hidden sm:table-cell`)
+  - Verify `onEdit` callback fires when edit button is clicked
+  - Verify `onDelete` callback fires when delete button is clicked
+  - Verify `onRowClick` callback fires when a row is clicked (for mobile drawer trigger)
+  - Verify notes display as italic `text-xs text-base-300` below the primary cell value
+  - Verify show-more toggle appears when rows exceed `showMoreThreshold` (default: 10)
+  - Verify show-more toggle text reads "Show all N records" and toggles to "Show less"
+  - Verify custom `format` function on `ColumnDef` is called and rendered
+  - Verify dark mode classes: `dark:border-base-700`, `dark:hover:bg-accent-900/10`, `dark:bg-base-700/30` for totals
+  - Snapshot test for basic table, table with totals, and empty state
 
 ## Technical Notes
 - File to create: `src/components/shared/DataTable.tsx`

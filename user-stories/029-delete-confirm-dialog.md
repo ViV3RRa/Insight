@@ -118,6 +118,26 @@ As the Insight platform user, I want a clear confirmation dialog before deleting
 - [ ] Clicking Delete calls onConfirm
 - [ ] Scale animation on open (animate-dialog-desktop from US-002)
 - [ ] Dark mode: bg-base-800, dark:bg-rose-900/30 for icon circle
+- [ ] All tests pass and meet coverage target
+- [ ] Accessibility: dialog is keyboard-operable (Escape to cancel, Enter to confirm)
+
+## Testing Requirements
+- **Test file**: `src/components/shared/DeleteConfirmDialog.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied
+- Test warning message (title and description) renders correctly from props
+- Test clicking the Confirm/Delete button fires `onConfirm` callback
+- Test clicking the Cancel button fires `onCancel` callback
+- Test backdrop click fires `onCancel` callback
+- Test Escape key fires `onCancel` callback
+- Test confirm button has danger styling (`bg-rose-500 text-white`)
+- Test rose trash icon is rendered in the dialog
+- Test dialog is centered on screen (not a bottom sheet)
+- Test `loading` prop disables action buttons when true
 
 ## Technical Notes
 - File to create: `src/components/shared/DeleteConfirmDialog.tsx`

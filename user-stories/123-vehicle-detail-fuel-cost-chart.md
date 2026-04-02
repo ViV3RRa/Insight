@@ -49,6 +49,19 @@ As the Insight platform user, I want a monthly fuel cost bar chart on the vehicl
 - [ ] YoY overlay shows prior year as semi-transparent bars
 - [ ] Responsive
 - [ ] PRD §7.5: Monthly fuel cost chart
+- [ ] All tests pass and meet coverage target
+- [ ] Chart renders with mocked cost data
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/VehicleFuelCostChart.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test bar chart renders with monthly fuel cost data
+- Test values displayed in DKK
+- Test TimeSpanSelector filters data correctly
+- Test YoY overlay shows prior year as semi-transparent bars when enabled
+- Test chart renders without errors when no data available
+- Test responsive behavior
 
 ## Technical Notes
 - File: `src/components/vehicles/VehicleFuelCostChart.tsx`

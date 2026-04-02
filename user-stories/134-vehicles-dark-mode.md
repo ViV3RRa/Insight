@@ -52,6 +52,17 @@ Already defined in US-116, verify applied correctly.
 - [ ] No missed white elements
 - [ ] Sufficient contrast
 - [ ] PRD §14 criterion 46: Dark mode functional
+- [ ] Dark mode verified through existing component tests checking dark: class variants
+
+## Testing Requirements
+- **Test file**: N/A — visual regression / manual verification story
+- Dark mode verified through existing component tests checking `dark:` class variants
+- Verify vehicle card gradients include dark variant classes (`dark:from-sky-950/60`, `dark:to-blue-900/40`, etc.)
+- Verify fuel type badges include dark mode color classes
+- Verify all surfaces use `dark:bg-base-800`, `dark:shadow-card-dark` tokens
+- Verify metadata chips use dark mode tokens (`dark:bg-base-700`)
+- Verify sold vehicle cards readable with muted opacity in dark mode
+- Verify chart elements legible on dark backgrounds
 
 ## Technical Notes
 - Visual audit, not new features

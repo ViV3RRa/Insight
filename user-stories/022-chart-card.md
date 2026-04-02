@@ -101,6 +101,33 @@ As the Insight platform user, I want a consistent chart card container with buil
 - [ ] TimeSpan state defaults to YTD and is exposed via onTimeSpanChange callback
 - [ ] ChartModeToggle only renders when `modes` prop is provided
 - [ ] Dark mode styles apply correctly
+- [ ] All tests pass and meet coverage target
+- [ ] Accessibility audit passes (axe-core or equivalent)
+
+## Testing Requirements
+- **Test file**: `src/components/shared/ChartCard.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied (dark: prefix variants)
+- **Component-specific test cases:**
+  - Verify card shell renders with `bg-white rounded-2xl shadow-card p-4 sm:p-6` classes
+  - Verify title renders as `text-sm font-semibold` in the header row
+  - Verify YoYToggle is present by default and responds to click interactions
+  - Verify ChartModeToggle renders only when `modes` prop is provided
+  - Verify ChartModeToggle does NOT render when `modes` prop is omitted
+  - Verify TimeSpanSelector renders with all 9 options and defaults to YTD
+  - Verify TimeSpanSelector is hidden when `hideTimeSpan` prop is true
+  - Verify YoYToggle is hidden when `hideYoY` prop is true
+  - Verify children are rendered in the chart content area
+  - Verify `onTimeSpanChange` callback fires when a time span pill is clicked
+  - Verify `onYoYChange` callback fires when YoY toggle is clicked
+  - Verify `onModeChange` callback fires when a chart mode segment is clicked
+  - Verify internal state management when controlled props are not provided (defaults to YTD)
+  - Verify dark mode classes: `dark:bg-base-800`, `dark:shadow-card-dark`
+  - Snapshot test for default configuration and with all optional controls visible
 
 ## Technical Notes
 - File to create: `src/components/shared/ChartCard.tsx`

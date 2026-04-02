@@ -44,6 +44,16 @@ N/A — utility module
 - [ ] `formatYearLabel(2026, true)` returns `"2026 (YTD)"`
 - [ ] Positive values can be prefixed with `+`
 - [ ] PRD §14 criterion 47: Danish locale formatting is applied throughout
+- [ ] All tests pass and meet coverage target
+
+## Testing Requirements
+- **Test file**: `src/utils/formatters.test.ts`
+- **Approach**: Pure function unit tests — no mocking required
+- **Coverage target**: 100% of exported functions
+- Every AC with a specific input → output (e.g., `formatNumber(1000.5) → "1.000,50"`) becomes a test case
+- Test edge cases: zero, negative numbers, very large numbers, undefined/null inputs
+- Test all date format functions with various dates including edge cases (leap day, Dec 31, Jan 1)
+- Use `test.each` for parameterized input/output tests
 
 ## Technical Notes
 - File to create: `src/utils/formatters.ts`

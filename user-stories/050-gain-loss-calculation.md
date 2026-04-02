@@ -89,6 +89,20 @@ N/A — backend/data layer story
 - [ ] Denominator for gainPercent is `startingValue + Σ deposits` (capital at risk), NOT `startingValue + netDeposits`
 - [ ] Works for all-time, yearly, monthly, and arbitrary date windows
 - [ ] PRD §14 criterion 18: Gain/loss correctly accounts for net deposits
+- [ ] All tests pass and meet 100% coverage of exported functions
+
+## Testing Requirements
+- **Test file**: `src/utils/calculations.test.ts` (co-located, shared with other calculation stories)
+- **Approach**: Pure function unit tests — no mocking required
+- **Coverage target**: 100% of exported functions
+- Test calculateGain(10000, 12000, 1000, 0) returns 1000
+- Test calculateGain(10000, 9000, 0, 0) returns -1000
+- Test calculateGain(10000, 15000, 3000, 500) returns 2500
+- Test calculateGainPercent(10000, 12000, 1000, 0) returns approximately 9.09%
+- Test calculateGainPercent(0, 0, 0, 0) returns null (division by zero)
+- Test computePlatformGainLoss returns null when data points are insufficient
+- **Verify denominator is startingValue + deposits, NOT startingValue + netDeposits**
+- Test edge cases: null returns, empty arrays, division by zero
 
 ## Technical Notes
 - File to modify: `src/utils/calculations.ts` — add gain/loss functions

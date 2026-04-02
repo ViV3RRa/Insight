@@ -63,6 +63,20 @@ None — this story IS a shared component
 - [ ] Desktop (sm+) shows full label: "Deposit" / "Withdrawal"
 - [ ] Mobile (<sm) shows abbreviated label: "Dep." / "Wdl."
 - [ ] Component accepts a `type` prop of `'deposit' | 'withdrawal'`
+- [ ] All tests pass and meet coverage target
+
+## Testing Requirements
+- **Test file**: `src/components/shared/TransactionTypeBadge.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied
+- Test deposit badge renders with correct label ("Deposit" on desktop, "Dep." on mobile) and emerald color classes (`bg-emerald-50 text-emerald-700`)
+- Test withdrawal badge renders with correct label ("Withdrawal" on desktop, "Wdl." on mobile) and rose color classes (`bg-rose-50 text-rose-700`)
+- Test badge shape uses `rounded-full` pill styling
+- Test both `type: 'deposit'` and `type: 'withdrawal'` prop values produce the correct output
 
 ## Technical Notes
 - File to create: `src/components/shared/TransactionTypeBadge.tsx`

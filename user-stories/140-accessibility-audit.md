@@ -51,6 +51,18 @@ N/A — this is an audit and fix story
 - [ ] Keyboard can reach all interactive elements
 - [ ] Escape key closes dialogs and dropdowns
 - [ ] PRD §13: ARIA labels, sufficient contrast, keyboard navigation
+- [ ] Automated axe-core audit passes on every page with zero violations
+- [ ] Accessibility fixes validated in both light and dark themes
+
+## Testing Requirements
+- **Test file**: N/A — audit/verification story
+- **Approach**: Testing IS the deliverable — automated accessibility testing with axe-core
+- Run axe-core on every page (Home overview, utility detail, portfolio overview, platform detail, vehicles overview, vehicle detail, settings) and fix all violations
+- Verify WCAG AA color contrast (4.5:1 for text, 3:1 for large text) in both light and dark themes
+- Test keyboard navigation: Tab through all interactive elements, verify focus order is logical
+- Test focus trap in all dialogs: focus cannot escape modal, returns to trigger on close
+- Test Escape key closes all dialogs and dropdowns
+- Integrate axe-core checks into the CI test suite (e.g., `vitest-axe` or `jest-axe`) for ongoing regression prevention
 
 ## Technical Notes
 - Use browser accessibility tools (axe DevTools, Lighthouse) to audit

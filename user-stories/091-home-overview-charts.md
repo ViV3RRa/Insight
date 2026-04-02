@@ -98,6 +98,24 @@ As the Insight platform user, I want a chart area on the Home overview showing m
 - [ ] Dark mode: chart readable with dark backgrounds
 - [ ] Uses shared ChartCard, TimeSpanSelector, YoYToggle, ChartModeToggle
 - [ ] PRD §5.3 item 3: Charts area with time span selector and mode toggles
+- [ ] All tests pass and meet coverage target
+- [ ] Component rendering verified by tests covering chart modes, toggles, and data display
+
+## Testing Requirements
+- **Test file**: `src/components/home/HomeOverviewChart.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test consumption mode renders bar chart with utility consumption values
+- Test cost mode renders bar chart with DKK cost values
+- Test mode toggle switches between Consumption and Cost views
+- Test stacked/grouped toggle changes bar chart layout
+- Test YoY toggle adds prior year overlay data
+- Test TimeSpanSelector filters chart data to selected period
+- Test chart legend shows utility names with correct color swatches
+- Test each utility uses its assigned color for bars
+- Test chart renders responsively within container
+- Test loading state renders placeholder
+- Test empty data state
 
 ## Technical Notes
 - File: `src/components/home/HomeOverviewChart.tsx`

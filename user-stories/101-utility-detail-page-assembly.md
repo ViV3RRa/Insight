@@ -75,6 +75,22 @@ As the Insight platform user, I want all utility detail sections assembled into 
 - [ ] Page uses max-w-[1440px] mx-auto
 - [ ] Bottom padding clears mobile tab bar
 - [ ] PRD §5.4: Utility detail page content matches spec
+- [ ] All tests pass and meet coverage target
+- [ ] Page assembly verified by integration-level test covering section composition and data flow
+
+## Testing Requirements
+- **Test file**: `src/components/home/UtilityDetail.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test all sections render in correct order (switcher bar, action buttons, stat cards, chart, yearly table, readings table, bills table)
+- Test page loads utility data, readings, and bills on mount
+- Test data refreshes when switching utilities via switcher (utilityId change)
+- Test all dialogs (add reading, add bill, edit utility) are functional
+- Test sections have correct vertical spacing (mb-6 lg:mb-8)
+- Test page uses max-w-[1440px] container
+- Test bottom padding clears mobile tab bar (pb-24 lg:pb-10)
+- Test loading state while data is being fetched
+- Test error state when data fetch fails
 
 ## Technical Notes
 - File: `src/components/home/UtilityDetail.tsx`

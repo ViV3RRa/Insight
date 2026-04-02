@@ -70,6 +70,22 @@ N/A — backend/data layer story
 - [ ] Cost trend compares rolling average to prior equivalent period
 - [ ] `calculateUtilityMetrics` produces all required metric fields
 - [ ] PRD §14 criterion 6: Cost per unit is calculated and displayed
+- [ ] All tests pass and meet coverage target
+- [ ] All AC items with specific input/output values verified by test cases
+
+## Testing Requirements
+- **Test file**: `src/utils/utilityCosts.test.ts` (co-located)
+- **Approach**: Pure function unit tests — no mocking required
+- **Coverage target**: 100% of exported functions
+- All AC items with specific input/output values become test cases
+- Test cost per unit correctly divides amortized monthly cost by monthly consumption
+- Test zero consumption returns null (no division by zero)
+- Test missing cost data for a month returns null
+- Test weighted average cost per unit: `totalCost / totalConsumption`
+- Test YTD consumption and cost sum correctly from January of current year
+- Test `calculateUtilityMetrics` produces all required fields (monthlyConsumption, monthlyCost, monthlyCostPerUnit, ytdConsumption, ytdCost, currentMonthConsumption, currentMonthCost, currentMonthCostPerUnit, avgMonthlyCost, costTrend)
+- Test cost trend logic: >5% higher = up, >5% lower = down, otherwise flat
+- Test edge cases: no data for current month, single month of data, null returns
 
 ## Technical Notes
 - File to create: `src/utils/utilityCosts.ts` (or extend `src/utils/consumption.ts`)

@@ -13,8 +13,8 @@ As the Insight platform user, I want staleness badges to appear automatically on
   - **Investment**: per platform, check if a new data point exists for the current month
   - **Home**: per utility, check if a new meter reading exists for the current month
 - **Trigger rules:**
-  - No new entry by the **2nd** of the month → Amber "Stale" badge
-  - No new entry by the **7th** of the month → Red "Stale" badge
+  - No new entry for the current month and today is the **3rd or later** (`today.getDate() > 2`) → Amber "Stale" badge
+  - No new entry for the current month and today is the **8th or later** (`today.getDate() > 7`) → Red "Stale" badge
   - Entry exists for current month → badge disappears
 - **Display locations** (both overview rows AND detail page headers):
   - Portfolio overview: platform table rows
@@ -44,8 +44,8 @@ N/A — integration story using existing component
 - `design-artifacts/prototypes/screenshots/investment/overview-desktop-tables.png` — Stale badges on platform rows
 
 ## Acceptance Criteria
-- [ ] Amber badge appears on platforms without data point for current month after the 2nd
-- [ ] Red badge appears after the 7th
+- [ ] Amber badge: displayed when today is the 3rd or later of the month and no data entry exists for the current month (i.e., `today.getDate() > 2` and the 2nd has passed without an entry)
+- [ ] Red badge: displayed when today is the 8th or later of the month and no data entry exists for the current month (i.e., `today.getDate() > 7` and the 7th has passed without an entry)
 - [ ] Badge disappears when current-month entry is added
 - [ ] Badge shown on portfolio overview platform rows
 - [ ] Badge shown on platform detail header
@@ -55,6 +55,20 @@ N/A — integration story using existing component
 - [ ] Staleness recalculated when new data is added
 - [ ] PRD §3.4: Staleness indicator rules
 - [ ] PRD §14 criterion 42: Staleness indicators on both overview and detail
+- [ ] All tests pass and meet coverage target
+- [ ] Integration tests verify staleness behavior across Investment and Home sections
+
+## Testing Requirements
+- **Test file**: `src/test/integration/staleness.test.tsx`
+- **Approach**: Integration tests verifying cross-component behavior
+- Test `StalenessIndicator` renders on portfolio overview platform table rows when platform data is stale
+- Test `StalenessIndicator` renders on home overview utility cards when utility data is stale
+- Test amber threshold: badge appears when `today.getDate() > 2` and no current-month entry exists (use `vi.useFakeTimers()` to control date)
+- Test red threshold: badge appears when `today.getDate() > 7` and no current-month entry exists (use `vi.useFakeTimers()`)
+- Test fresh state: no indicator shown when a current-month entry exists
+- Test `getStalenessLevel()` returns `'none'`, `'warning'`, or `'critical'` for appropriate date scenarios
+- Test badge disappears after adding a new data point or meter reading for the current month
+- Test early-month scenario (day 1-2): no badge even without current-month data
 
 ## Technical Notes
 - File: `src/utils/staleness.ts`

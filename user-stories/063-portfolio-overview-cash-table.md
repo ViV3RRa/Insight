@@ -72,6 +72,23 @@ As the Insight platform user, I want a separate table for cash platform accounts
 - [ ] Uses shared DataTable, PlatformIcon, CurrencyDisplay — no inline markup
 - [ ] PRD §14 criterion 22: Cash platforms show balance; no XIRR/gain-loss analysis
 - [ ] PRD §14 criterion 23: Visual distinction between investment and cash platforms
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PortfolioOverviewCashTable.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked query results (cash platform rows render correct values)
+- Test loading state (skeleton/spinner shown while cash platform queries are pending)
+- Test empty state (EmptyState component when no cash platforms exist)
+- Test error state (ErrorState component when query fails)
+- Test that section header shows "Cash Accounts" with correct count badge
+- Test that table shows only 3 columns: Account, Current Balance, Updated
+- Test that no XIRR, gain/loss, or earnings columns are present
+- Test that Account column shows circular icon + name
+- Test that Current Balance uses CurrencyDisplay with native + DKK equivalent
+- Test that rows are clickable and trigger navigation to cash detail page
 
 ## Technical Notes
 - This section is part of `src/components/portfolio/PortfolioOverview.tsx`

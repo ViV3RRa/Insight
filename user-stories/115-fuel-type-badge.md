@@ -41,6 +41,17 @@ None — this story IS a shared component
 - [ ] Dark mode colors applied correctly
 - [ ] Falls back gracefully for unknown fuel types
 - [ ] Badge styling matches prototype
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders correctly with test utilities
+
+## Testing Requirements
+- **Test file**: `src/components/shared/FuelTypeBadge.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 80%+ line coverage
+- Test all 4 fuel types render correct label text: Petrol, Diesel, Electric, Hybrid
+- Test each fuel type applies the correct color classes
+- Test dark mode variant classes are present
+- Test fallback behavior for unknown/unexpected fuel type values
 
 ## Technical Notes
 - File: `src/components/shared/FuelTypeBadge.tsx`

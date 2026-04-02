@@ -71,6 +71,20 @@ As the Insight platform user, I want all Vehicles overview sections assembled in
 - [ ] Sold vehicles in collapsible section (if any)
 - [ ] Correct spacing and max-width
 - [ ] PRD §7.4: Vehicles overview layout matches spec
+- [ ] All tests pass and meet coverage target
+- [ ] Page composes all child sections correctly
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/VehiclesOverview.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test active vehicle cards section and sold vehicles section both compose on page
+- Test page header renders title "Vehicles" with correct subtitle
+- Test action buttons render ("+ Add Refueling", "+ Add Maintenance")
+- Test "+ Add Vehicle" link present
+- Test correct section ordering (header, active cards, sold accordion)
+- Test loading state renders skeleton/loading indicator
+- Test empty state when no vehicles exist
 
 ## Technical Notes
 - File: `src/components/vehicles/VehiclesOverview.tsx`

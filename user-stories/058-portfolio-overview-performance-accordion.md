@@ -48,6 +48,21 @@ These child sections are arranged vertically with `space-y-6` inside the expande
 - [ ] aria-expanded attribute toggles correctly
 - [ ] Dark mode styles apply correctly
 - [ ] PRD §6.3 item 3: Performance charts are in a collapsible accordion, collapsed by default
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PortfolioOverviewPerformanceAccordion.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test that the section renders collapsed by default (children not visible)
+- Test that clicking the header expands the section (children become visible)
+- Test that clicking again collapses the section
+- Test that the chevron rotates on expand/collapse
+- Test aria-expanded attribute toggles correctly
+- Test that expanded content area renders child components (chart cards and performance tabs)
+- Test that children have correct vertical spacing (space-y-6)
+- Test that the title "Performance Charts & Analysis" renders correctly
 
 ## Technical Notes
 - This is a section within `src/components/portfolio/PortfolioOverview.tsx`

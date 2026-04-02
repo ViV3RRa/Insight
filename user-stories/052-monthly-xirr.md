@@ -69,7 +69,21 @@ N/A — backend/data layer story
 - [ ] `computeMonthlyXIRRSeries` returns an entry for each month in the range
 - [ ] Monthly XIRR uses the same XIRR solver as the general XIRR calculation (US-048)
 - [ ] Month with no transactions: XIRR is computed from just start/end values
+- [ ] Returns `null` (or 0%) when `startingValue === endingValue` and no transactions occurred in the month
 - [ ] PRD §14 criterion 19: Monthly XIRR is computed and displayed as first-class metric
+- [ ] All tests pass and meet 100% coverage of exported functions
+
+## Testing Requirements
+- **Test file**: `src/utils/calculations.test.ts` (co-located, shared with other calculation stories)
+- **Approach**: Pure function unit tests — no mocking required
+- **Coverage target**: 100% of exported functions
+- Test single month XIRR computation with known start/end values and transactions
+- Test month with no transactions uses only start and end values (2 cash flows)
+- Test startingValue === endingValue with no transactions returns null
+- Test non-convergence returns null
+- Test computeMonthlyXIRRSeries returns an entry for each month in range
+- Test boundary values: missing start or end value returns null
+- Test edge cases: null returns, empty transaction arrays
 
 ## Technical Notes
 - File to modify: `src/utils/calculations.ts` — add monthly XIRR functions

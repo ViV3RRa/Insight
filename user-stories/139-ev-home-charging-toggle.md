@@ -59,6 +59,20 @@ As the Insight platform user, I want a toggle on my electricity utility detail p
 - [ ] Adjusted consumption never goes negative
 - [ ] PRD §7.3: EV home-charging crossover
 - [ ] PRD §14 criterion 49: EV home-charging kWh excludable from electricity
+- [ ] All tests pass and meet coverage target
+- [ ] Integration tests verify toggle behavior on electricity utility detail
+
+## Testing Requirements
+- **Test file**: `src/test/integration/ev-home-charging-toggle.test.tsx`
+- **Approach**: Integration tests verifying cross-component behavior
+- Test toggle only appears on electricity utility detail page (not on water, heat, etc.)
+- Test toggle only appears when EV charging data exists (at least one refueling with `chargedAtHome=true`)
+- Test toggle ON: home-charging kWh subtracted from consumption in chart and stat cards
+- Test toggle OFF: full consumption shown (includes home-charging kWh)
+- Test total home-charging kWh displayed as supplementary metric regardless of toggle state
+- Test adjusted consumption never goes negative (clamp to zero)
+- Test toggle is hidden when no EV charging data exists
+- Test chart and stat cards update reactively when toggle changes
 
 ## Technical Notes
 - Integrated into `src/components/home/UtilityDetail.tsx`

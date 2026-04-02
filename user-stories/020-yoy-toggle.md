@@ -73,6 +73,29 @@ None — this story IS a shared component
 - [ ] Dark mode: inactive uses dark:border-base-600, active uses dark:bg-accent-900/30 dark:text-accent-400
 - [ ] Label reads "YoY"
 - [ ] Transition-colors duration-150 for smooth state changes
+- [ ] All tests pass and meet coverage target
+- [ ] Accessibility audit passes (axe-core or equivalent)
+
+## Testing Requirements
+- **Test file**: `src/components/shared/YoYToggle.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied (dark: prefix variants)
+- **Component-specific test cases:**
+  - Verify inactive state renders with `border-base-200 text-base-400` and no accent background
+  - Verify active state renders with `bg-accent-50 text-accent-600 border-accent-200`
+  - Verify ArrowLeftRight icon renders at `w-3.5 h-3.5`
+  - Verify clicking the button calls `onChange` with the toggled boolean value
+  - Verify label text reads "YoY"
+  - Verify `aria-pressed` attribute reflects the current active state
+  - Verify keyboard activation: Enter and Space keys toggle the state via `userEvent`
+  - Verify dark mode inactive: `dark:border-base-600 dark:text-base-400`
+  - Verify dark mode active: `dark:bg-accent-900/30 dark:text-accent-400 dark:border-accent-700`
+  - Verify `transition-colors duration-150` class for smooth state changes
+  - Snapshot test for active and inactive states
 
 ## Technical Notes
 - File to create: `src/components/shared/YoYToggle.tsx`

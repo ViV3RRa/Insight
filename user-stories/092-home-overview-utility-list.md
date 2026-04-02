@@ -41,6 +41,17 @@ As the Insight platform user, I want an "Add Utility" link at the bottom of the 
 - [ ] Clicking opens UtilityDialog in create mode
 - [ ] Styled as muted text with hover effect
 - [ ] Centered horizontally
+- [ ] All tests pass and meet coverage target
+- [ ] Component rendering verified by tests covering click behavior and styling
+
+## Testing Requirements
+- **Test file**: `src/components/home/AddUtilityLink.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 80%+ line coverage
+- Test "+ Add Utility" link renders with correct text
+- Test click fires callback to open UtilityDialog in create mode
+- Test muted text styling with hover effect classes
+- Test centered horizontal alignment (text-center)
 
 ## Technical Notes
 - This is part of the HomeOverview page assembly (US-096)

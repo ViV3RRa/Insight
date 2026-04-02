@@ -4,6 +4,7 @@
 As the Insight platform user, I want a dialog to record utility bills so that I can enter bill amounts with their coverage periods for automatic amortization.
 
 ## Dependencies
+- US-013: Button Component
 - US-028: Dialog Shell Component
 - US-030: Form Input Components
 - US-031: File Upload Component
@@ -82,6 +83,27 @@ As the Insight platform user, I want a dialog to record utility bills so that I 
 - [ ] Mobile: bottom sheet
 - [ ] PRD §9.7: Bill dialog fields match spec
 - [ ] PRD §14 criterion 3: User can register bills with amount, period range, note, attachment
+- [ ] All tests pass and meet coverage target
+- [ ] Dialog behavior verified by tests covering create/edit modes, validation, and submission
+
+## Testing Requirements
+- **Test file**: `src/components/home/dialogs/BillDialog.test.tsx` (co-located)
+- **Approach**: React Testing Library with mocked services via MSW
+- **Coverage target**: 80%+ line coverage
+- Test create mode opens with empty form and date received defaulting to now
+- Test edit mode opens pre-populated with existing bill values
+- Test utility select shown when invoked from overview (no utilityId prop), hidden when from detail page (utilityId provided)
+- Test amount field is required — validation error if empty or non-positive
+- Test period start and period end are required — validation error if empty
+- Test validation: period end must be >= period start (error message when violated)
+- Test date received is optional, defaults to now
+- Test note field is optional (form submits without it)
+- Test attachment file upload works (accepts image and PDF files, max 10MB)
+- Test "Save & Add Another" saves, clears form (keeping utility), resets date received to now
+- Test "Save & Add Another" not shown in edit mode
+- Test save calls `utilityBillService.create()` / `.update()` with correct data
+- Test cancel button closes dialog without saving
+- Test error handling when save fails
 
 ## Technical Notes
 - File: `src/components/home/dialogs/BillDialog.tsx`

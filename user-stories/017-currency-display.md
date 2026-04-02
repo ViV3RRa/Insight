@@ -82,6 +82,30 @@ None — this story IS a shared component
 - [ ] Sign prefix (+/-) is shown when `showSign` prop is true
 - [ ] Dark mode applies correct colors (emerald-400, rose-400, base-500 for secondary)
 - [ ] Component works in both block and table cell contexts
+- [ ] All tests pass and meet coverage target
+- [ ] Accessibility audit passes (axe-core or equivalent)
+
+## Testing Requirements
+- **Test file**: `src/components/shared/CurrencyDisplay.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied (dark: prefix variants)
+- **Component-specific test cases:**
+  - DKK-only: verify single line rendering with no secondary text when `currency === 'DKK'`
+  - DKK-only: verify `dkkEquivalent` prop is ignored when `currency === 'DKK'`
+  - Non-DKK (e.g., EUR): verify primary line shows native currency and secondary line shows "≈ X DKK"
+  - Verify the "≈" prefix is present on the DKK equivalent line
+  - Verify secondary line has `text-xs text-base-300 font-mono-data` classes
+  - Verify positive trend applies `text-emerald-600` class to the primary value
+  - Verify negative trend applies `text-rose-600` class to the primary value
+  - Verify neutral/no trend applies default `text-base-900` class
+  - Verify `showSign` prop adds "+" prefix for positive amounts and "-" for negative
+  - Verify Danish locale formatting (period thousands separator, comma decimal)
+  - Verify dark mode classes: `dark:text-emerald-400`, `dark:text-rose-400`, `dark:text-base-500` for secondary
+  - Verify `size` prop ("sm" vs "md") affects text sizing classes
+  - Snapshot test for DKK-only, non-DKK positive, and non-DKK negative variants
 
 ## Technical Notes
 - File to create: `src/components/shared/CurrencyDisplay.tsx`

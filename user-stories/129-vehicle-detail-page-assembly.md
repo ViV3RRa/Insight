@@ -86,6 +86,20 @@ As the Insight platform user, I want all vehicle detail sections assembled into 
 - [ ] Correct spacing
 - [ ] PRD §7.5: Vehicle detail page content matches spec
 - [ ] PRD §14 criterion 36: Vehicle detail shows all charts and collapsible data tables
+- [ ] All tests pass and meet coverage target
+- [ ] Page composes all child sections correctly
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/VehicleDetail.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test all sections render in correct order (switcher, header, stats, YoY, charts, tables)
+- Test charts accordion section is collapsible
+- Test fuel cost and km charts render side-by-side on desktop (grid-cols-2)
+- Test data loads on mount with correct query keys
+- Test data refreshes when vehicleId route param changes
+- Test loading state renders skeleton/loading indicators
+- Test error state handled gracefully
 
 ## Technical Notes
 - File: `src/components/vehicles/VehicleDetail.tsx`

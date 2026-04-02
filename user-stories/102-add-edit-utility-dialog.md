@@ -4,6 +4,7 @@
 As the Insight platform user, I want a dialog to create and edit utilities so that I can manage which household services I track with their icons and colors.
 
 ## Dependencies
+- US-013: Button Component
 - US-028: Dialog Shell Component
 - US-030: Form Input Components
 - US-080: Home (Utilities) TypeScript Types
@@ -81,6 +82,26 @@ As the Insight platform user, I want a dialog to create and edit utilities so th
 - [ ] Desktop: centered modal (sm:max-w-md)
 - [ ] Mobile: bottom sheet
 - [ ] PRD §9.5: Utility dialog fields match spec
+- [ ] All tests pass and meet coverage target
+- [ ] Dialog behavior verified by tests covering create/edit modes, validation, and submission
+
+## Testing Requirements
+- **Test file**: `src/components/home/dialogs/UtilityDialog.test.tsx` (co-located)
+- **Approach**: React Testing Library with mocked services via MSW
+- **Coverage target**: 80%+ line coverage
+- Test create mode opens with empty fields
+- Test edit mode opens pre-populated with existing utility values
+- Test icon picker shows 8 icons in a 4x2 grid; selecting one applies accent border
+- Test color picker shows 8 color swatches; selecting one applies ring indicator
+- Test name field is required — validation error if empty
+- Test unit field is required — validation error if empty
+- Test icon is required — validation error if none selected
+- Test color is required — validation error if none selected
+- Test save in create mode calls `utilityService.create()` with correct data
+- Test save in edit mode calls `utilityService.update()` with correct data
+- Test dialog closes on successful save
+- Test cancel button closes dialog without saving
+- Test error handling when save fails (error message displayed)
 
 ## Technical Notes
 - File: `src/components/home/dialogs/UtilityDialog.tsx`

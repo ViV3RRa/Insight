@@ -79,6 +79,17 @@ As the Insight platform user, I want the entire Investment section to render cor
 - [ ] Sufficient color contrast for accessibility (WCAG AA minimum)
 - [ ] PRD §8.4: Light and dark mode both functional
 - [ ] PRD §14 criterion 46: Light mode and dark mode are both functional and togglable
+- [ ] Dark mode verified through existing component tests checking dark: class variants
+- [ ] No "white flash" elements detected in dark mode audit
+
+## Testing Requirements
+- **Test file**: N/A — visual regression / manual verification story
+- Dark mode verified through existing component tests checking `dark:` class variants are present
+- Consider snapshot tests for key components in dark mode (render with `dark` class on container)
+- Existing component tests (US-055 through US-077) should assert correct dark mode Tailwind classes (e.g., `dark:bg-base-800`, `dark:text-base-100`, `dark:border-base-700`)
+- Chart legibility in dark mode verified manually or via visual regression tools
+- Color contrast (WCAG AA) verified via accessibility testing utilities in component tests
+- Staleness badge dark variants verified in US-062 and US-067 component tests
 
 ## Technical Notes
 - This story is a visual audit, not new feature development

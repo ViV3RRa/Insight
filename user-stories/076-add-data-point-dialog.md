@@ -4,6 +4,7 @@
 As the Insight platform user, I want a dialog to record data points (value observations) for my investment platforms so that I can track platform values over time with minimal friction.
 
 ## Dependencies
+- US-013: Button Component
 - US-028: Dialog Shell Component
 - US-030: Form Input Components
 - US-041: Investment TypeScript Types
@@ -103,6 +104,26 @@ As the Insight platform user, I want a dialog to record data points (value obser
 - [ ] PRD §9.3: Data point dialog fields match spec
 - [ ] PRD §9: "Save & Add Another" for high-frequency data entry
 - [ ] PRD §14 criterion 15: User can register data points
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/dialogs/DataPointDialog.test.tsx` (co-located)
+- **Approach**: React Testing Library with mocked services via MSW
+- **Coverage target**: 80%+ line coverage
+- Test create mode: empty form with timestamp defaulting to now (use `vi.useFakeTimers()`), successful submission calls dataPointService.create()
+- Test edit mode: pre-populated fields, updates via dataPointService.update()
+- Test cancellation: dialog closes, no service calls, no side effects
+- Test error handling: service failure shows error toast, dialog stays open
+- Test form validation: Value required and must be non-negative (non-numeric error shown), Platform required (when field is shown), Timestamp required
+- Test loading state on submit button during mutation
+- Test that platform select is shown when invoked from overview, hidden when from detail page
+- Test that platform options are grouped by type (Investment / Cash)
+- Test that value field shows currency suffix matching selected platform's currency
+- Test "Save & Add Another": saves, clears form (keeping platform), resets timestamp to now, dialog stays open
+- Test that "Save & Add Another" is not shown in edit mode
+- Test that edit mode for interpolated data points shows amber info banner
+- Test that banner is hidden for non-interpolated data points
 
 ## Technical Notes
 - File: `src/components/portfolio/dialogs/DataPointDialog.tsx`

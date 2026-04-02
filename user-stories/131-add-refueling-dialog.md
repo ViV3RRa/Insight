@@ -4,6 +4,7 @@
 As the Insight platform user, I want a dialog to record refueling events so that I can quickly enter fuel amount, cost, and odometer reading — especially at the pump on mobile.
 
 ## Dependencies
+- US-013: Button Component
 - US-028: Dialog Shell Component
 - US-030: Form Input Components
 - US-031: File Upload Component
@@ -89,6 +90,25 @@ const computedTotal = fuelAmount * costPerUnit;
 - [ ] PRD §9.9: Refueling dialog fields match spec
 - [ ] PRD §14 criterion 30: Fuel-type-appropriate units
 - [ ] PRD §14 criterion 31: EV refueling includes charged-at-home flag
+- [ ] All tests pass and meet coverage target
+- [ ] Dialog renders correctly in both create and edit modes
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/dialogs/RefuelingDialog.test.tsx` (co-located)
+- **Approach**: React Testing Library with mocked services via MSW
+- **Coverage target**: 80%+ line coverage
+- Test all required fields validated: date, fuelAmount, costPerUnit, odometerReading
+- Test fuel type adaptation: labels show "Liters" / "DKK/liter" for Petrol/Diesel and "kWh" / "DKK/kWh" for Electric
+- Test "Charged at home" checkbox only visible for Electric vehicles, hidden for others
+- Test auto-compute: `totalCost = fuelAmount * costPerUnit` updates live when inputs change
+- Test totalCost is editable (user can override auto-computed value)
+- Test odometer reading required and validated as positive number
+- Test receipt and tripCounterPhoto file uploads work
+- Test "Save & Add Another" saves, clears form (keeping vehicle), resets date to today
+- Test "Save & Add Another" not shown in edit mode
+- Test edit mode pre-populates with existing refueling values
+- Test vehicle select shown when opened from overview, hidden from detail
+- Test cancel/close dismisses dialog without saving
 
 ## Technical Notes
 - File: `src/components/vehicles/dialogs/RefuelingDialog.tsx`

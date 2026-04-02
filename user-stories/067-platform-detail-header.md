@@ -105,6 +105,25 @@ Same responsive grid as the portfolio overview summary cards.
 - [ ] All values are in the platform's native currency
 - [ ] Uses shared StatCard, PlatformIcon, StalenessIndicator — no inline markup
 - [ ] PRD §14 criterion 24: Platform detail page shows summary stat cards
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PlatformDetailHeader.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked platform data (header and stat cards render correctly)
+- Test loading state (skeleton/spinner shown while platform data is pending)
+- Test empty state (graceful handling when platform has no data points)
+- Test error state (ErrorState component when platform query fails)
+- Test that back button renders and fires navigation callback
+- Test that platform name, icon, and currency badge display correctly
+- Test that staleness badge appears when platform data is stale
+- Test that desktop switcher subtitle shows platform type, currency, and last-updated date
+- Test that 6 StatCards render in correct responsive grid (grid-cols-2 sm:grid-cols-3 lg:grid-cols-6)
+- Test that non-DKK platforms show DKK equivalent as sublabel on value cards
+- Test that Gain/Loss cards show colored value with percentage badge
+- Test that XIRR cards show value with "%" suffix
 
 ## Technical Notes
 - This is a section within `src/components/portfolio/PlatformDetail.tsx`

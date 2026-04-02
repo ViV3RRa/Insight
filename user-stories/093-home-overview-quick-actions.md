@@ -52,6 +52,18 @@ As the Insight platform user, I want quick-add buttons for "Add Reading" and "Ad
 - [ ] Mobile: full-width buttons below header
 - [ ] Correct button variants (secondary for Reading, primary for Bill)
 - [ ] PRD §5.3 item 5: Quick actions accessible from overview
+- [ ] All tests pass and meet coverage target
+- [ ] Component rendering verified by tests covering button interactions and responsive layout
+
+## Testing Requirements
+- **Test file**: `src/components/home/HomeQuickActions.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 80%+ line coverage
+- Test "Add Reading" button fires callback to open MeterReadingDialog
+- Test "Add Bill" button fires callback to open BillDialog
+- Test correct button variants: secondary for "Add Reading", primary for "Add Bill"
+- Test desktop layout: buttons in header row with sm size (hidden on mobile via lg:flex)
+- Test mobile layout: full-width buttons below header (hidden on desktop via lg:hidden)
 
 ## Technical Notes
 - These buttons are part of the HomeOverview page assembly (US-096)

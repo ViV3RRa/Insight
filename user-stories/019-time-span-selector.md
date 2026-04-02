@@ -114,6 +114,36 @@ None — this story IS a shared component
 - [ ] Dropdown mode fires the same onChange callback
 - [ ] Dark mode styles apply correctly
 - [ ] Transition animations are smooth (duration-150)
+- [ ] Time span pills are keyboard-navigable (Arrow keys cycle between options, Enter/Space selects)
+- [ ] Active pill has `aria-selected="true"` or equivalent ARIA state
+- [ ] Container has appropriate ARIA role (e.g., `role="tablist"` with `role="tab"` on each pill)
+- [ ] Focus indicator is visible on the currently focused pill
+- [ ] All tests pass and meet coverage target
+- [ ] Accessibility audit passes (axe-core or equivalent)
+
+## Testing Requirements
+- **Test file**: `src/components/shared/TimeSpanSelector.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied (dark: prefix variants)
+- **Component-specific test cases:**
+  - Verify all 9 options render: 1M, 3M, 6M, MTD, YTD, 1Y, 3Y, 5Y, All
+  - Verify default selection is YTD with active styling (`bg-white shadow-sm`)
+  - Verify clicking an inactive pill calls `onChange` with the correct TimeSpan value
+  - Verify active pill has `bg-white dark:bg-base-600 shadow-sm text-base-900` classes
+  - Verify inactive pills have `text-base-400` class
+  - Verify container has `role="tablist"` attribute
+  - Verify each pill has `role="tab"` attribute
+  - Verify active pill has `aria-selected="true"` and inactive pills have `aria-selected="false"`
+  - Verify arrow key navigation cycles between pills using `userEvent.keyboard`
+  - Verify Enter and Space keys select the focused pill
+  - Verify focus indicator is visible on the currently focused pill
+  - Verify container uses `bg-base-100 dark:bg-base-700 rounded-lg p-0.5` classes
+  - Verify dark mode classes for active and inactive states
+  - Snapshot test for pill button mode
 
 ## Technical Notes
 - File to create: `src/components/shared/TimeSpanSelector.tsx`

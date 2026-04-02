@@ -166,6 +166,27 @@ None — this story IS a shared component
 - [ ] TextareaInput uses resize-none and configurable rows
 - [ ] Dark mode: bg-base-900, border-base-600, text-white, placeholder:text-base-500
 - [ ] All inputs forward standard HTML input attributes (name, value, onChange, etc.)
+- [ ] All tests pass and meet coverage target
+- [ ] Each input type has dedicated test coverage
+
+## Testing Requirements
+- **Test file**: `src/components/shared/FormField.test.tsx` and `src/components/shared/inputs/TextInput.test.tsx`, `NumberInput.test.tsx`, `SelectInput.test.tsx`, `TextareaInput.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied
+- Test all input types render correctly: TextInput, NumberInput, SelectInput, TextareaInput
+- Test FormField displays label text and associates it with the input via `htmlFor`
+- Test required asterisk (`*`) renders when `required` prop is true and is absent when false
+- Test validation error message renders with AlertCircle icon when `error` prop is provided
+- Test error state applies rose border (`border-rose-400`) to the input
+- Test disabled state renders correctly on all input types
+- Test NumberInput uses `font-mono-data` class for tabular number display
+- Test SelectInput renders options and supports selection changes
+- Test TextareaInput respects the `rows` prop
+- Test all inputs forward `onChange`, `value`, `name`, and other standard HTML attributes
 
 ## Technical Notes
 - Files to create: `src/components/shared/FormField.tsx`, `src/components/shared/inputs/TextInput.tsx`, `src/components/shared/inputs/NumberInput.tsx`, `src/components/shared/inputs/SelectInput.tsx`, `src/components/shared/inputs/TextareaInput.tsx`, `src/components/shared/inputs/index.ts` (barrel export)

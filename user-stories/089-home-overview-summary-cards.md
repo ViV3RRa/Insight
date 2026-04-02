@@ -112,6 +112,22 @@ As the Insight platform user, I want summary cards for each utility on the Home 
 - [ ] Uses shared UtilityIcon, ChangeIndicator, StalenessIndicator, CurrencyDisplay
 - [ ] PRD §5.3 item 2: Summary cards per utility with required metrics
 - [ ] PRD §14 criterion 7: Home overview shows summary cards per utility
+- [ ] All tests pass and meet coverage target
+- [ ] Component rendering verified by tests covering data display, interactions, and edge states
+
+## Testing Requirements
+- **Test file**: `src/components/home/UtilitySummaryCards.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test one card rendered per utility in the data set
+- Test each card displays utility icon, name, unit, consumption, cost, and footer stats (YTD Cost, Cost/Unit, Updated)
+- Test ChangeIndicator renders with correct % change for consumption (green for decrease, red for increase)
+- Test staleness badge appears when utility has no reading for current month
+- Test cards are clickable and navigate to correct utility detail URL
+- Test grid layout classes: single column on mobile, 3 columns on sm+
+- Test loading state renders skeleton/placeholder
+- Test empty state when no utilities exist
+- Test hover shadow transition class is present
 
 ## Technical Notes
 - File: `src/components/home/UtilitySummaryCards.tsx`

@@ -60,7 +60,28 @@ N/A — backend/data layer story
 - [ ] `getMonthlyCost` returns correct amount for a specific month
 - [ ] `getCostForPeriod` sums correctly across a date range
 - [ ] Empty bills array returns empty cost array
+- [ ] Bill with `periodStart === periodEnd` (single-day bill): entire amount assigned to that calendar month
+- [ ] Overlapping bills (two bills covering partially the same period): both are amortized independently — costs are summed per month, no deduplication
+- [ ] Zero-amount bill (`amount === 0`): amortized normally (distributes 0 across months), does not error
 - [ ] PRD §14 criterion 5: Multi-month bills are amortized correctly across covered months
+- [ ] All tests pass and meet coverage target
+- [ ] All AC items with specific input/output values verified by test cases
+
+## Testing Requirements
+- **Test file**: `src/utils/amortization.test.ts` (co-located)
+- **Approach**: Pure function unit tests — no mocking required
+- **Coverage target**: 100% of exported functions
+- All AC items with specific input/output values become test cases
+- Test single-month bill: full amount assigned to that month
+- Test 12,000 bill covering Jan-Dec produces 1,000/month for 12 months
+- Test 3,000 bill covering Jan 1-Mar 31 produces 1,000/month for 3 months
+- Test single-day bill (`periodStart === periodEnd`): entire amount assigned to that calendar month
+- Test overlapping bills: two bills covering partially the same period — both amortized independently, costs summed per month
+- Test zero-amount bill (`amount === 0`): amortized normally (distributes 0 across months), does not error
+- Test empty bills array returns empty cost array
+- Test `getMonthlyCost` returns correct amount for a specific month
+- Test `getCostForPeriod` sums correctly across a date range
+- Test edge cases: bill spanning a single day, bill spanning multiple years
 
 ## Technical Notes
 - File to create: `src/utils/amortization.ts`

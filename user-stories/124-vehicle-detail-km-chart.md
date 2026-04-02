@@ -47,6 +47,18 @@ As the Insight platform user, I want a monthly km chart on the vehicle detail pa
 - [ ] YoY overlay
 - [ ] Responsive
 - [ ] PRD §7.5: Monthly km chart
+- [ ] All tests pass and meet coverage target
+- [ ] Chart renders with mocked distance data
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/VehicleKmChart.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test chart renders with monthly km data
+- Test TimeSpanSelector filters data correctly
+- Test YoY overlay renders when enabled
+- Test chart renders without errors when no data available
+- Test responsive behavior
 
 ## Technical Notes
 - File: `src/components/vehicles/VehicleKmChart.tsx`

@@ -4,6 +4,7 @@
 As the Insight platform user, I want a dialog to create and edit vehicles so that I can manage vehicle metadata and lifecycle.
 
 ## Dependencies
+- US-013: Button Component
 - US-028: Dialog Shell Component
 - US-030: Form Input Components
 - US-031: File Upload Component
@@ -95,6 +96,24 @@ As the Insight platform user, I want a dialog to create and edit vehicles so tha
 - [ ] Desktop: centered modal. Mobile: bottom sheet.
 - [ ] PRD §9.8: Vehicle dialog fields match spec
 - [ ] PRD §14 criteria 27-28: Vehicle CRUD and marking as sold
+- [ ] All tests pass and meet coverage target
+- [ ] Dialog renders correctly in both create and edit modes
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/dialogs/VehicleDialog.test.tsx` (co-located)
+- **Approach**: React Testing Library with mocked services via MSW
+- **Coverage target**: 80%+ line coverage
+- Test create mode: all fields empty, Name required validation
+- Test edit mode: pre-populates with existing vehicle values
+- Test all 4 fuel type options available in select (Petrol, Diesel, Electric, Hybrid)
+- Test photo upload accepts images and enforces 5MB limit
+- Test "Mark as Sold" danger section only appears in edit mode for active vehicles
+- Test sale date required when marking as sold
+- Test already-sold vehicles show sale info and "Reactivate" option
+- Test save calls `vehicleService.create()` in create mode and `vehicleService.update()` in edit mode
+- Test mark as sold calls `vehicleService.markAsSold()` with correct parameters
+- Test cancel/close dismisses dialog without saving
+- Test validation errors displayed for required fields
 
 ## Technical Notes
 - File: `src/components/vehicles/dialogs/VehicleDialog.tsx`

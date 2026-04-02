@@ -154,6 +154,32 @@ None — this story IS a shared component
 - [ ] Component supports controlled mode (expanded prop + onChange) and uncontrolled mode
 - [ ] Multiple instances on the same page operate independently
 - [ ] Dark mode styles apply correctly
+- [ ] All tests pass and meet coverage target
+- [ ] Accessibility audit passes (axe-core or equivalent)
+
+## Testing Requirements
+- **Test file**: `src/components/shared/CollapsibleSection.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied (dark: prefix variants)
+- **Component-specific test cases:**
+  - Verify default state is collapsed: content is hidden and `aria-expanded="false"`
+  - Verify clicking the toggle button expands content and sets `aria-expanded="true"`
+  - Verify clicking again collapses content and sets `aria-expanded="false"`
+  - Verify chevron has `rotate-180` class when expanded, no rotation when collapsed
+  - Verify chevron rotation uses `transition-transform duration-200`
+  - Verify title renders with `text-sm font-semibold text-base-900` classes
+  - Verify optional icon renders at `w-4 h-4 text-base-400` when provided, absent when omitted
+  - Verify count badge renders with `text-xs px-2 py-0.5 rounded-full bg-base-100 text-base-400` when provided, absent when omitted
+  - Verify `defaultExpanded` prop starts the section in expanded state
+  - Verify controlled mode: `expanded` prop + `onToggle` callback control state externally
+  - Verify multiple instances on the same page operate independently (expand one, others stay collapsed)
+  - Verify keyboard activation: Enter and Space toggle expand/collapse via `userEvent`
+  - Verify dark mode classes: `dark:bg-base-800`, `dark:border-base-700`, `dark:text-white`
+  - Snapshot test for collapsed and expanded states
 
 ## Technical Notes
 - File to create: `src/components/shared/CollapsibleSection.tsx`

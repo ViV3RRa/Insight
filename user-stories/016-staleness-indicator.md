@@ -128,6 +128,28 @@ None — this story IS a shared component
 - [ ] Dark mode applies correct dark variants (dark:bg-amber-900/30 etc.)
 - [ ] Component accepts `severity` (warning | critical) and `size` (sm | md | lg) props
 - [ ] Component renders nothing when data is not stale (null return)
+- [ ] All tests pass and meet coverage target
+- [ ] Accessibility audit passes (axe-core or equivalent)
+
+## Testing Requirements
+- **Test file**: `src/components/shared/StalenessIndicator.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied (dark: prefix variants)
+- **Component-specific test cases:**
+  - Render warning severity: verify amber color palette (`bg-amber-50`, `text-amber-700`, `border-amber-200`)
+  - Render critical severity: verify rose color palette (`bg-rose-50`, `text-rose-700`, `border-rose-200`)
+  - Render sm size: verify `text-[10px]`, `px-1.5`, and dot is `w-1 h-1`
+  - Render md size (default): verify `text-xs`, `px-2`, and dot is `w-1.5 h-1.5`
+  - Render lg size: verify `text-sm font-semibold`, `px-3.5`, and dot is `w-2 h-2`
+  - Verify pulsing dot has `animate-pulse` class across all sizes
+  - Verify all sizes have `rounded-full` and `border` classes
+  - Verify dark mode classes: `dark:bg-amber-900/30`, `dark:text-amber-400`, `dark:border-amber-700` for warning; corresponding rose values for critical
+  - Verify label text reads "Stale"
+  - Test all 6 combinations (2 severities x 3 sizes) render correct class sets
+  - Snapshot test for each severity + size combination
 
 ## Technical Notes
 - File to create: `src/components/shared/StalenessIndicator.tsx`

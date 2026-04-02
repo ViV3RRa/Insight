@@ -91,6 +91,23 @@ As the Insight platform user, I want a chart on the utility detail page that tog
 - [ ] Dark mode: chart readable
 - [ ] Uses shared ChartCard, TimeSpanSelector, YoYToggle, ChartModeToggle
 - [ ] PRD §5.4: Chart area with consumption/cost/cost-per-unit toggle
+- [ ] All tests pass and meet coverage target
+- [ ] Component rendering verified by tests covering chart modes, toggles, and data display
+
+## Testing Requirements
+- **Test file**: `src/components/home/UtilityDetailChart.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test three-way mode toggle renders: Consumption, Cost, Cost per Unit
+- Test consumption mode renders bar chart with utility's unit
+- Test cost mode renders bar chart with DKK values
+- Test cost per unit mode renders line chart
+- Test TimeSpanSelector filters data (default: YTD)
+- Test YoY toggle overlays prior year data
+- Test chart uses utility's assigned color
+- Test responsive layout (no overflow at any viewport)
+- Test loading state renders placeholder
+- Test empty data state (no readings/bills)
 
 ## Technical Notes
 - File: `src/components/home/UtilityDetailChart.tsx`

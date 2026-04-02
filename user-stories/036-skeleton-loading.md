@@ -121,6 +121,24 @@ None — this story IS a shared component
 - [ ] Dark mode: skeleton bars use dark:bg-base-700 as base color
 - [ ] Generic skeleton supports custom `width` and `height` props
 - [ ] Skeleton elements do not cause layout shift when real content loads
+- [ ] All tests pass and meet coverage target
+- [ ] Each skeleton variant (kpiCard, chart, tableRow, generic) has dedicated test coverage
+
+## Testing Requirements
+- **Test file**: `src/components/shared/Skeleton.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied
+- Test placeholder elements render for each variant (kpiCard, chart, tableRow, generic)
+- Test the `skeleton` CSS class (pulse/shimmer animation) is present on skeleton bar elements
+- Test generic skeleton accepts custom `width` and `height` props
+- Test SkeletonKpiCard renders the expected 3 shimmer bars inside a card shell
+- Test SkeletonChart renders header row, time span bar, and chart area placeholder
+- Test SkeletonTableRows renders header row plus 3 body rows
+- Test `count` prop renders multiple instances when provided
 
 ## Technical Notes
 - File to create: `src/components/shared/Skeleton.tsx`

@@ -66,6 +66,24 @@ The `ChartCard` handles the card shell, title, controls (mode toggle, YoY toggle
 - [ ] Uses shared ChartCard component — no inline chart card markup
 - [ ] PRD §6.4 item 1: Line/area chart with time span selector and YoY toggle
 - [ ] PRD §14 criterion 40: YoY toggle overlays prior year data
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PlatformDetailPerfChart.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked query results (chart renders with data)
+- Test loading state (skeleton/spinner shown while performance data is pending)
+- Test empty state (EmptyState component when no performance data available)
+- Test error state (ErrorState component when query fails)
+- Test that ChartCard renders with title "Performance Overview"
+- Test that mode toggle switches between Earnings and XIRR % views
+- Test that time span selector filters the visible data range
+- Test that default time span is YTD
+- Test that YoY toggle activates/deactivates overlay
+- Test that chart values are in the platform's native currency
+- Test responsive chart sizing
 
 ## Technical Notes
 - Charts rendered using Recharts (`BarChart`, `LineChart`, `Area`, `Bar`, `Line`, `XAxis`, `YAxis`, `Tooltip`, `ResponsiveContainer`)

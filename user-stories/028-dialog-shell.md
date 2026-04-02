@@ -201,6 +201,33 @@ As the Insight platform user, I want a responsive dialog for creating and editin
 - [ ] Clicking backdrop or close button calls onClose
 - [ ] z-50 stacking context for the dialog
 - [ ] Dark mode styles apply correctly
+- [ ] Focus is trapped within the dialog while open (Tab and Shift+Tab cycle through focusable elements inside the dialog only)
+- [ ] Pressing Escape closes the dialog
+- [ ] On close, focus returns to the element that triggered the dialog
+- [ ] Dialog has `role="dialog"` and `aria-modal="true"`
+- [ ] Dialog title is associated via `aria-labelledby`
+- [ ] All tests pass and meet coverage target
+- [ ] Component meets WCAG 2.1 AA dialog accessibility requirements
+
+## Testing Requirements
+- **Test file**: `src/components/shared/Dialog.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied
+- Test dialog opens and closes based on `isOpen` prop
+- Test focus trap: Tab cycles through focusable elements inside the dialog only
+- Test Escape key triggers `onClose`
+- Test focus returns to the trigger element when dialog closes
+- Test `role="dialog"` and `aria-modal="true"` attributes are present
+- Test `aria-labelledby` links the title to the dialog
+- Test backdrop click triggers `onClose`
+- Test close button (X icon) triggers `onClose`
+- Test "Save & Add Another" button only renders when `showSaveAndAddAnother` is true
+- Test Cancel, Save, and Save & Add Another buttons fire their respective callbacks
+- Test children render inside the body area
 
 ## Technical Notes
 - File to create: `src/components/shared/Dialog.tsx`

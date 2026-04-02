@@ -49,6 +49,21 @@ N/A — backend/data layer story (UI integration in US-153)
 - [ ] Returns unchanged consumption when no EV charging data exists
 - [ ] Only applies to electric vehicle refuelings
 - [ ] PRD §14 criterion 49: EV home-charging kWh can be excluded from electricity utility
+- [ ] All tests pass and meet coverage target
+- [ ] Each AC input/output example is a dedicated test case
+
+## Testing Requirements
+- **Test file**: `src/utils/evCrossover.test.ts` (co-located)
+- **Approach**: Pure function unit tests — no mocking required
+- **Coverage target**: 100% of exported functions
+- All AC items with specific input -> output values become test cases
+- Test `getHomeChargingKwh` sums only refuelings where `chargedAtHome === true`
+- Test `getMonthlyHomeChargingKwh` produces correct monthly breakdown
+- Test `adjustConsumptionForEvCharging` subtracts home-charging kWh from utility consumption correctly
+- Test adjusted consumption never goes negative (floor at 0)
+- Test returns unchanged consumption when no EV charging data exists
+- Test ignores refuelings where `chargedAtHome === false`
+- Test with date range filtering (startDate/endDate)
 
 ## Technical Notes
 - File: `src/utils/evCrossover.ts`

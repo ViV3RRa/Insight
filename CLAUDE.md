@@ -31,10 +31,12 @@ Each phase builds on the outputs of the previous one. Do not skip ahead to imple
 | Styling | Tailwind CSS |
 | Charts | Recharts |
 | Icons | lucide-react |
+| Schema & validation | Zod (type definitions, branded IDs, PocketBase response parsing) |
 | Data fetching | TanStack Query (server state, caching, background refetch) |
 | State management | Zustand (client/UI state) |
 | Backend | PocketBase (self-hosted) |
 | Auth | PocketBase email/password |
+| Testing | Vitest, React Testing Library, MSW (Mock Service Worker) |
 
 ## Architecture
 
@@ -45,6 +47,111 @@ Three domain sections sharing common platform capabilities:
 - **Vehicles** — refuelings, maintenance events, fuel efficiency tracking
 
 All PocketBase calls go through a `services/` layer — UI components never call PocketBase directly. TanStack Query wraps service calls for caching, background refetch, and loading/error states. Zustand manages client-side UI state (selected time span, YoY toggle, active filters, etc.). Each section has its own data models, service functions, and views but shares common components (time span selector, YoY toggle, staleness indicators, collapsible tables, charts, file attachments).
+
+## Type System
+
+All application types are defined as **Zod schemas** in `src/types/`. Zod serves three roles: type definition, runtime validation, and PocketBase response parsing.
+
+**Branded ID types** prevent accidentally passing one entity's ID where another is expected:
+```ts
+const PortfolioId = z.string().brand<'PortfolioId'>();
+const PlatformId = z.string().brand<'PlatformId'>();
+// platform.id is PlatformId, not string
+// platform.portfolioId is PortfolioId, not string
+```
+
+**PocketBase field names and TypeScript property names are identical.** Relation fields use `Id` suffix for clarity (e.g., `platformId`, `portfolioId`, `ownerId`). No mapping layer — the Zod schema parses PocketBase responses directly:
+```
+PocketBase response → Zod schema.parse() → typed object with branded IDs
+```
+
+**Schema hierarchy per entity:**
+- `platformSchema` — full record shape (what you read)
+- `platformCreateSchema` — omits `id`, `created`, `ownerId` (what you write)
+- `type Platform = z.infer<typeof platformSchema>`
+- `type PlatformCreate = z.infer<typeof platformCreateSchema>`
+
+Every service function parses its PocketBase response through the appropriate Zod schema before returning. This catches schema mismatches at runtime rather than silently passing malformed data.
+
+## TanStack Query Conventions
+
+All PocketBase service calls are wrapped in TanStack Query for caching, background refetch, and loading/error states.
+
+**Query key pattern** — standardized across all services:
+
+| Pattern | Structure | Example |
+|---------|-----------|---------|
+| List (top-level) | `['entity']` | `['portfolios']` |
+| List (by parent) | `['entity', parentId]` | `['platforms', portfolioId]` |
+| Single record | `['entity', parentId, id]` | `['platforms', portfolioId, platformId]` |
+| Filtered list | `['entity', parentId, filters]` | `['dataPoints', platformId, { start, end }]` |
+
+**Mutation invalidation** — on successful create/update/delete, invalidate the parent list key:
+- Creating a platform → invalidate `['platforms', portfolioId]`
+- Updating a data point → invalidate `['dataPoints', platformId]`
+- Deleting a transaction → invalidate `['transactions', platformId]`
+
+**Read functions** are `queryFn` candidates. **Write functions** (`create`, `update`, `delete`) are `mutationFn` candidates.
+
+## Zustand Store Architecture
+
+Zustand manages **client-side UI state only** — transient selections, toggles, and filters that don't belong in the URL or server. TanStack Query owns all server/data state.
+
+**What lives in Zustand:**
+- `useSettingsStore` — user preferences (date format, theme, demo mode), hydrated from PocketBase on app init
+- `useInvestmentUIStore` — selected portfolio ID, selected time span, YoY toggle state, chart mode
+- `useHomeUIStore` — selected time span, YoY toggle state
+- `useVehicleUIStore` — selected time span, YoY toggle state
+
+**What lives in TanStack Query (NOT Zustand):**
+- All entity data (portfolios, platforms, data points, transactions, utilities, vehicles, etc.)
+- Loading/error states for data fetches
+- Cache invalidation and background refetch
+
+**Rule of thumb:** If it comes from PocketBase, it goes in TanStack Query. If it's a UI toggle or selection that resets on page navigation, it goes in Zustand.
+
+## Testing Conventions
+
+**Testing is baked into every user story.** Each story that produces testable code includes a `## Testing Requirements` section specifying the test file, approach, and key test cases. A story is not done until its tests pass. There are no separate "testing phase" stories — tests are written alongside the implementation.
+
+**Test framework:** Vitest + React Testing Library + MSW (Mock Service Worker)
+
+**Test infrastructure** (US-148) provides the foundation: Vitest config, custom render with providers, test data factories for all entities, PocketBase mock via MSW, and coverage configuration. This is a Phase 1 story — set up before any feature work begins.
+
+**File structure — co-located tests next to source:**
+- `src/utils/xirr.ts` → `src/utils/xirr.test.ts`
+- `src/components/shared/StatCard.tsx` → `src/components/shared/StatCard.test.tsx`
+- `src/services/portfolios.ts` → `src/services/portfolios.test.ts`
+
+**Test infrastructure in `src/test/`:**
+- `setup.ts` — global test setup (jsdom, Testing Library matchers, MSW server)
+- `utils.tsx` — custom `renderWithProviders` (QueryClient, Router, ThemeProvider)
+- `factories/` — test data factories using Zod schemas (one per entity)
+- `mocks/` — PocketBase client mock, MSW handlers
+
+**Testing approach per story type:**
+
+| Story type | Test approach | Coverage target |
+|------------|--------------|-----------------|
+| **Utility functions** (`src/utils/`) | Pure function unit tests — no mocking. All AC input→output examples become test cases. | 100% |
+| **Zod type schemas** (`src/types/`) | Schema acceptance tests (valid data parses) + rejection tests (invalid data throws) + branded ID tests. | 100% |
+| **Services** (`src/services/`) | Mock PocketBase via MSW. Test CRUD, ownership filtering, Zod parsing, error handling. | 90%+ |
+| **Zustand stores** (`src/stores/`) | Test initial state, all actions, selectors, state transitions, store isolation. | 90%+ |
+| **Shared components** (`src/components/shared/`) | React Testing Library with `renderWithProviders`. All prop variants, interactions, accessibility, dark mode. | 90%+ |
+| **Domain components** (`src/components/{domain}/`) | RTL with mocked service data via MSW. Data rendering, loading/empty/error states. | 80%+ |
+| **Dialogs** | RTL. Create/edit modes, form validation, submission, cancellation, error handling. | 80%+ |
+| **Page assemblies** | RTL. All sub-sections compose, data flows, loading/empty/error states. | 80%+ |
+| **Cross-cutting** | Integration tests — cross-layer data flows, settings propagation, EV crossover. | Functional |
+| **Overall project** | — | **85%+** |
+
+**Testing principles:**
+- **Pure functions in utils, tested without mocks.** All business logic, calculations, formatters, and data transformations live in `src/utils/` as pure functions. Tested with direct input/output assertions.
+- **Services tested with mocked PocketBase.** Mock via MSW. Verify API calls, ownership filtering, Zod parsing, error handling.
+- **Components tested with React Testing Library.** Test user-visible behavior, not implementation details. Use `getByRole`, `getByText`. Use `userEvent` for interactions.
+- **Every AC with a specific input → output example** (e.g., "`calculateGain(10000, 12000, 1000, 0)` returns 1000") becomes a direct test case.
+- **Test data factories** produce valid, typed objects from Zod schemas. Never construct test data manually.
+
+**Extractability rule:** If a function in a service file does computation or transformation that doesn't require PocketBase or external state, extract it to `src/utils/` and test it as a pure function. Services should be thin orchestration layers — fetch data, call pure utils, persist results.
 
 ## Critical Calculation Details
 

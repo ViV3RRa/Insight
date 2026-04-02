@@ -4,6 +4,7 @@
 As the Insight platform user, I want a dialog to record deposit and withdrawal transactions for my platforms so that I can track cash flows with exchange rates, notes, and attachments.
 
 ## Dependencies
+- US-013: Button Component
 - US-028: Dialog Shell Component
 - US-030: Form Input Components
 - US-031: File Upload Component
@@ -95,6 +96,26 @@ As the Insight platform user, I want a dialog to record deposit and withdrawal t
 - [ ] Mobile: bottom sheet with drag handle
 - [ ] PRD §9.4: Transaction dialog fields match spec
 - [ ] PRD §14 criterion 16: User can register transactions with exchange rate, notes, attachments
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/dialogs/TransactionDialog.test.tsx` (co-located)
+- **Approach**: React Testing Library with mocked services via MSW
+- **Coverage target**: 80%+ line coverage
+- Test create mode: empty form with Deposit selected and timestamp defaulting to now, successful submission calls transactionService.create()
+- Test edit mode: pre-populated fields, updates via transactionService.update()
+- Test cancellation: dialog closes, no service calls, no side effects
+- Test error handling: service failure shows error toast, dialog stays open
+- Test form validation: Amount required and must be positive, Platform required (when shown), Timestamp required
+- Test loading state on submit button during mutation
+- Test that type radio shows styled Deposit (green) and Withdrawal (red) options
+- Test that exchange rate field is shown only for non-DKK platforms
+- Test that exchange rate is auto-populated from latest rate for selected platform's currency
+- Test that DKK equivalent preview updates when amount or exchange rate changes
+- Test "Save & Add Another": saves, clears form (keeping platform), resets type to Deposit, dialog stays open
+- Test that "Save & Add Another" is not shown in edit mode
+- Test file upload for attachments (image/PDF)
 
 ## Technical Notes
 - File: `src/components/portfolio/dialogs/TransactionDialog.tsx`

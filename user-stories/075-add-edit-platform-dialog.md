@@ -4,6 +4,7 @@
 As the Insight platform user, I want a dialog to create and edit investment and cash platforms so that I can manage each financial entity's metadata and lifecycle within a portfolio.
 
 ## Dependencies
+- US-013: Button Component
 - US-028: Dialog Shell Component
 - US-030: Form Input Components
 - US-031: File Upload Component
@@ -112,6 +113,25 @@ Read-only badges showing current type and currency.
 - [ ] Mobile: bottom sheet
 - [ ] PRD §9.2: Platform dialog fields match spec
 - [ ] PRD §14 criteria 12-14: Platform CRUD, type/currency lock, and closure
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/dialogs/PlatformDialog.test.tsx` (co-located)
+- **Approach**: React Testing Library with mocked services via MSW
+- **Coverage target**: 80%+ line coverage
+- Test create mode: empty form with icon upload, name, type select (Investment/Cash), and currency selector; successful submission calls platformService.create()
+- Test edit mode: pre-populated fields with icon preview, name editable, type and currency displayed as read-only badges; updates via platformService.update()
+- Test cancellation: dialog closes, no service calls, no side effects
+- Test error handling: service failure shows error toast, dialog stays open
+- Test form validation: Icon required, Name required, Type required on creation, Currency required on creation
+- Test loading state on submit button during mutation
+- Test that Type and Currency are not editable after creation (displayed as read-only)
+- Test that "Close Platform" danger section appears in edit mode for active platforms
+- Test that Close Platform section expands to show closure date and note fields
+- Test that closure date is required when closing
+- Test that already-closed platforms show closure info and "Reopen Platform" option
+- Test photo/icon upload with circular preview
 
 ## Technical Notes
 - File: `src/components/portfolio/dialogs/PlatformDialog.tsx`

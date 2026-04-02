@@ -6,15 +6,16 @@ As the Insight platform user, I want to record and manage deposit and withdrawal
 ## Dependencies
 - US-004: PocketBase Client and Auth Service
 - US-041: Investment TypeScript Types
+- US-144: PocketBase Schema — Investment Collections
 
 ## Requirements
 - Create `src/services/transactions.ts` with the following functions:
 
 **CRUD operations:**
-- `getByPlatform(platformId: string)`: Fetch all transactions for a platform. Filter by `owner` and `platformId`. Sort by `timestamp` ascending (chronological).
+- `getByPlatform(platformId: string)`: Fetch all transactions for a platform. Filter by `ownerId` and `platformId`. Sort by `timestamp` ascending (chronological).
 - `getByPlatformInRange(platformId: string, start: string, end: string)`: Fetch transactions within a date range. Sort by `timestamp` ascending.
 - `getOne(id: string)`: Fetch a single transaction by ID. Verify ownership.
-- `create(data: TransactionCreate | FormData)`: Create a new transaction. Set `owner` to current user. Accept either a typed object or `FormData` (when file attachment is included).
+- `create(data: TransactionCreate | FormData)`: Create a new transaction. Set `ownerId` to current user. Accept either a typed object or `FormData` (when file attachment is included).
 - `update(id: string, data: Partial<TransactionCreate> | FormData)`: Update a transaction. Accept typed object or `FormData`.
 - `delete(id: string)`: Delete a transaction. Verify ownership.
 
@@ -42,7 +43,7 @@ As the Insight platform user, I want to record and manage deposit and withdrawal
 - `getByPortfolioInRange(portfolioId: string, start: string, end: string)`: Fetch portfolio-level transactions in a date range.
 
 **Data isolation:**
-- All queries filter by `owner = currentUserId`.
+- All queries filter by `ownerId = currentUserId`.
 
 ## Shared Components Used
 N/A — backend/data layer story
@@ -53,7 +54,7 @@ N/A — backend/data layer story
 ## Acceptance Criteria
 - [ ] `getByPlatform()` returns all transactions for a platform, sorted by timestamp ascending
 - [ ] `getByPlatformInRange()` correctly filters by date range
-- [ ] `create()` sets owner automatically
+- [ ] `create()` sets ownerId automatically
 - [ ] `create()` validates that amount is positive (> 0)
 - [ ] `create()` accepts FormData for file attachment uploads
 - [ ] `update()` allows changing type, amount, exchangeRate, timestamp, note, and attachment
@@ -67,6 +68,27 @@ N/A — backend/data layer story
 - [ ] Exchange rate is null for DKK platform transactions
 - [ ] All operations verify ownership
 - [ ] PRD §14 criterion 16: Transaction registration works with type, amount, exchange rate, notes, and attachments
+- [ ] All tests pass and meet 90%+ line coverage target
+- [ ] Zod schema parsing is verified for all service responses
+
+## Testing Requirements
+- **Test file**: `src/services/transactions.test.ts` (co-located)
+- **Approach**: Mock PocketBase via MSW; test CRUD operations, ownership filtering, Zod parsing, error handling
+- **Coverage target**: 90%+ line coverage
+- Test getByPlatform returns transactions sorted by timestamp ascending
+- Test create with type "deposit" stores amount as positive number
+- Test create with type "withdrawal" stores amount as positive number
+- Test create validates amount > 0 (rejects zero or negative)
+- Test create accepts FormData for file attachment uploads
+- Test getNetDeposits correctly computes deposits minus withdrawals for a date range
+- Test getDepositSum returns sum of deposit amounts in range
+- Test getByPortfolio returns transactions across all platforms in the portfolio
+- Test getAttachmentUrl returns valid PocketBase file URL or null
+- Test exchange rate is stored for non-DKK platform transactions
+- Test exchange rate is null for DKK platform transactions
+- Verify all queries filter by `ownerId`
+- Verify Zod schema parsing catches malformed responses
+- Test error cases: not found, unauthorized
 
 ## Technical Notes
 - File to create: `src/services/transactions.ts`
@@ -79,3 +101,4 @@ N/A — backend/data layer story
 - The `getNetDeposits` helper can be computed client-side from the fetched transactions, or use PocketBase's aggregate features if available
 - For `getByPortfolio`, first fetch all platform IDs for the portfolio, then query transactions with a filter like `platformId IN ('id1','id2',...)`
 - Error handling: throw for "transaction not found", "amount must be positive", "unauthorized"
+- All responses are parsed through Zod schemas (e.g., `transactionSchema.parse(response)`) before returning — this validates the response shape and produces branded ID types at runtime

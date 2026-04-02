@@ -94,6 +94,22 @@ As the Insight platform user, I want cards for each active vehicle on the Vehicl
 - [ ] Grid: 1 col mobile, 2 sm, 3 lg
 - [ ] Hover effect: shadow-lg + chevron overlay
 - [ ] PRD §7.4 item 1: Active vehicle cards with required metrics
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders correctly with mocked vehicle data
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/VehicleCard.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test one card rendered per active vehicle
+- Test card displays vehicle name, make/model/year
+- Test current year efficiency displayed with correct unit (km/l or km/kWh based on fuelType)
+- Test YTD fuel cost displayed in DKK
+- Test footer stats (YTD Total Cost, YTD km, Updated date) render
+- Test FuelTypeBadge is present with correct fuel type
+- Test card is clickable and links to correct vehicle detail route
+- Test placeholder silhouette shown when no photo
+- Test loading and empty states
 
 ## Technical Notes
 - File: `src/components/vehicles/VehicleCard.tsx`

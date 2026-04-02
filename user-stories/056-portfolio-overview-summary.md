@@ -62,6 +62,23 @@ No additional page-level styling beyond the grid. All card visuals are handled b
 - [ ] Values update when the active portfolio changes (via PortfolioSwitcher)
 - [ ] Summary cards use the shared StatCard component — no inline stat card markup
 - [ ] PRD §14 criterion 23: Portfolio overview shows summary cards
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PortfolioOverviewSummary.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked query results (all 6 stat cards render correct values)
+- Test loading state (skeleton placeholders shown while aggregation queries are pending)
+- Test empty state (EmptyState component when portfolio has no platforms or data)
+- Test error state (ErrorState component when aggregation query fails)
+- Test that Total Value card shows DKK value with date sublabel (Variant A)
+- Test that Gain/Loss cards show colored value with percentage badge (Variant C)
+- Test that XIRR cards show value with "%" suffix and correct sublabel (Variant D)
+- Test that Month Earnings card shows colored value with current month sublabel (Variant B)
+- Test responsive grid classes (grid-cols-2, sm:grid-cols-3, lg:grid-cols-6)
+- Test that values update when active portfolio changes
 
 ## Technical Notes
 - This is a section within `src/components/portfolio/PortfolioOverview.tsx`

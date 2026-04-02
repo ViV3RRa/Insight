@@ -44,6 +44,16 @@ None — this is a standalone page built before shared components exist. Uses ra
 - [ ] Button shows loading state during authentication
 - [ ] Works in both light and dark mode
 - [ ] Responsive: works on desktop and mobile
+- [ ] All tests pass and meet coverage target
+
+## Testing Requirements
+- **Test file**: `src/components/layout/Login.test.tsx`
+- **Approach**: React Testing Library with MSW for auth endpoint
+- Test form renders with email and password fields
+- Test validation: empty fields show errors
+- Test successful login: redirects to home
+- Test failed login: shows error message, stays on page
+- Test loading state during authentication
 
 ## Technical Notes
 - File to create: `src/components/layout/Login.tsx`

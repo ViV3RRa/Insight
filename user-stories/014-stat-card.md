@@ -105,6 +105,29 @@ None — this story IS a shared component
 - [ ] Dark mode colors apply correctly (emerald-400 / rose-400 for colored values)
 - [ ] All numeric values use font-mono-data for tabular alignment
 - [ ] Component works in responsive grid layouts (grid-cols-2 sm:grid-cols-3 lg:grid-cols-4)
+- [ ] All tests pass and meet coverage target
+- [ ] Accessibility audit passes (axe-core or equivalent)
+
+## Testing Requirements
+- **Test file**: `src/components/shared/StatCard.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied (dark: prefix variants)
+- **Component-specific test cases:**
+  - Render Variant A (simple): verify label, value in base-900 text, and `font-mono-data` class
+  - Render Variant B (colored): verify emerald-600 class for positive trend, rose-600 for negative trend
+  - Render Variant C (withBadge): verify colored value + inline percentage badge with `rounded-full` and correct bg color
+  - Render Variant C with negative badge: verify rose color palette on badge
+  - Render Variant D (withUnit): verify value + muted unit suffix in `text-sm text-base-400`
+  - Verify sublabel renders as `text-xs text-base-300` when provided, and is absent when omitted
+  - Verify all numeric values have the `font-mono-data` class for tabular alignment
+  - Verify card shell has `bg-white rounded-2xl p-5 shadow-card` classes
+  - Verify dark mode classes: `dark:bg-base-800`, `dark:text-white`, `dark:text-emerald-400`, `dark:text-rose-400`
+  - Verify neutral trend renders in base-900 (no colored styling)
+  - Snapshot test for each variant to catch unintended style regressions
 
 ## Technical Notes
 - File to create: `src/components/shared/StatCard.tsx`

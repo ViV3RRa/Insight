@@ -98,6 +98,25 @@ As the Insight platform user, I want tabbed yearly and monthly performance analy
 - [ ] Monthly mobile cycle: Monthly XIRR, Starting Value, Ending Value, Net Deposits
 - [ ] Uses shared TabBar, ChartModeToggle, DataTable — no inline markup
 - [ ] PRD §6.4 item 2: Tabbed card with Yearly/Monthly performance analysis
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/PlatformDetailPerfTabs.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked query results (yearly and monthly data render correctly)
+- Test loading state (skeleton/spinner shown while performance data is pending)
+- Test empty state (EmptyState component when no performance data available)
+- Test error state (ErrorState component when query fails)
+- Test that TabBar shows Yearly and Monthly tabs
+- Test that tab switching between Yearly and Monthly works correctly
+- Test that ChartModeToggle switches chart between Earnings and XIRR views
+- Test that yearly tab shows bar chart + table with 7 columns and totals row
+- Test that monthly tab shows bar chart + table with 6 columns
+- Test that current year is labeled "(YTD)"
+- Test yearly mobile column cycling: Earnings %, XIRR, Starting Value, Ending Value, Net Deposits
+- Test monthly mobile column cycling: Monthly XIRR, Starting Value, Ending Value, Net Deposits
 
 ## Technical Notes
 - This section is within `src/components/portfolio/PlatformDetail.tsx`

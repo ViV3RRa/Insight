@@ -65,8 +65,32 @@ As the Insight platform user, I want a demo mode that displays realistic synthet
 - [ ] Synthetic data includes interpolated data points
 - [ ] Synthetic data includes file attachments (placeholder images)
 - [ ] Demo mode does NOT modify real data in any way
+- [ ] Demo data includes at least: 2 portfolios (1 default), 4 investment platforms (2 investment + 1 cash in DKK, 1 investment in EUR), 24+ months of data point history with month-end boundaries
+- [ ] Demo data includes at least: 2 utilities (e.g., Electricity + Water) with 24+ months of meter readings and 6+ bills each
+- [ ] Demo data includes at least: 2 vehicles (1 active petrol/diesel, 1 sold electric) with 20+ refueling records and 5+ maintenance events
+- [ ] Demo data includes interpolated data points (isInterpolated=true) to demonstrate month-end normalization
+- [ ] Demo data includes YoY-comparable data (data spanning at least 2 calendar years)
+- [ ] Demo data includes a closed investment platform with historical data up to closure date
+- [ ] Demo data includes an EV vehicle with `chargedAtHome=true` refueling records
 - [ ] PRD §3.9: Demo mode specification
 - [ ] PRD §14 criterion 50: Demo mode displays realistic mock data
+- [ ] All tests pass and meet coverage target
+- [ ] Integration tests verify demo mode toggle and data completeness
+
+## Testing Requirements
+- **Test file**: `src/test/integration/demo-mode.test.tsx`
+- **Approach**: Integration tests verifying cross-component behavior
+- Test demo mode toggle loads demo data across all sections when enabled
+- Test demo mode indicator/banner is visible when demo mode is active
+- Test disabling demo mode restores real data (no demo data visible)
+- Test demo data meets minimum requirements: at least 2 portfolios, 4 investment platforms (2 investment + 1 cash in DKK, 1 investment in EUR), 24+ months of data point history
+- Test demo data meets minimum requirements: at least 2 utilities with 24+ months of meter readings and 6+ bills each
+- Test demo data meets minimum requirements: at least 2 vehicles (1 active, 1 sold) with 20+ refueling records and 5+ maintenance events
+- Test demo data includes interpolated data points (`isInterpolated=true`)
+- Test demo data includes YoY-comparable data spanning at least 2 calendar years
+- Test demo data includes an EV vehicle with `chargedAtHome=true` refueling records
+- Test real data is not modified or deleted when toggling demo mode on/off
+- Use factory-generated demo fixtures for deterministic test data
 
 ## Technical Notes
 - File: `src/utils/demoData.ts` for synthetic data generation

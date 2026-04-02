@@ -47,6 +47,17 @@ As the Insight platform user, I want the entire Home section to render correctly
 - [ ] No missed white elements
 - [ ] Sufficient contrast for accessibility
 - [ ] PRD §14 criterion 46: Dark mode functional
+- [ ] Dark mode styling verified through existing component tests checking dark: class variants
+
+## Testing Requirements
+- **Test file**: N/A — visual regression / manual verification story
+- Dark mode verified through existing component tests checking `dark:` class variants
+- No dedicated test file; dark mode correctness is ensured by:
+  - Component tests in US-089 through US-101 asserting `dark:` Tailwind class presence (e.g., `dark:bg-base-800`, `dark:shadow-card-dark`, `dark:text-base-300`)
+  - Manual verification with `<html class="dark">` toggle
+  - Verifying all surfaces use correct dark mode background/shadow tokens
+  - Verifying sufficient contrast for accessibility in dark mode
+  - Verifying utility icon backgrounds use `/30` opacity variants (e.g., `dark:bg-amber-900/30`)
 
 ## Technical Notes
 - Visual audit, not new features

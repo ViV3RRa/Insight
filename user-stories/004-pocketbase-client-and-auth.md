@@ -34,6 +34,14 @@ N/A
 - [ ] Session survives page reload (token persisted in localStorage)
 - [ ] Auth state changes trigger registered callbacks
 - [ ] PRD §2.2, §14 criterion 44: Authentication via PocketBase works
+- [ ] All tests pass and meet coverage target
+
+## Testing Requirements
+- **Test file**: `src/services/pb.test.ts`
+- **Approach**: Test client initialization, auth state management
+- Test that PocketBase client initializes with correct URL
+- Test auth state helpers (isAuthenticated, getCurrentUser)
+- Test that auth token is included in requests (via MSW interceptor)
 
 ## Technical Notes
 - Files to create: `src/services/pb.ts`, `src/services/auth.ts`

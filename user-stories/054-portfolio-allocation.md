@@ -75,6 +75,19 @@ N/A — backend/data layer story
 - [ ] Zero-value platform shows 0% allocation
 - [ ] Each result includes `type` field for visual distinction between investment and cash platforms
 - [ ] PRD §14 criterion 20: Portfolio allocation visualization shows each platform's share
+- [ ] All tests pass and meet 100% coverage of exported functions
+
+## Testing Requirements
+- **Test file**: `src/utils/calculations.test.ts` (co-located, shared with other calculation stories)
+- **Approach**: Pure function unit tests — **mock currency conversion** for DKK conversion
+- **Coverage target**: 100% of exported functions
+- Test calculateAllocation(7460, 20000) returns 37.3
+- Test calculateAllocation(5000, 0) returns null (division by zero)
+- Test single platform portfolio returns 100% allocation
+- Test zero-value platform shows 0% allocation
+- Test results are sorted by allocation percentage descending (largest first)
+- Test closed platforms are excluded from allocation calculation
+- Test edge cases: empty portfolio returns empty array, all platforms zero value returns null percentages
 
 ## Technical Notes
 - File to modify: `src/utils/calculations.ts` — add allocation functions

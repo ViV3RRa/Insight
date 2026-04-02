@@ -67,6 +67,25 @@ N/A — backend/data layer story
 - [ ] `calculateVehicleMetrics` produces all required fields
 - [ ] Handles vehicles with no refuelings or no maintenance gracefully
 - [ ] PRD §14 criterion 37: Total cost of ownership calculated for sold vehicles
+- [ ] All tests pass and meet coverage target
+- [ ] Each AC input/output example is a dedicated test case
+
+## Testing Requirements
+- **Test file**: `src/utils/vehicleMetrics.test.ts` (co-located, extending US-112 tests)
+- **Approach**: Pure function unit tests — no mocking required
+- **Coverage target**: 100% of exported functions
+- All AC items with specific input -> output values become test cases
+- Test fuel cost sum for a given period
+- Test average fuel cost per month calculated correctly (total cost / months between first and last)
+- Test average cost per unit is weighted: total cost / total fuel consumed
+- Test maintenance cost sum for a given period
+- Test yearly maintenance cost breakdown
+- Test total vehicle cost = fuel + maintenance combined
+- Test total cost of ownership includes lifetime fuel + maintenance
+- Test purchase-to-sale offset: `(salePrice || 0) - (purchasePrice || 0)` for sold vehicles
+- Test `calculateVehicleMetrics` produces all required VehicleMetrics fields
+- Test vehicles with no refuelings return `null` for fuel-related metrics
+- Test vehicles with no maintenance events return 0 for maintenance cost
 
 ## Technical Notes
 - File: `src/utils/vehicleMetrics.ts` (extending US-112)

@@ -176,7 +176,7 @@ A settings page accessible from the main navigation, providing:
 
 - **Date format**: Toggle between `YYYY-MM-DD` and `DD/MM/YYYY` (applies to record dates in tables; human-readable labels like `Feb 14, 2026` are not affected).
 - **Theme**: Toggle between light mode and dark mode.
-- **Home currency**: DKK (displayed for reference; drives portfolio aggregation currency).
+- **Home currency**: DKK (fixed). All portfolio-level aggregations use DKK. Displayed as read-only on the Settings page for reference. Not configurable — this is a single-user Danish-focused platform.
 - **Demo mode**: Toggle on/off. See §3.9.
 
 Settings are stored per user in PocketBase.
@@ -861,20 +861,20 @@ All dialogs are modal overlays with backdrop blur. Forms validate before submiss
 | Collection | Fields | Notes |
 |---|---|---|
 | `users` | Built-in PocketBase auth | Email/password |
-| `settings` | userId (relation), dateFormat, theme, demoMode | Per-user settings |
-| `exchange_rates` | fromCurrency, toCurrency, rate, date, source | Historical exchange rates |
-| `portfolios` | name, ownerName, isDefault | One default per user |
-| `platforms` | portfolio (relation), name, icon, type, currency, status, closedDate, closureNote | Investment or cash, active or closed. Icon is a required image file (displayed as circular thumbnail). |
-| `data_points` | platform (relation), value, timestamp, isInterpolated, note | Value in platform's native currency. isInterpolated marks system-generated month-end values. |
-| `transactions` | platform (relation), type, amount, exchangeRate, timestamp, note, attachment | Amount in platform's native currency |
-| `utilities` | name, unit | |
-| `meter_readings` | utility (relation), value, timestamp, note, attachment | |
-| `utility_bills` | utility (relation), amount, periodStart, periodEnd, note, attachment, timestamp | |
-| `vehicles` | name, type, make, model, year, licensePlate, fuelType, status, purchaseDate, purchasePrice, saleDate, salePrice, saleNote, photo | |
-| `refuelings` | vehicle (relation), date, fuelAmount, costPerUnit, totalCost, odometerReading, station, chargedAtHome, note, receipt, tripCounterPhoto | |
-| `maintenance_events` | vehicle (relation), date, description, cost, note, receipt | |
+| `settings` | userId (relation → users), dateFormat, theme, demoMode | Per-user settings. userId is the data isolation key. |
+| `exchange_rates` | ownerId (relation → users), fromCurrency, toCurrency, rate, date, source | Historical exchange rates |
+| `portfolios` | ownerId (relation → users), name, ownerName, isDefault | One default per user |
+| `platforms` | ownerId (relation → users), portfolioId (relation → portfolios), name, icon, type, currency, status, closedDate, closureNote | Investment or cash, active or closed. Icon is a required image file (displayed as circular thumbnail). |
+| `data_points` | ownerId (relation → users), platformId (relation → platforms), value, timestamp, isInterpolated, note | Value in platform's native currency. isInterpolated marks system-generated month-end values. |
+| `transactions` | ownerId (relation → users), platformId (relation → platforms), type, amount, exchangeRate, timestamp, note, attachment | Amount in platform's native currency |
+| `utilities` | ownerId (relation → users), name, unit, icon, color | |
+| `meter_readings` | ownerId (relation → users), utilityId (relation → utilities), value, timestamp, note, attachment | |
+| `utility_bills` | ownerId (relation → users), utilityId (relation → utilities), amount, periodStart, periodEnd, note, attachment, timestamp | |
+| `vehicles` | ownerId (relation → users), name, type, make, model, year, licensePlate, fuelType, status, purchaseDate, purchasePrice, saleDate, salePrice, saleNote, photo | |
+| `refuelings` | ownerId (relation → users), vehicleId (relation → vehicles), date, fuelAmount, costPerUnit, totalCost, odometerReading, station, chargedAtHome, note, receipt, tripCounterPhoto | |
+| `maintenance_events` | ownerId (relation → users), vehicleId (relation → vehicles), date, description, cost, note, receipt | |
 
-All collections should have an `owner` field (relation to `users`) for data isolation, even though there's currently a single user.
+All collections have an `ownerId` field (relation to `users`) for data isolation. Relation fields use the `Id` suffix to make foreign key references explicit (e.g., `platformId`, not `platform`). Field names match TypeScript/Zod property names exactly — no mapping layer between PocketBase and the frontend.
 
 ---
 

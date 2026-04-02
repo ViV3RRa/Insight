@@ -90,6 +90,22 @@ N/A — backend/data layer story
 - [ ] Closed platforms are excluded from current totals and current calculations
 - [ ] Historical calculations include closed platform data up to closure date
 - [ ] PRD §14 criterion 21: All metrics computed at portfolio level in DKK
+- [ ] All tests pass and meet 100% coverage of exported functions
+
+## Testing Requirements
+- **Test file**: `src/utils/portfolioAggregation.test.ts` (co-located)
+- **Approach**: Pure function unit tests — **mock currency conversion** for DKK conversion
+- **Coverage target**: 100% of exported functions
+- Test buildCompositeValueSeries sums all platform values in DKK at each timestamp
+- Test buildCompositeValueSeries uses carry-forward for platforms missing data at a given timestamp
+- Test mergeTransactions converts all transaction amounts to DKK
+- Test computePortfolioXIRR includes cash platform values (idle cash dilutes return)
+- Test closed platforms are excluded from current totals and current calculations
+- Test closed platforms are included in historical calculations up to closure date
+- Test computePortfolioGainLoss uses DKK-converted values
+- Test computeTotalPortfolioValue sums latest active platform values in DKK
+- Test edge cases: null returns, empty arrays, single platform, all closed platforms
+- **Mock currency conversion to control exchange rates in tests**
 
 ## Technical Notes
 - File to create: `src/utils/portfolioAggregation.ts`

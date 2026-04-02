@@ -34,6 +34,19 @@ Placed below stat cards with `mb-6 lg:mb-8` spacing. Uses standard YoYComparison
 - [ ] Efficiency increase shown in green, decrease in red (normal)
 - [ ] Handles missing prior year data (N/A)
 - [ ] Uses shared YoYComparisonRow
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders year comparisons with correct color coding
+
+## Testing Requirements
+- **Test file**: `src/components/vehicles/VehicleYoYRow.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test three YoY metrics render: YTD Fuel Cost, YTD Efficiency, YTD km
+- Test cost increase shown in red, decrease in green (inverse polarity)
+- Test efficiency increase shown in green, decrease in red (normal polarity)
+- Test km comparisons render with correct values
+- Test handles missing prior year data gracefully (shows "N/A")
+- Test uses shared YoYComparisonRow component
 
 ## Technical Notes
 - Part of `src/components/vehicles/VehicleDetail.tsx`

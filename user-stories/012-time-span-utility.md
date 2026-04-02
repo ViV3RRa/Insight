@@ -43,9 +43,30 @@ N/A — utility module
 - [ ] `filterByTimeSpan` correctly filters arrays by the computed date range
 - [ ] `getYoYRange` returns the equivalent prior-year period
 - [ ] All span options are correctly implemented per PRD §3.1
+- [ ] All tests pass and meet coverage target
+
+## Testing Requirements
+- **Test file**: `src/utils/timeSpan.test.ts`
+- **Approach**: Pure function unit tests — no mocking required
+- **Coverage target**: 100% of exported functions
+- Use `vi.useFakeTimers()` to pin "today" for deterministic results
+- Test every time span option (1M, 3M, 6M, MTD, YTD, 1Y, 3Y, 5Y, All)
+- Test calendar boundary semantics (1M = first day of previous month, NOT 30 days ago)
+- Test `filterByTimeSpan` with arrays: all in range, none in range, empty array
+- Test `getYoYRange` returns correct prior-year equivalent
+- Test leap year transitions and year boundaries
 
 ## Technical Notes
 - File to create: `src/utils/timeSpan.ts`
 - Define `TimeSpan` as a union type: `'1M' | '3M' | '6M' | 'MTD' | 'YTD' | '1Y' | '3Y' | '5Y' | 'All'`
 - Export the `TIME_SPAN_OPTIONS` array with labels for the UI component
 - Calendar month calculation should use proper month arithmetic (handle month lengths, leap years)
+- **Date range semantics:** All "last N months/years" spans use **calendar boundaries**, not rolling days:
+  - `1M` = first day of previous month through today (not "last 30 days")
+  - `3M` = first day of the month 3 months ago through today
+  - `6M` = first day of the month 6 months ago through today
+  - `MTD` = first day of current month through today
+  - `YTD` = January 1 of current year through today
+  - `1Y` = same date last year through today (or first day of same month last year)
+  - `3Y` / `5Y` = same pattern, 3/5 years back
+  - `All` = earliest data point date through today

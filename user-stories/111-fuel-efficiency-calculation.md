@@ -65,10 +65,29 @@ N/A — backend/data layer story
 - [ ] Rolling 5 uses last 5 intervals (6 refueling data points)
 - [ ] Returns null for < 2 refuelings (all-time), < 6 (rolling 5)
 - [ ] Per-refueling efficiency array for charting
-- [ ] Handles edge case of negative distance (odometer rollover/correction) gracefully
+- [ ] Negative distance between consecutive odometer readings (rollover/correction): skip that refueling pair and exclude from efficiency calculation, return `null` for that segment
+- [ ] Single refueling record (no prior odometer reading to compare): return `null` for efficiency (cannot compute distance)
+- [ ] Zero fuel amount in a refueling: skip that record (avoid division by zero)
 - [ ] Pure functions, no external dependencies
 - [ ] PRD §14 criterion 33: Fuel efficiency uses weighted average, not arithmetic mean
 - [ ] PRD §14 criterion 34: Rolling 5-refueling weighted average calculated correctly
+- [ ] All tests pass and meet coverage target
+- [ ] Each AC input/output example is a dedicated test case
+
+## Testing Requirements
+- **Test file**: `src/utils/fuelEfficiency.test.ts` (co-located)
+- **Approach**: Pure function unit tests — no mocking required
+- **Coverage target**: 100% of exported functions
+- All AC items with specific input -> output values become test cases
+- Test weighted average: 3 refuelings, distances 300/200/500 km, fuel 30/25/45 L -> 1000/100 = 10.0 km/l
+- **Explicit rejection test**: arithmetic mean (10+8+11.1)/3 = 9.7 is WRONG — test must verify the result is NOT 9.7
+- Test `< 2` refuelings returns `null`
+- Test rolling 5 needs 6 data points; `< 6` returns `null`
+- Test zero fuel amount in a refueling: skip that record (avoid division by zero)
+- Test negative distance between consecutive odometer readings: skip that pair
+- Test single refueling record returns `null` (no prior odometer)
+- Test `calculateYearEfficiency` scoped to given year with baseline from prior year
+- Test `calculatePerRefuelingEfficiency` returns array with correct per-refueling values
 
 ## Technical Notes
 - File: `src/utils/fuelEfficiency.ts`

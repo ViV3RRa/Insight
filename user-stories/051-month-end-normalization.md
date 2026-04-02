@@ -66,7 +66,7 @@ N/A — backend/data layer story
 N/A — backend/data layer story
 
 ## Acceptance Criteria
-- [ ] `interpolateMonthEndValue(10000, Dec15, 10600, Jan15, Dec31)` returns ~10516 (linear interpolation at Dec 31, roughly halfway)
+- [ ] `interpolateMonthEndValue(10000, Dec 15, 10600, Jan 15, Dec 31)` returns 10309.68 (linear interpolation: 16 of 31 days elapsed, ratio = 16/31)
 - [ ] `getMonthEndDate(2026, 1)` returns Jan 31, 2026
 - [ ] `getMonthEndDate(2024, 2)` returns Feb 29, 2024 (leap year)
 - [ ] `getMonthEndDate(2025, 2)` returns Feb 28, 2025 (non-leap year)
@@ -82,6 +82,22 @@ N/A — backend/data layer story
 - [ ] `onDataPointDeleted` returns any re-interpolated points needed
 - [ ] Multiple mid-month recordings do not affect month-end boundary selection
 - [ ] PRD §14 criterion 19 (supporting): Month-end normalization enables accurate monthly metrics
+- [ ] All tests pass and meet 100% coverage of exported functions
+
+## Testing Requirements
+- **Test file**: `src/utils/interpolation.test.ts` (co-located)
+- **Approach**: Pure function unit tests — no mocking required
+- **Coverage target**: 100% of exported functions
+- Test interpolateMonthEndValue(10000, Dec 15, 10600, Jan 15, Dec 31) returns 10309.68 (linear interpolation: 16/31 days)
+- Test getMonthEndDate handles leap years correctly (Feb 29, 2024 vs Feb 28, 2025)
+- Test findMissingMonthEnds identifies all gaps where month-end boundaries fall between data points
+- Test computeInterpolatedPoint returns a DataPoint with isInterpolated=true
+- Test computeInterpolatedPoint returns null with only a single data point
+- Test generateInterpolatedPoints produces all missing month-end values for a platform
+- Test onDataPointCreated returns new interpolated points needed after a creation
+- Test onDataPointDeleted returns re-interpolated points needed after a deletion
+- Test onDataPointUpdated returns updated interpolated points when value changes
+- Test edge cases: null returns, empty arrays, single data point
 
 ## Technical Notes
 - File to create: `src/utils/interpolation.ts`

@@ -15,6 +15,10 @@ None
 - Install chart library: recharts
 - Install icon library: lucide-react
 - Install PocketBase JS SDK: pocketbase
+- Install schema/validation: zod
+- Install testing: vitest, @vitest/coverage-v8, @vitest/ui, jsdom
+- Install testing-library: @testing-library/react, @testing-library/jest-dom, @testing-library/user-event
+- Install API mocking: msw
 - Configure TypeScript with strict mode enabled
 - Set up the `src/` directory structure per PRD §11:
   - `src/components/layout/`
@@ -41,10 +45,12 @@ N/A — backend/tooling story
 
 ## Acceptance Criteria
 - [ ] `npm run dev` starts the development server without errors
+- [ ] `npm test` runs the test suite (Vitest) without errors
 - [ ] TypeScript compilation succeeds with strict mode
 - [ ] All listed dependencies are installed and importable
 - [ ] Directory structure matches PRD §11 file structure
 - [ ] A blank page renders in the browser at localhost
+- [ ] Testing infrastructure is importable: vitest, @testing-library/react, msw
 
 ## Technical Notes
 - Use Vite (not CRA) for fast HMR and modern tooling
@@ -53,3 +59,5 @@ N/A — backend/tooling story
 - `QueryClientProvider` from `@tanstack/react-query` wraps the app in `App.tsx`; create a `QueryClient` with sensible defaults (staleTime, retry)
 - Zustand stores live in `src/stores/` — one file per domain (e.g. `themeStore.ts`, `settingsStore.ts`, `portfolioStore.ts`)
 - Do NOT install Tailwind forms or typography plugins — the design system uses custom styling throughout
+- Testing dependencies are installed at scaffolding time so the test infrastructure (US-148) can be set up immediately after. The `src/test/` directory structure is created by US-148, not this story.
+- Add scripts to `package.json`: `"test": "vitest run"`, `"test:watch": "vitest"`, `"test:coverage": "vitest run --coverage"`, `"test:ui": "vitest --ui"`

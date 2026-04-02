@@ -44,6 +44,21 @@ The `YoYComparisonRow` component handles all layout and styling (US-018). This s
 - [ ] Handles missing prior year data gracefully (shows "N/A" or hides metric)
 - [ ] Uses shared YoYComparisonRow component
 - [ ] PRD §3.2: YoY comparison summary for Home section metrics
+- [ ] All tests pass and meet coverage target
+- [ ] Component rendering verified by tests covering data display and edge states
+
+## Testing Requirements
+- **Test file**: `src/components/home/HomeOverviewYoYRow.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test YTD Total Cost metric renders with current and prior year values
+- Test Current Month Cost metric renders with current and same-month-last-year values
+- Test Avg Monthly Cost metric renders with current and prior year averages
+- Test cost increase shown in red, cost decrease shown in green (inverse color coding)
+- Test comparison period label shows correct date range
+- Test missing prior year data shows "N/A" or hides metric gracefully
+- Test uses shared YoYComparisonRow component with changeType "inverse"
+- Test loading state
 
 ## Technical Notes
 - Composed within `src/components/home/HomeOverview.tsx`

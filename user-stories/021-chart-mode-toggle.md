@@ -90,6 +90,30 @@ None — this story IS a shared component
 - [ ] Active segment transitions smoothly (transition-all duration-150)
 - [ ] Dark mode styles apply correctly
 - [ ] Component is generic — accepts an array of options with labels and values
+- [ ] All tests pass and meet coverage target
+- [ ] Accessibility audit passes (axe-core or equivalent)
+
+## Testing Requirements
+- **Test file**: `src/components/shared/ChartModeToggle.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied (dark: prefix variants)
+- **Component-specific test cases:**
+  - Verify 2-option configuration renders both segments with correct labels
+  - Verify 3-option configuration renders all three segments with correct labels
+  - Verify active segment has `bg-white dark:bg-base-600 shadow-sm text-base-900` classes
+  - Verify inactive segments have `text-base-400` class
+  - Verify clicking an inactive segment calls `onChange` with the new mode value
+  - Verify clicking the already-active segment does not trigger `onChange`
+  - Verify container uses `bg-base-100 dark:bg-base-700 rounded-lg p-0.5 gap-0.5` classes
+  - Verify `role="tablist"` on container and `role="tab"` on each segment
+  - Verify `aria-selected` reflects the active segment
+  - Verify dark mode classes for active and inactive states
+  - Verify transition classes: `transition-all duration-150` on active, `transition-colors duration-150` on inactive
+  - Snapshot test for 2-option and 3-option configurations
 
 ## Technical Notes
 - File to create: `src/components/shared/ChartModeToggle.tsx`

@@ -175,6 +175,25 @@ As the Insight platform user, I want a file upload area in forms so that I can a
 - [ ] File type hint text shows accepted formats
 - [ ] Dark mode styles apply correctly
 - [ ] Component calls onChange with the File object or null (on delete)
+- [ ] All tests pass and meet coverage target
+- [ ] File interaction tests use `userEvent.upload()` for realistic simulation
+
+## Testing Requirements
+- **Test file**: `src/components/shared/FileUpload.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied
+- Test empty upload area renders with CloudUpload icon and helper text
+- Test file selection via `userEvent.upload()` triggers `onChange` with the File object
+- Test image file shows thumbnail preview (img element with object-cover)
+- Test non-image file shows FileText icon with filename and size
+- Test file size limit error: selecting a file exceeding `maxSizeMB` is rejected or shows an error
+- Test MIME type filter: `accept` prop restricts selectable file types on the input
+- Test remove/delete button calls `onChange` with null
+- Test existing file URL (string value) renders as a preview
 
 ## Technical Notes
 - File to create: `src/components/shared/FileUpload.tsx`

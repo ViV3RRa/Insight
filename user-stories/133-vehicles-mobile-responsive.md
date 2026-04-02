@@ -68,6 +68,17 @@ As the Insight platform user, I want the entire Vehicles section to be fully fun
 - [ ] Touch targets ≥ 44×44px
 - [ ] PRD §13: Refueling forms specifically optimized for mobile at pump
 - [ ] PRD §14 criterion 45: Fully functional on mobile
+- [ ] Responsive behavior verified through existing component tests with responsive class assertions
+
+## Testing Requirements
+- **Test file**: N/A — visual regression / manual verification story
+- Responsive behavior verified through existing component tests with responsive class assertions
+- Verify vehicle cards use correct responsive grid classes (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`)
+- Verify vehicle header uses stacked layout classes (`flex-col sm:flex-row`)
+- Verify stat cards grid uses responsive classes (`grid-cols-2 sm:grid-cols-4 lg:grid-cols-7`)
+- Verify table columns use `hidden sm:table-cell` for mobile hiding
+- Verify bottom padding `pb-24` applied for tab bar clearance
+- Manual test at: 320px, 375px, 414px, 768px
 
 ## Technical Notes
 - Polish/audit pass

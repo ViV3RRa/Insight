@@ -61,6 +61,16 @@ Icons (from lucide-react): Home, TrendingUp (Investment), Car (Vehicles), Settin
 - [ ] Main content has enough bottom padding to not be obscured by the tab bar
 - [ ] Works in both light and dark mode
 - [ ] Visual output matches prototype screenshots: overview-mobile-top
+- [ ] All tests pass and meet coverage target
+
+## Testing Requirements
+- **Test file**: `src/components/layout/BottomTabBar.test.tsx`
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+
+- Test rendering of navigation links
+- Test active route highlighting
+- Test responsive visibility classes
+- Test navigation triggers route changes
 
 ## Technical Notes
 - File to create: `src/components/layout/BottomTabBar.tsx`

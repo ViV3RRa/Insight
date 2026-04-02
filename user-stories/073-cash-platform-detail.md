@@ -91,6 +91,25 @@ As the Insight platform user, I want a dedicated detail page for cash platforms 
 - [ ] Desktop: action buttons in header row
 - [ ] PRD §6.5: Cash platform detail shows balance, balance history, transactions, and data points
 - [ ] PRD §14 criterion 22: Cash platforms show balance and balance history; no XIRR/gain-loss analysis
+- [ ] All tests pass and meet coverage target
+- [ ] Component renders without console errors or warnings in test environment
+
+## Testing Requirements
+- **Test file**: `src/components/portfolio/CashPlatformDetail.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test data rendering with mocked query results (balance, chart, and tables render correctly)
+- Test loading state (skeleton/spinner shown while platform data is pending)
+- Test empty state (EmptyState component when cash platform has no data)
+- Test error state (ErrorState component when query fails)
+- Test that balance stat card shows latest data point value in native currency
+- Test that non-DKK platforms show DKK equivalent on balance card
+- Test that balance history line chart renders with TimeSpanSelector
+- Test that no XIRR, gain/loss, or performance analysis sections are present
+- Test that transactions table is collapsible and collapsed by default
+- Test that data points table is collapsible and collapsed by default
+- Test that "+ Add Data Point" and "+ Add Transaction" buttons open respective dialogs
+- Test that platform switcher allows navigating to other platforms
 
 ## Technical Notes
 - File: `src/components/portfolio/CashPlatformDetail.tsx`

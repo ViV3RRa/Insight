@@ -89,6 +89,25 @@ As the Insight platform user, I want a collapsible meter readings table on the u
 - [ ] "Show N older readings" toggle at bottom with chevron icon (rotates 180deg when expanded)
 - [ ] When expanded, a "Show less" link appears in the header area
 - [ ] Uses shared DataTable
+- [ ] All tests pass and meet coverage target
+- [ ] Component rendering verified by tests covering data display, interactions, and edge states
+
+## Testing Requirements
+- **Test file**: `src/components/home/UtilityReadingsTable.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`, mocked service data via MSW
+- **Coverage target**: 80%+ line coverage
+- Test card header shows "Meter Readings" title, count badge, and "+ Add Reading" button
+- Test 5 rows visible by default with "Show N older readings" toggle
+- Test date column formats per locale settings
+- Test reading column shows cumulative value with unit suffix (font-mono-data)
+- Test notes display as italic muted text
+- Test attachment column shows Paperclip icon when attached, dash when not
+- Test "+ Add Reading" button fires callback to open MeterReadingDialog
+- Test edit button opens MeterReadingDialog pre-filled
+- Test delete button opens confirmation dialog
+- Test rows sorted by date descending
+- Test "Show N older readings" toggle expands/collapses
+- Test empty state (no readings)
 
 ## Technical Notes
 - This section is within `src/components/home/UtilityDetail.tsx`

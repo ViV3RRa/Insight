@@ -6,14 +6,15 @@ As the Insight platform user, I want to create, manage, and close investment and
 ## Dependencies
 - US-004: PocketBase Client and Auth Service
 - US-041: Investment TypeScript Types
+- US-144: PocketBase Schema — Investment Collections
 
 ## Requirements
 - Create `src/services/platforms.ts` with the following functions:
 
 **CRUD operations:**
-- `getByPortfolio(portfolioId: string)`: Fetch all platforms belonging to a portfolio. Filter by `owner` and `portfolioId`. Return sorted: active platforms first (alphabetical by name), then closed platforms (by `closedDate` descending).
+- `getByPortfolio(portfolioId: string)`: Fetch all platforms belonging to a portfolio. Filter by `ownerId` and `portfolioId`. Return sorted: active platforms first (alphabetical by name), then closed platforms (by `closedDate` descending).
 - `getOne(id: string)`: Fetch a single platform by ID. Verify ownership.
-- `create(data: PlatformCreate)`: Create a new platform. Set `owner` to current user. Set `status` to `"active"`. Validate that `type` and `currency` are provided (required on creation).
+- `create(data: PlatformCreate)`: Create a new platform. Set `ownerId` to current user. Set `status` to `"active"`. Validate that `type` and `currency` are provided (required on creation).
 - `update(id: string, data: Partial<PlatformCreate>)`: Update mutable platform fields. **Type and currency are immutable after creation** (PRD §9.2) — the update function must reject attempts to change `type` or `currency` fields. Mutable fields: `name`, `icon`.
 - `delete(id: string)`: Delete a platform. Verify ownership. Consider warning if platform has associated data points or transactions (but do not block deletion).
 
@@ -43,7 +44,7 @@ As the Insight platform user, I want to create, manage, and close investment and
 - Provide a helper `getPlatformIconUrl(platform: Platform)`: Returns the full URL for the platform's icon image via PocketBase file URL construction.
 
 **Data isolation:**
-- All queries filter by `owner = currentUserId`.
+- All queries filter by `ownerId = currentUserId`.
 
 ## Shared Components Used
 N/A — backend/data layer story
@@ -54,7 +55,7 @@ N/A — backend/data layer story
 ## Acceptance Criteria
 - [ ] `getByPortfolio()` returns all platforms for a given portfolio, owned by current user
 - [ ] Platforms are sorted: active first (alphabetical), then closed (by closedDate descending)
-- [ ] `create()` sets owner, status="active", and requires type and currency
+- [ ] `create()` sets ownerId, status="active", and requires type and currency
 - [ ] `update()` allows changing name and icon
 - [ ] `update()` rejects changes to `type` field with a meaningful error
 - [ ] `update()` rejects changes to `currency` field with a meaningful error
@@ -69,6 +70,27 @@ N/A — backend/data layer story
 - [ ] Icon upload works via FormData
 - [ ] All operations verify ownership
 - [ ] PRD §14 criteria 12-14: Platform CRUD, type/currency lock, and closure work correctly
+- [ ] All tests pass and meet 90%+ line coverage target
+- [ ] Zod schema parsing is verified for all service responses
+
+## Testing Requirements
+- **Test file**: `src/services/platforms.test.ts` (co-located)
+- **Approach**: Mock PocketBase via MSW; test CRUD operations, ownership filtering, Zod parsing, error handling
+- **Coverage target**: 90%+ line coverage
+- Test getByPortfolio returns platforms filtered by portfolioId and ownerId
+- Test create with type "investment" sets status to "active" and requires type and currency
+- Test create with type "cash" sets status to "active" and requires type and currency
+- Test closePlatform sets status="closed", closedDate, and optional closureNote
+- Test reopenPlatform sets status="active" and clears closedDate and closureNote
+- Test update rejects changes to `type` field with meaningful error
+- Test update rejects changes to `currency` field with meaningful error
+- Test getActivePlatforms excludes closed platforms
+- Test getClosedPlatforms returns only closed platforms
+- Test getInvestmentPlatforms returns only active investment-type platforms
+- Test getCashPlatforms returns only active cash-type platforms
+- Verify all queries filter by `ownerId`
+- Verify Zod schema parsing catches malformed responses
+- Test error cases: not found, unauthorized
 
 ## Technical Notes
 - File to create: `src/services/platforms.ts`
@@ -81,3 +103,4 @@ N/A — backend/data layer story
 - The immutability check on `type` and `currency` should happen in the service layer (not just the UI) as a defensive measure
 - When deleting a platform, consider whether to cascade-delete associated data points and transactions, or let PocketBase handle it via relation rules
 - Error handling: throw for "platform not found", "cannot change type after creation", "cannot change currency after creation", "unauthorized"
+- All responses are parsed through Zod schemas (e.g., `platformSchema.parse(response)`) before returning — this validates the response shape and produces branded ID types at runtime

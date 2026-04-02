@@ -127,6 +127,24 @@ As the Insight platform user, I want clear error states when something goes wron
 - [ ] Variant B centers vertically with min-h-[60vh]
 - [ ] onRetry callback is called when retry button is clicked
 - [ ] Dark mode styles apply correctly
+- [ ] All tests pass and meet coverage target
+- [ ] Both variant A (card) and variant B (page) have dedicated test coverage
+
+## Testing Requirements
+- **Test file**: `src/components/shared/ErrorState.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied
+- Test error message (title and description) renders correctly from props
+- Test retry button fires `onRetry` callback when clicked
+- Test custom message text is displayed as provided
+- Test card variant renders AlertTriangle icon with rose styling
+- Test page variant renders WifiOff icon and server URL in monospace
+- Test component renders without retry button when `onRetry` is not provided
+- Test page variant centers vertically with min-h-[60vh]
 
 ## Technical Notes
 - File to create: `src/components/shared/ErrorState.tsx`

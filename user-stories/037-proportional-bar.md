@@ -108,6 +108,25 @@ None — this story IS a shared component
 - [ ] Values and percentages use font-mono-data
 - [ ] Dark mode: legend text uses dark:text-base-300
 - [ ] Component handles edge cases: single platform (100%), many platforms (10+)
+- [ ] All tests pass and meet coverage target
+- [ ] Edge cases (single segment, empty data) are tested
+
+## Testing Requirements
+- **Test file**: `src/components/shared/ProportionalBar.test.tsx` (co-located)
+- **Approach**: React Testing Library with `renderWithProviders`
+- **Coverage target**: 90%+ line coverage
+- Test all prop variants and conditional rendering
+- Test user interactions (click, keyboard) with `userEvent`
+- Test accessibility: ARIA roles, labels, keyboard navigation where applicable
+- Verify dark mode classes are applied
+- Test segments render with correct width percentages matching allocation data
+- Test legend labels display on segments (platform names, values, percentages)
+- Test single segment renders at 100% width
+- Test empty data (no segments) is handled gracefully without errors
+- Test cash platform segments display the "Cash" badge and muted styling
+- Test many segments (10+) render correctly without layout issues
+- Test minimum visual width is enforced for very small segments (< 2%)
+- Test `showLegend` prop controls whether the legend is rendered
 
 ## Technical Notes
 - File to create: `src/components/shared/ProportionalBar.tsx`
