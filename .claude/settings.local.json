@@ -1,4 +1,8 @@
 {
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_SPAWN_BACKEND": "tmux"
+  },
   "permissions": {
     "allow": [
       "mcp__playwright__browser_navigate",
@@ -10,7 +14,11 @@
       "mcp__playwright__browser_select_option",
       "mcp__playwright__browser_run_code",
       "mcp__playwright__browser_press_key",
-      "Bash(wc -l *.html)"
+      "Bash(wc -l *.html)",
+      "Bash(find /Users/sKrogh/Projects/privat/Insight -type f \\\\\\(-iname *.png -o -iname *.jpg -o -iname *.jpeg -o -iname *.webp -o -iname *.gif -o -iname *.svg \\\\\\))",
+      "Bash(file /Users/sKrogh/Projects/privat/Insight/design-artifacts/prototypes/screenshots/home/*.png)",
+      "Bash(find /Users/sKrogh/Projects/privat/Insight -type f -name *.json ! -path */.git/* ! -path */.playwright*)"
     ]
-  }
+  },
+  "teammateMode": "tmux"
 }

@@ -31,6 +31,8 @@ Each phase builds on the outputs of the previous one. Do not skip ahead to imple
 | Styling | Tailwind CSS |
 | Charts | Recharts |
 | Icons | lucide-react |
+| Data fetching | TanStack Query (server state, caching, background refetch) |
+| State management | Zustand (client/UI state) |
 | Backend | PocketBase (self-hosted) |
 | Auth | PocketBase email/password |
 
@@ -42,7 +44,7 @@ Three domain sections sharing common platform capabilities:
 - **Investment Portfolio** — platforms, data points, transactions, XIRR calculations
 - **Vehicles** — refuelings, maintenance events, fuel efficiency tracking
 
-All PocketBase calls go through a `services/` layer — UI components never call PocketBase directly. Each section has its own data models, service functions, and views but shares common components (time span selector, YoY toggle, staleness indicators, collapsible tables, charts, file attachments).
+All PocketBase calls go through a `services/` layer — UI components never call PocketBase directly. TanStack Query wraps service calls for caching, background refetch, and loading/error states. Zustand manages client-side UI state (selected time span, YoY toggle, active filters, etc.). Each section has its own data models, service functions, and views but shares common components (time span selector, YoY toggle, staleness indicators, collapsible tables, charts, file attachments).
 
 ## Critical Calculation Details
 
@@ -64,3 +66,16 @@ These are easy to get wrong — refer to PRD v2 §6.2 and §7.2 for full specs:
 - **Transparency**: All calculations visible and understandable, no black boxes
 - **Pluggable sections**: New domains addable without rearchitecting core
 - **Home is the default landing section** after login
+
+## UI Implementation: Prototypes Are the Source of Truth
+
+The HTML prototypes in `design-artifacts/prototypes/` and their screenshots in `design-artifacts/prototypes/screenshots/` are the **definitive source of truth** for all UI/UX. Every component — shared or single-use — must reproduce the prototype's visual output **1:1**. Tailwind classes, spacing, colors, typography, responsive breakpoints, dark mode styling, and interaction patterns in the prototypes are the spec.
+
+When implementing UI:
+
+1. **Pixel-match the prototypes.** The `## Design Reference` section in each user story points to the exact prototype lines and screenshots. The rendered output of your implementation must match these references exactly.
+2. **Implement through shared components** (US-013–040) rather than copying raw HTML. The prototypes contain raw HTML with no component abstraction — your job is to build shared components that produce identical output, then compose pages from those components.
+3. **The `## Shared Components Used` section in each user story is the implementation contract.** Every component listed there must be used — do not inline equivalent markup.
+4. **Cross-section consistency is mandatory.** A StatCard on Investment must render identically to a StatCard on Home or Vehicles. Same for DataTable, DialogShell, ChartCard, TimeSpanSelector, YoYToggle, etc. The Reuse Matrix in `user-stories/README.md` maps which components appear on which pages.
+5. **If a pattern appears in multiple sections, it must be a shared component.** If you find yourself duplicating similar markup across Home, Investment, and Vehicles, extract it into a shared component first.
+6. **When in doubt, the prototype wins.** If a user story's text description conflicts with what the prototype shows, follow the prototype.
