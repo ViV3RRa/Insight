@@ -32,36 +32,40 @@ As the Insight platform developer, I want a fully configured test infrastructure
 ### 4. Test Setup File
 Create `src/test/setup.ts`:
 - Import `@testing-library/jest-dom` matchers
+- Import and configure `vitest-axe` matchers (`toHaveNoViolations`) for accessibility testing from day one
 - Start MSW server `beforeAll`, reset handlers `afterEach`, close `afterAll`
-- Set up global mocks (e.g., `matchMedia` for responsive tests)
-- Configure fake timers setup helper for date-dependent tests
+- Set up global mocks:
+  - `matchMedia` mock — configurable, defaults to desktop/light-mode, overridable per-test
+  - `ResizeObserver` mock — required by Recharts `<ResponsiveContainer>`
+  - `IntersectionObserver` mock — required for lazy loading (US-141)
+  - `URL.createObjectURL` mock — required for file upload preview tests (US-031)
+- Provide `withFakeTimers(date: string, fn: () => Promise<void>)` helper to reduce boilerplate in 20+ date-dependent test files
 
 ### 5. Custom Render Utility
 Create `src/test/utils.tsx`:
 - `renderWithProviders(ui, options?)` — wraps components with all required providers:
   - `QueryClientProvider` with a fresh `QueryClient` per test (no cache sharing)
-  - `MemoryRouter` for route-dependent components
+  - `MemoryRouter` for route-dependent components — accepts `initialEntries` option for route param testing
   - `ThemeProvider` (or mock theme context)
 - Re-export everything from `@testing-library/react`
 - Export `createTestQueryClient()` — creates a QueryClient with `retry: false` and `gcTime: 0` for test isolation
+- Export viewport constants: `VIEWPORT.MOBILE_S = 320`, `VIEWPORT.MOBILE_M = 375`, `VIEWPORT.TABLET = 768`, `VIEWPORT.DESKTOP = 1024`
 
-### 6. Test Data Factories
-Create `src/test/factories/` with factory functions for every entity:
+### 6. Test Data Factory Infrastructure
+Create `src/test/factories/` with the base factory infrastructure and the settings factory:
 
+**Created in this story (US-148):**
 | Factory File | Entities | Source Schema |
 |---|---|---|
-| `portfolioFactory.ts` | `Portfolio`, `PortfolioCreate` | US-041 |
-| `platformFactory.ts` | `Platform`, `PlatformCreate` | US-041 |
-| `dataPointFactory.ts` | `DataPoint`, `DataPointCreate` | US-041 |
-| `transactionFactory.ts` | `Transaction`, `TransactionCreate` | US-041 |
-| `exchangeRateFactory.ts` | `ExchangeRate` | US-041 |
-| `utilityFactory.ts` | `Utility`, `UtilityCreate` | US-080 |
-| `meterReadingFactory.ts` | `MeterReading`, `MeterReadingCreate` | US-080 |
-| `utilityBillFactory.ts` | `UtilityBill`, `UtilityBillCreate` | US-080 |
-| `vehicleFactory.ts` | `Vehicle`, `VehicleCreate` | US-107 |
-| `refuelingFactory.ts` | `Refueling`, `RefuelingCreate` | US-107 |
-| `maintenanceFactory.ts` | `MaintenanceEvent`, `MaintenanceEventCreate` | US-107 |
+| `base.ts` | `buildEntity` helper, branded ID generator, `buildList(n)` helper | — |
 | `settingsFactory.ts` | `Settings` | US-010 |
+
+**Created incrementally in type stories:**
+| Factory File | Created In | Source Schema |
+|---|---|---|
+| `portfolioFactory.ts`, `platformFactory.ts`, `dataPointFactory.ts`, `transactionFactory.ts`, `exchangeRateFactory.ts` | US-041 (Investment Types) | US-041 |
+| `utilityFactory.ts`, `meterReadingFactory.ts`, `utilityBillFactory.ts` | US-080 (Utility Types) | US-080 |
+| `vehicleFactory.ts`, `refuelingFactory.ts`, `maintenanceFactory.ts` | US-107 (Vehicle Types) | US-107 |
 
 Each factory:
 - Returns a valid object that passes its Zod schema
@@ -141,7 +145,8 @@ src/
 - [ ] Each test gets a fresh QueryClient instance (no cache leakage between tests)
 - [ ] MSW intercepts PocketBase API calls in tests
 - [ ] MSW handlers reset between tests (no state leakage)
-- [ ] All 12 entity factories produce valid Zod-schema-compliant objects
+- [ ] Settings factory produces valid Zod-schema-compliant objects
+- [ ] Factory base infrastructure (`buildEntity`, `buildList`, branded ID generator) works correctly
 - [ ] Factories accept partial overrides for customization
 - [ ] Factory IDs are unique branded types per call
 - [ ] PocketBase client mock supports standard CRUD operations

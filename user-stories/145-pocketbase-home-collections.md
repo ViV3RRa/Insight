@@ -5,7 +5,7 @@ As the Insight platform user, I want the home/utilities-related PocketBase colle
 
 ## Dependencies
 - US-147: PocketBase Bootstrap & Migration Setup (migration infrastructure must exist)
-- US-143: PocketBase Schema — Settings Collection (establishes the API rule pattern)
+<!-- US-143 dependency removed: API rule pattern is a documentation concern, not a code dependency. See implementation-plan.md §3.3 -->
 
 ## Requirements
 - Create 3 collections in PocketBase with the schemas below

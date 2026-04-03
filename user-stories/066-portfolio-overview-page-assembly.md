@@ -138,9 +138,11 @@ The PortfolioSwitcher renders in the mobile nav slot showing the current portfol
 - Test page layout classes (max-w-[1440px], correct padding, pb-24 for mobile)
 
 ## Technical Notes
+- Add `data-testid` attributes to section wrappers (e.g., `data-testid="section-summary-cards"`, `data-testid="section-yoy"`, `data-testid="section-performance"`, etc.) for stable assembly test selectors
 - File: `src/components/portfolio/PortfolioOverview.tsx`
 - Route: `/investment` (registered in US-006)
 - Active portfolio ID from Zustand `usePortfolioStore`. Dialog open states in local component `useState`.
+- Create `usePortfolioMetrics(portfolioId)` custom hook to centralize the entire calculation pipeline (data fetching → currency conversion → aggregation → memoization). All overview components consume this hook rather than independently running calculations. This prevents redundant computation across summary cards, charts, and tables.
 - Custom hook `usePortfolioData(portfolioId)` encapsulates:
   1. `useQuery({ queryKey: ['portfolios'], queryFn: portfolioService.getAll })`
   2. `useQuery({ queryKey: ['platforms', portfolioId], queryFn: () => platformService.getByPortfolio(portfolioId), enabled: !!portfolioId })`

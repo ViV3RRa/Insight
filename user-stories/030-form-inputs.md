@@ -13,6 +13,7 @@ As the Insight platform user, I want consistent, well-labeled form inputs across
 - **NumberInput**: Numeric input with font-mono-data for value display
 - **SelectInput**: Dropdown select using the form-select CSS class from US-002
 - **TextareaInput**: Multi-line text input
+- **RadioGroup + RadioInput**: Styled radio buttons using `peer sr-only` + `peer-checked:` pattern (needed by transaction type selection in investment dialogs — deposit/withdrawal)
 - All inputs share the same visual style: border, rounded-lg, consistent padding, focus ring
 - Error state: rose border + error icon + error message below
 - Inputs work in both Dialog body (space-y-4) and standalone form contexts
@@ -118,6 +119,29 @@ None — this story IS a shared component
   placeholder="Optional note..."
 />
 
+/* === RadioGroup + RadioInput === */
+<div className="flex gap-3">
+  <label className="flex-1 cursor-pointer">
+    <input type="radio" name="type" value="deposit" className="peer sr-only" />
+    <div className="
+      text-center py-2.5 rounded-lg border
+      border-base-200 dark:border-base-600
+      text-sm font-medium text-base-500 dark:text-base-400
+      peer-checked:border-accent-500 peer-checked:bg-accent-50 peer-checked:text-accent-700
+      dark:peer-checked:border-accent-400 dark:peer-checked:bg-accent-500/10 dark:peer-checked:text-accent-400
+      transition-colors duration-150
+    ">
+      Deposit
+    </div>
+  </label>
+  <label className="flex-1 cursor-pointer">
+    <input type="radio" name="type" value="withdrawal" className="peer sr-only" />
+    <div className="...same pattern...">
+      Withdrawal
+    </div>
+  </label>
+</div>
+
 /* === Error state (any input) === */
 <input
   className="
@@ -167,6 +191,8 @@ None — this story IS a shared component
 - [ ] Dark mode: bg-base-900, border-base-600, text-white, placeholder:text-base-500
 - [ ] All inputs forward standard HTML input attributes (name, value, onChange, etc.)
 - [ ] All tests pass and meet coverage target
+- [ ] RadioGroup renders options with peer-checked styling pattern
+- [ ] RadioInput uses `sr-only` for native input, visible label for styled appearance
 - [ ] Each input type has dedicated test coverage
 
 ## Testing Requirements
@@ -187,9 +213,11 @@ None — this story IS a shared component
 - Test SelectInput renders options and supports selection changes
 - Test TextareaInput respects the `rows` prop
 - Test all inputs forward `onChange`, `value`, `name`, and other standard HTML attributes
+- Test RadioGroup renders options and handles selection changes
+- Test RadioInput applies `peer-checked:` styling classes on selection
 
 ## Technical Notes
-- Files to create: `src/components/shared/FormField.tsx`, `src/components/shared/inputs/TextInput.tsx`, `src/components/shared/inputs/NumberInput.tsx`, `src/components/shared/inputs/SelectInput.tsx`, `src/components/shared/inputs/TextareaInput.tsx`, `src/components/shared/inputs/index.ts` (barrel export)
+- Files to create: `src/components/shared/FormField.tsx`, `src/components/shared/inputs/TextInput.tsx`, `src/components/shared/inputs/NumberInput.tsx`, `src/components/shared/inputs/SelectInput.tsx`, `src/components/shared/inputs/TextareaInput.tsx`, `src/components/shared/inputs/RadioGroup.tsx`, `src/components/shared/inputs/index.ts` (barrel export)
 - FormField Props: `label: string`, `required?: boolean`, `error?: string`, `children: ReactNode`, `htmlFor?: string`
 - Input Props: extend standard HTML input attributes + `error?: boolean` (for border state)
 - The `form-select` class provides a custom dropdown arrow defined in US-002's global CSS

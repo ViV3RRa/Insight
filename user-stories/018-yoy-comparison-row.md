@@ -5,6 +5,7 @@ As the Insight platform user, I want an always-visible year-over-year comparison
 
 ## Dependencies
 - US-002: Tailwind Configuration and Design Tokens
+- US-012: Time Span Utility Functions (uses `getYoYRange`)
 - US-015: ChangeIndicator Component
 
 ## Requirements

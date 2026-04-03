@@ -5,6 +5,7 @@ As the Insight platform user, I want monthly earnings computed automatically for
 
 ## Dependencies
 - US-041: Investment TypeScript Types
+- US-051: Month-End Normalization (uses month-end boundary values for startingValue/endingValue)
 
 ## Requirements
 - Add a `calculateMonthlyEarnings` function to `src/utils/calculations.ts`:

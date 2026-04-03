@@ -98,7 +98,11 @@ N/A — backend/data layer story
 - For `getLatestBefore`, use PocketBase filter: `platformId = '${id}' && timestamp <= '${date}'` with sort `-timestamp` and limit 1
 - For `getEarliestAfter`, use filter: `platformId = '${id}' && timestamp > '${date}'` with sort `timestamp` and limit 1
 - The `getMonthEndValue` helper computes the last day of the month and delegates to `getLatestBefore`
-- This service provides raw data access. The interpolation logic (creating/managing interpolated data points) lives in US-051
+- **Interpolation orchestration (ADR-7):** This service is responsible for triggering interpolation after CRUD operations. When `create()`, `update()`, or `delete()` completes:
+  1. Fetch the updated data points list for the platform
+  2. Call the appropriate US-051 function (`onDataPointCreated`, `onDataPointUpdated`, or `onDataPointDeleted`)
+  3. Persist any returned interpolated points (create/update/delete them in PocketBase)
+  4. This ensures interpolation is never skipped and the component layer stays simple
 - Interpolation guard: when creating a data point with `isInterpolated: true` (i.e., saving an interpolated point), skip the interpolation trigger to avoid infinite recursion
 - Error handling: throw for "data point not found", "unauthorized"
 - All responses are parsed through Zod schemas (e.g., `dataPointSchema.parse(response)`) before returning — this validates the response shape and produces branded ID types at runtime

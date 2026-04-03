@@ -28,6 +28,7 @@ costPerUnit = amortizedMonthlyCost / monthlyConsumption
   - Returns null if total consumption is zero
 
 - `calculateUtilityMetrics(readings: MeterReading[], bills: UtilityBill[]): UtilityMetrics`:
+  - **Thin compositor** that delegates to individual calculation functions (US-084, US-085, and above) and assembles results. Should NOT contain calculation logic itself — only orchestration.
   - High-level function that computes all utility metrics:
     - Monthly consumption (from readings)
     - Monthly cost (from amortized bills)

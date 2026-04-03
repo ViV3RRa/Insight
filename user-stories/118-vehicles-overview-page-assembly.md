@@ -87,6 +87,7 @@ As the Insight platform user, I want all Vehicles overview sections assembled in
 - Test empty state when no vehicles exist
 
 ## Technical Notes
+- Add `data-testid` attributes to section wrappers for stable assembly test selectors
 - File: `src/components/vehicles/VehiclesOverview.tsx`
 - Route: `/vehicles` (registered in US-006)
 - `useQuery({ queryKey: ['vehicles'], queryFn: vehicleService.getAll })` for vehicle list; metrics computed from query data

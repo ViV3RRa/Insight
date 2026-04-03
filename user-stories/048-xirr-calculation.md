@@ -64,7 +64,9 @@ Where:
 **Newton-Raphson implementation details:**
 - Maximum iterations: 100
 - Convergence tolerance: 1e-7 (when |f(r)| < tolerance, consider it converged)
-- Initial guess: 0.1
+- Rate-change tolerance: 1e-10 (when |r_new - r_old| < tolerance, stop — rate isn't changing meaningfully)
+- Initial guess: 0.1. If non-convergence, retry with guesses 1.0 and -0.5. Return the result closest to 0 if multiple converge.
+- **Brent's method fallback**: If Newton-Raphson fails to converge after all initial guesses, attempt Brent's bracketed solver as a fallback for edge cases (extreme returns, negative returns).
 - Guard against `(1 + r)` becoming zero or negative during iteration — if `r <= -1`, reset to a smaller step
 - If the derivative `f'(r)` is zero, break and return `null` (cannot continue iteration)
 
@@ -114,10 +116,12 @@ N/A — backend/data layer story
 - **Test file**: `src/utils/xirr.test.ts` (co-located)
 - **Approach**: Pure function unit tests — no mocking required
 - **Coverage target**: 100% of exported functions
-- Test known case: invest 10K on Jan 1, receive 11K on Dec 31 — XIRR approximately 10%
+- Test known case: invest 10K on Jan 1, receive 11K on Dec 31 — XIRR ≈ 10.0000% (pre-compute exact value in Excel to 4+ decimal places)
 - Test known case: invest 10K on Jan 1, deposit 5K on Jul 1, end value 16K on Dec 31 — XIRR matches Excel
-- Test known case: deposit 10K on Jan 1, value 10.5K on Jul 1 — XIRR approximately 10.25%
-- Test known case: deposit 10K on Jan 1, withdrawal 2K on Apr 1, value 8.5K on Dec 31 — XIRR approximately 5.83%
+- Test known case: deposit 10K on Jan 1, value 10.5K on Jul 1 — XIRR ≈ 10.2500% (pre-compute exact value in Excel to 4+ decimal places)
+- Test known case: deposit 10K on Jan 1, withdrawal 2K on Apr 1, value 8.5K on Dec 31 — XIRR ≈ 5.8300% (pre-compute exact value in Excel to 4+ decimal places)
+- Create a golden test fixture file (`src/test/fixtures/xirr-reference.json`) with 10+ pre-computed Excel reference values
+- Use `toBeCloseTo(expected, 4)` for all XIRR comparisons (4 decimal places = 0.01% tolerance)
 - Test fewer than 2 cash flows returns null
 - Test all cash flows on same date returns null
 - Test all cash flows have same sign returns null

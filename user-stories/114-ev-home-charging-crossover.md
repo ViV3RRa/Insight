@@ -28,8 +28,12 @@ As the Insight platform user, I want home-charging kWh from my electric vehicle 
   - Returns adjusted consumption array
   - Only applied when the user enables the toggle
 
+**Electricity utility identification:**
+- Identify the electricity utility by `unit === 'kWh'` (primary heuristic) or by an explicit `utilityType` enum field if added to the schema
+- Do NOT use `icon === 'bolt'` — icon-based matching is fragile and breaks if the user customizes the icon
+
 **Business rules:**
-- The toggle only appears on the electricity utility detail page
+- The toggle only appears on the electricity utility detail page (identified as above)
 - The toggle state is stored in component state (or user settings extension)
 - When toggle is OFF: consumption shown as-is (includes home charging)
 - When toggle is ON: home-charging kWh subtracted from consumption view

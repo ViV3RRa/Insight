@@ -112,7 +112,7 @@ N/A — backend/data layer story
 - All functions are async because currency conversion requires exchange rate lookups
 - For the composite value series, the "carry forward" approach means: at each date, each platform's value is either its data point on that date or its most recent prior data point. This creates a step-function per platform.
 - The `platformBreakdown` in `CompositeDataPoint` maps platform ID to its DKK value at that point — used for the stacked area chart on the portfolio overview (PRD §6.3 item 3)
-- Performance consideration: portfolio aggregation may involve many data points across many platforms, each requiring currency conversion. Use batch conversion (US-047) and rate caching to minimize redundant lookups.
+- Performance consideration: portfolio aggregation may involve many data points across many platforms, each requiring currency conversion. Use batch conversion (US-047) and pass a `RateCache` (`Map<string, number>` keyed by `${currency}-${date}`) through the calculation chain so that exchange rates fetched for one platform's data point are reused for other platforms on the same date.
 - The `PlatformWithData` type bundles a platform with its pre-fetched data points and transactions. This avoids N+1 queries during aggregation — fetch all data upfront and pass it in.
 - For closed platforms in historical calculations: filter data points and transactions to those before `closedDate`
 - This module is the most computation-heavy in the investment section. Consider memoization or caching of intermediate results for the portfolio overview page.

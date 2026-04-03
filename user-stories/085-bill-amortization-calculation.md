@@ -82,6 +82,7 @@ N/A — backend/data layer story
 - Test `getMonthlyCost` returns correct amount for a specific month
 - Test `getCostForPeriod` sums correctly across a date range
 - Test edge cases: bill spanning a single day, bill spanning multiple years
+- Test cross-year bill: 4,000 bill covering Nov 1, 2025 – Feb 28, 2026 → 1,000/month for 4 months spanning the year boundary
 
 ## Technical Notes
 - File to create: `src/utils/amortization.ts`

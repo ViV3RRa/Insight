@@ -5,7 +5,7 @@ As the Insight platform user, I want month-end boundary values automatically int
 
 ## Dependencies
 - US-041: Investment TypeScript Types
-- US-044: DataPoint CRUD Service
+<!-- US-044 dependency removed: US-051 is a pure utility module. US-044 calls US-051, not vice versa. See implementation-plan.md §3.1 -->
 
 ## Requirements
 - Create `src/utils/interpolation.ts` with the following:

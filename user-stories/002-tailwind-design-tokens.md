@@ -11,11 +11,12 @@ As the Insight platform user, I want a precisely configured Tailwind setup so th
 - Dark mode strategy: `class` on `<html>` element
 - Custom color scales:
   - `accent`: 50 (#f0fdf4), 100 (#dcfce7), 200 (#bbf7d0), 400 (#4ade80), 500 (#22c55e), 600 (#16a34a), 700 (#15803d)
-  - `base`: 50 (#f7f9f7), 100 (#f0f2f0), 150 (#e7e9e7), 200 (#d3d5d3), 300 (#afb1af), 400 (#898b89), 500 (#6a6c6a), 600 (#515351), 700 (#3c3e3c), 800 (#252725), 900 (#161816)
+  - `base`: 50 (#f7f9f7), 100 (#f0f2f0), 150 (#e7e9e7), 200 (#d3d5d3), 300 (#afb1af), 400 (#898b89), 500 (#6a6c6a), 600 (#515351), 700 (#3c3e3c), 750 (#313313), 800 (#252725), 900 (#161816)
   - Override `white` to `#fafcfa` (subtle green-tinted off-white)
 - Custom shadows:
   - `card`: `0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04)`
   - `card-dark`: `0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2)`
+  - `card-hover-dark`: `0 1px 3px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.3)`
 - Max-width: `content: 1440px`
 - Add global CSS in `src/index.css`:
   - `.font-mono-data` class: `font-family: 'DM Mono', monospace; font-variant-numeric: tabular-nums;`

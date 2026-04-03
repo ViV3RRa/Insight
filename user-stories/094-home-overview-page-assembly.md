@@ -96,6 +96,7 @@ Title: "Home", subtitle: "3 utilities tracked"
 - Test page uses max-w-[1440px] container
 
 ## Technical Notes
+- Add `data-testid` attributes to section wrappers for stable assembly test selectors
 - File: `src/components/home/HomeOverview.tsx`
 - Route: `/home` or `/` (default after login, registered in US-006)
 - Custom hook `useHomeData()` encapsulates:

@@ -16,6 +16,10 @@ None
 - Install icon library: lucide-react
 - Install PocketBase JS SDK: pocketbase
 - Install schema/validation: zod
+- Install form handling: react-hook-form, @hookform/resolvers (Zod resolver for form validation — ADR-1)
+- Install date utilities: date-fns (v3+ — tree-shakeable, ESM, locale support — ADR-2)
+- Install toast notifications: sonner (ADR-3)
+- Install visual testing: @playwright/test (visual regression screenshots — decision §13.5)
 - Install testing: vitest, @vitest/coverage-v8, @vitest/ui, jsdom
 - Install testing-library: @testing-library/react, @testing-library/jest-dom, @testing-library/user-event
 - Install API mocking: msw
@@ -47,7 +51,7 @@ N/A — backend/tooling story
 - [ ] `npm run dev` starts the development server without errors
 - [ ] `npm test` runs the test suite (Vitest) without errors
 - [ ] TypeScript compilation succeeds with strict mode
-- [ ] All listed dependencies are installed and importable
+- [ ] All listed dependencies are installed and importable (including react-hook-form, date-fns, sonner, @playwright/test)
 - [ ] Directory structure matches PRD §11 file structure
 - [ ] A blank page renders in the browser at localhost
 - [ ] Testing infrastructure is importable: vitest, @testing-library/react, msw

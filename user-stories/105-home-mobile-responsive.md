@@ -7,6 +7,8 @@ As the Insight platform user, I want the entire Home section to be fully functio
 - US-094: Home Overview — Page Assembly
 - US-101: Utility Detail — Page Assembly
 - US-008: App Shell — Mobile Tab Bar
+- US-026: MobileColumnCycler Component
+- US-027: MobileDrawer Component
 
 ## Requirements
 - Audit and polish all Home section pages for mobile viewports (PRD §8.3, §13)

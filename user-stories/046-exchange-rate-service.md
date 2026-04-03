@@ -22,13 +22,13 @@ As the Insight platform user, I want exchange rates to be automatically fetched 
 **Rate lookup** (PRD §4.2):
 - `getRate(fromCurrency: string, toCurrency: string, date: string)`: Look up the exchange rate for a currency pair on a specific date. Search strategy:
   1. Exact date match in stored rates.
-  2. If no exact match, use the closest previous date's rate.
+  2. If no exact match, use the most recent prior rate (nearest business day fallback — handles weekends/holidays).
   3. If no stored rate exists at all, trigger auto-fetch.
   4. Returns `null` if no rate can be determined.
 - `toCurrency` is always "DKK" (the home currency). The function signature accepts it for API symmetry and future extensibility.
 
 **Auto-fetching** (PRD §4.2):
-- `fetchRate(fromCurrency: string, date: string)`: Fetch a rate from a public API (ECB or similar, e.g. `exchangerate.host`, `frankfurter.app`, or ECB Statistical Data Warehouse).
+- `fetchRate(fromCurrency: string, date: string)`: Fetch a rate from **`frankfurter.app`** (free, JSON, no API key, ECB data — confirmed ADR-4).
   - On success: store the rate with `source: "auto"` and return it.
   - On failure: log the error, return `null`. The user can manually enter the rate.
 - `fetchMonthlyRates(fromCurrency: string)`: Fetch rates for the 1st of the current month (and any missing recent months). Called on app initialization or when navigating to the Investment section.

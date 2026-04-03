@@ -5,6 +5,7 @@ As the Insight platform user, I want a compact directional indicator showing val
 
 ## Dependencies
 - US-002: Tailwind Configuration and Design Tokens
+- US-011: Shared Formatters (uses `formatPercent`)
 
 ## Requirements
 - Create a `ChangeIndicator` component that shows an up or down arrow with a formatted value

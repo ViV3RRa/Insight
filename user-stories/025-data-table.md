@@ -6,6 +6,7 @@ As the Insight platform user, I want a consistent data table for displaying raw 
 ## Dependencies
 - US-002: Tailwind Configuration and Design Tokens
 - US-013: Button Component
+- US-026: MobileColumnCycler Component (integrates mobile column cycling)
 
 ## Requirements
 - Create a `DataTable` component per PRD §3.6

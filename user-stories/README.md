@@ -145,6 +145,8 @@ Phase 1 includes:
 - **Cross-cutting stories** (135–142) depend on all section UI being complete
 - **Test infrastructure** (148) depends only on US-001 — set up early in Phase 1 so all subsequent stories can write tests immediately
 - **Every story writes its own tests** as part of its definition of done — no separate testing phase
+- **Mandatory for all component/page stories**: test loading state, error state, and empty state — not just the happy path
+- **Dark mode is built into every component from day one** — `dark:` variant classes are added during initial implementation, not deferred to polish stories
 
 **Phase 9 can start after US-001 (Project Scaffolding) completes** and then run in parallel with the rest of Phase 1 (US-002–040). PocketBase setup and frontend scaffolding are independent after the initial project structure exists. Each domain's collections must be ready before that domain's service stories begin. `npm run dev` starts both servers together.
 

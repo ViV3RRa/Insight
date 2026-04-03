@@ -60,7 +60,7 @@ N/A — backend/data layer story
 - [ ] Example: readings of 1000 on Jan 5, 1050 on Jan 20, 1100 on Feb 5 → January gets 50 + interpolated portion, February gets remainder
 - [ ] Empty readings array returns empty consumption array
 - [ ] Single reading returns empty consumption (need at least 2 for a delta)
-- [ ] Negative delta between consecutive readings (meter reset/replacement) returns `null` for that interval — flagged for user review, not silently calculated
+- [ ] Negative delta between consecutive readings (meter reset/replacement) returns `{ consumption: null, warning: 'negative_delta' }` for that interval — flagged for user review via a distinct UI state, not silently dropped
 - [ ] When a reading's `note` contains "reset" or similar, the negative delta is expected and should not produce an error
 - [ ] `isInterpolated` flag correctly set when month-boundary interpolation is used
 - [ ] `getConsumptionForPeriod` correctly sums monthly consumption within the date range
