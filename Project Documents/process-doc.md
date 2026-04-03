@@ -33,74 +33,73 @@ This document describes the expert-driven discovery and design process used to t
 
 ---
 
-## Phase 2: UX/UI Designer ⬜
+## Phase 2: UX/UI Designer ✅
 
 **Purpose**: Translate the anthropological findings and PRD into a visual and interaction design. Define how the platform looks, feels, and behaves — not just what's on each page, but how the user moves through it.
 
-**Inputs**:
-- `anthropologist.md` — For understanding the user's personality, rituals, and emotional register.
-- `PRD.md` — For the complete feature spec, data models, and page structures.
+**Method**: HTML prototypes built for every page and state, with full Tailwind CSS styling for both light and dark mode. Screenshots generated for visual reference. Design system tokens extracted and audited.
 
-**Expected outputs**:
-- Wireframes or mockups for all key views (overview pages, detail pages, dialogs).
-- Interaction patterns (how accordions expand, how the portfolio switcher works, how charts respond to time span changes).
-- Visual design language (theme, color palette, typography, spacing, component styles).
-- Responsive behavior (how layouts adapt from desktop to mobile).
+**Outputs**:
+- `design-artifacts/prototypes/` — Full HTML prototypes: `portfolio-overview.html`, `platform-detail.html`, `home-overview.html`, `utility-detail.html`, `vehicles-overview.html`, `vehicle-detail.html`, `ui-states.html`
+- `design-artifacts/prototypes/screenshots/` — Visual reference screenshots for Investment and Home sections
+- `Project Documents/implementation/design-system-audit.md` — Canonical design tokens: green accent palette, DM Sans/DM Mono fonts, warm-gray base scale, rounded-2xl cards, shadow-card. **This overrides any older design-system.md references.**
+- `Project Documents/implementation/ui-analysis.md` — Component patterns, responsive breakpoints, cross-section consistency analysis
 
-**Key questions for the designer**:
-- How to achieve information density without clutter (the "cockpit vs. calm control room" tension).
-- How progressive disclosure should feel in practice (accordion behavior, toggle placement, default states).
-- How to make the monthly data entry ritual feel fast and intentional.
-- Dark theme, light theme, or toggle?
+**Key decisions made**:
+- Toggle between dark and light theme (not one-or-the-other)
+- Information density achieved via progressive disclosure: accordions, collapsible sections, tab bars
+- Mobile-first responsive design with `sm` (640px) and `lg` (1024px) breakpoints
+- Dark mode built into every component from day one
 
 ---
 
-## Phase 3: Software Architect ⬜
+## Phase 3: Software Architect ✅
 
 **Purpose**: Validate and refine the technical architecture before implementation begins. Pressure-test the data model, query patterns, performance assumptions, and system boundaries.
 
-**Inputs**:
-- `PRD.md` — Data models, PocketBase collections, service layer structure, calculation specs.
-- Designer outputs — To understand what the frontend needs to render and how.
+**Method**: 5-specialist planning team analyzed all 148 user stories, the PRD, prototypes, and design artifacts in parallel. Produced architecture assessment, risk register, and 8 architecture decision records (ADRs).
 
-**Expected outputs**:
-- Validated (or revised) PocketBase schema with indexing and query strategy.
-- Decision on client-side vs. server-side computation (especially XIRR with large datasets).
-- File upload and storage strategy.
-- Performance assessment for 5+ years of data rendered in Recharts.
-- Any architectural changes needed to support the pluggable section model.
+**Outputs**:
+- 8 ADRs documented in `implementation-plan.md` §7 (form library, date library, toast, exchange rate API, time span state, error boundaries, interpolation orchestration, optimistic updates)
+- Risk register with 15 identified risks and mitigations
+- Tech stack additions: react-hook-form, date-fns, sonner, @playwright/test, vitest-axe
+- Calculation complexity analysis: XIRR, interpolation, portfolio aggregation identified as top hotspots
+- PocketBase limitations documented with mitigations (no cron → frontend fetch on login, no batch → parallel useQueries)
 
-**Key questions for the architect**:
-- Is the PocketBase schema optimized for the access patterns the UI requires?
-- Should heavy calculations (XIRR, aggregations) be cached or computed on every render?
-- How should the service layer handle error states, loading states, and optimistic updates?
-- Are there scalability concerns with the current approach?
+**Key decisions made**:
+- All computation is client-side in `src/utils/` (PocketBase is a dumb data store)
+- Exchange rates fetched from `frankfurter.app` (free, JSON, ECB data)
+- No optimistic updates for v1 (PocketBase is local, < 10ms latency)
+- Per-section error boundaries (Home, Investment, Vehicles) + global fallback
+- XIRR solver: Newton-Raphson with Brent's method fallback
+- DataPoint service orchestrates interpolation persistence (ADR-7)
 
 ---
 
-## Phase 4: Product Manager ⬜
+## Phase 4: Product Manager ✅
 
 **Purpose**: Define build order, scope boundaries, and delivery phases. Turn the PRD into an actionable implementation plan with clear milestones and definitions of done.
 
-**Inputs**:
-- `PRD.md` — The full feature spec.
-- Architect outputs — Any technical constraints or sequencing dependencies.
-- Designer outputs — To understand which views are designed and ready for build.
+**Method**: 5-specialist planning team (Product Strategist, Technical Architect, Frontend Architect, Data Layer Specialist, QA Strategist) analyzed all 148 stories in parallel, then findings were synthesized into a comprehensive implementation plan.
 
-**Expected outputs**:
-- Phased build plan (e.g. Phase A: Portfolio, Phase B: Home/Utilities, Phase C: Vehicles).
-- Scope definition for each phase — what's in, what's deferred.
-- Acceptance criteria per phase (derived from the PRD's acceptance criteria, grouped by milestone).
-- Prioritized backlog or task breakdown suitable for Claude Code.
+**Outputs**:
+- `Project Documents/implementation/implementation-plan.md` — The complete implementation plan
+- `user-stories/` — 148 user stories with dependencies, acceptance criteria, testing requirements
+- `user-stories/README.md` — Phase overview, dependency graph, complexity breakdown, reuse matrix
+- `Project Documents/implementation/requirements-map.md` — PRD requirements mapped to user stories
 
-**Key questions for the PM**:
-- What's the minimum viable first delivery — one full section or a thin pass across all three?
-- How to handle cross-cutting features (time span selector, YoY toggle, file attachments) — build once upfront or extract after the first section?
-- What's the testing strategy? Manual validation against the acceptance criteria, or something more structured?
+**Key decisions made**:
+- MVP = Investment section (76 stories, ~11 sprints) — user's highest-priority domain
+- 20-sprint plan with 5 delivery milestones (M1: "It Runs", M2: "Component Library", M3: "Investment MVP", M4: "Home + Vehicles", M5: "Release Candidate")
+- Shared components built first (Phase 1), then domain sections sequentially
+- PocketBase backend runs in parallel with Phase 1 (not sequentially as Phase 9)
+- Cross-cutting features (US-114 EV Crossover, US-135–142) deferred to Phase 8
+- Dependency graph audited: 1 circular dep fixed, 6 missing deps added, 3 over-constrained deps removed
+- 23 recommended changes applied to user story files
 
 ---
 
-## Phase 5: Implementation ⬜
+## Phase 5: Implementation 🔄
 
 **Purpose**: Build the platform.
 
@@ -133,7 +132,10 @@ This document describes the expert-driven discovery and design process used to t
 | `anthropologist-findings.md` | Session 1 research findings and design principles | ✅ Complete |
 | `anthropologist-findings-session-2.md` | Session 2 research findings — currency, platform types, lifecycles, priorities | ✅ Complete |
 | `metrics-dashboard-prd-v1.md` | Original PRD from Session 1 | ✅ Superseded by v2 |
-| `metrics-dashboard-prd-v2.md` | Current PRD — source of truth for what to build | ✅ Complete (will evolve) |
-| Design mockups | Visual and interaction design | ⬜ Not started |
-| Architecture decisions | Technical validation and refinements | ⬜ Not started |
-| Build plan | Phased implementation roadmap | ⬜ Not started |
+| `metrics-dashboard-prd-v2.md` | Current PRD — source of truth for what to build | ✅ Complete |
+| `design-artifacts/prototypes/` | HTML prototypes — source of truth for UI | ✅ Complete |
+| `implementation/design-system-audit.md` | Canonical design tokens from prototypes | ✅ Complete |
+| `implementation/ui-analysis.md` | UI component patterns and analysis | ✅ Complete |
+| `implementation/implementation-plan.md` | 20-sprint plan, ADRs, risk register, milestones | ✅ Complete |
+| `implementation/requirements-map.md` | PRD requirements mapped to user stories | ✅ Complete |
+| `user-stories/` | 148 user stories with AC and testing requirements | ✅ Complete |

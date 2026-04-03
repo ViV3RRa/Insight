@@ -4,39 +4,47 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Status
 
-Insight is a **personal metrics platform** — currently in the **discovery phase** with no code written yet. Only planning documents exist. The project follows a phased process defined in `Project Documents/process-doc.md`:
+Insight is a **personal metrics platform** — ready for **implementation** (Phase 5). All prerequisite phases are complete. The project follows a phased process defined in `Project Documents/process-doc.md`:
 
 - **Phase 1** (complete): Anthropological research (2 sessions) + PRD v2
-- **Phase 2** (not started): UX/UI design
-- **Phase 3** (not started): Software architecture validation
-- **Phase 4** (not started): Product manager build plan
-- **Phase 5** (not started): Implementation
+- **Phase 2** (complete): UX/UI design — HTML prototypes, screenshots, design system audit
+- **Phase 3** (complete): Software architecture validation — 8 ADRs, risk register, tech assessment
+- **Phase 4** (complete): Product manager build plan — 148 user stories, 20-sprint plan, 5 milestones
+- **Phase 5** (in progress): Implementation — 20 sprints, starting with Sprint 1
 - **Phase 6** (not started): Review & iteration
 
-Each phase builds on the outputs of the previous one. Do not skip ahead to implementation without the prerequisite design and architecture decisions.
+The implementation plan is at `Project Documents/implementation/implementation-plan.md`. It defines sprint-by-sprint story assignments, delivery milestones, and all architecture decisions.
 
 ## Key Documents
 
 - `Project Documents/metrics-dashboard-prd-v2.md` — The complete PRD (v2): data models, calculations, UI structure, acceptance criteria. **This is the source of truth for what to build.**
-- `Project Documents/metrics-dashboard-prd-v1.md` — Original PRD (v1), superseded by v2. Kept for reference.
-- `Project Documents/anthropologist-findings.md` — User research session 1: behavioral patterns, motivations, and design principles.
-- `Project Documents/anthropologist-findings-session-2.md` — User research session 2: multi-currency, platform types, lifecycle states, locale preferences, and priority mapping.
+- `Project Documents/implementation/implementation-plan.md` — The implementation plan: 20-sprint breakdown, milestones, ADRs, risk register, recommended story changes. **This is the source of truth for how to build.**
+- `Project Documents/implementation/design-system-audit.md` — Canonical design tokens extracted from prototypes. Overrides any older design-system.md references.
+- `Project Documents/implementation/ui-analysis.md` — UI analysis: component patterns, responsive behavior, cross-section consistency.
+- `user-stories/README.md` — All 148 stories organized by phase, with dependency graph and reuse matrix.
 - `Project Documents/process-doc.md` — Development methodology and phase definitions.
+- `Project Documents/anthropologist-findings.md` — User research session 1.
+- `Project Documents/anthropologist-findings-session-2.md` — User research session 2.
 
-## Planned Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
 | Frontend | React (functional components, hooks), TypeScript |
-| Styling | Tailwind CSS |
+| Styling | Tailwind CSS v4 |
 | Charts | Recharts |
 | Icons | lucide-react |
 | Schema & validation | Zod (type definitions, branded IDs, PocketBase response parsing) |
+| Forms | react-hook-form + @hookform/resolvers/zod (ADR-1) |
+| Date utilities | date-fns v3+ (ADR-2) |
+| Toast notifications | sonner (ADR-3) |
 | Data fetching | TanStack Query (server state, caching, background refetch) |
 | State management | Zustand (client/UI state) |
 | Backend | PocketBase (self-hosted) |
 | Auth | PocketBase email/password |
-| Testing | Vitest, React Testing Library, MSW (Mock Service Worker) |
+| Exchange rates | frankfurter.app — free, JSON, ECB data (ADR-4) |
+| Testing | Vitest, React Testing Library, MSW (Mock Service Worker), vitest-axe |
+| Visual regression | Playwright (@playwright/test) |
 
 ## Architecture
 
@@ -110,13 +118,33 @@ Zustand manages **client-side UI state only** — transient selections, toggles,
 
 **Rule of thumb:** If it comes from PocketBase, it goes in TanStack Query. If it's a UI toggle or selection that resets on page navigation, it goes in Zustand.
 
+## Architecture Decisions (ADRs)
+
+These were resolved during the Phase 3-4 planning process. See `implementation-plan.md` §7 for full rationale.
+
+| ADR | Decision | Key Detail |
+|-----|----------|------------|
+| ADR-1 | **react-hook-form + Zod resolver** | All 10+ dialog forms use Zod schemas as form validators |
+| ADR-2 | **date-fns v3+** | All date math uses date-fns, not native Date |
+| ADR-3 | **sonner for toasts** | Wired into TanStack Query onSuccess/onError |
+| ADR-4 | **frankfurter.app for exchange rates** | Free, JSON, ECB data. Fallback: nearest prior business day rate |
+| ADR-5 | **Time span is per-card** | Component-local `useState`, not Zustand. Zustand stores the page-level default. |
+| ADR-6 | **Per-section error boundaries** | Home, Investment, Vehicles each get an error boundary + global fallback |
+| ADR-7 | **DataPoint service orchestrates interpolation** | After CRUD, service calls US-051's functions and persists returned interpolated points |
+| ADR-8 | **No optimistic updates for v1** | Use `invalidateQueries` on mutation success. PocketBase is local (< 10ms). |
+
+**Additional implementation decisions:**
+- **Dark mode baked in from day one** — every component includes `dark:` variants during initial implementation. Polish stories (US-079, US-106, US-134) are visual verification audits, not implementation sprints.
+- **Test data factories created incrementally** — base infrastructure + settings factory in US-148; domain factories created alongside type stories (US-041, US-080, US-107).
+- **EV crossover (US-114) is a Phase 8 cross-cutting story**, not Phase 6 — decouples Home and Vehicles phases.
+
 ## Testing Conventions
 
 **Testing is baked into every user story.** Each story that produces testable code includes a `## Testing Requirements` section specifying the test file, approach, and key test cases. A story is not done until its tests pass. There are no separate "testing phase" stories — tests are written alongside the implementation.
 
 **Test framework:** Vitest + React Testing Library + MSW (Mock Service Worker)
 
-**Test infrastructure** (US-148) provides the foundation: Vitest config, custom render with providers, test data factories for all entities, PocketBase mock via MSW, and coverage configuration. This is a Phase 1 story — set up before any feature work begins.
+**Test infrastructure** (US-148) provides the foundation: Vitest config, custom render with providers (`renderWithProviders` with `initialEntries` support), test data factory base infrastructure + settings factory, PocketBase mock via MSW, vitest-axe for a11y testing, browser API mocks (ResizeObserver, matchMedia, IntersectionObserver, URL.createObjectURL), `withFakeTimers` helper, viewport constants, and coverage configuration. This is a Phase 1 story — set up before any feature work begins. Domain-specific factories are added incrementally in type stories (US-041, US-080, US-107).
 
 **File structure — co-located tests next to source:**
 - `src/utils/xirr.ts` → `src/utils/xirr.test.ts`
@@ -140,7 +168,7 @@ Zustand manages **client-side UI state only** — transient selections, toggles,
 | **Shared components** (`src/components/shared/`) | React Testing Library with `renderWithProviders`. All prop variants, interactions, accessibility, dark mode. | 90%+ |
 | **Domain components** (`src/components/{domain}/`) | RTL with mocked service data via MSW. Data rendering, loading/empty/error states. | 80%+ |
 | **Dialogs** | RTL. Create/edit modes, form validation, submission, cancellation, error handling. | 80%+ |
-| **Page assemblies** | RTL. All sub-sections compose, data flows, loading/empty/error states. | 80%+ |
+| **Page assemblies** | RTL. All sub-sections compose, data flows, loading/empty/error states. Use `data-testid` for section selectors. | 75%+ |
 | **Cross-cutting** | Integration tests — cross-layer data flows, settings propagation, EV crossover. | Functional |
 | **Overall project** | — | **85%+** |
 
