@@ -4,6 +4,19 @@ import App from './App'
 
 let mockIsAuthenticated = false
 
+vi.mock('@/services/settings', () => ({
+  getOrCreateSettings: vi.fn().mockResolvedValue({
+    id: 'settings_1',
+    userId: 'user_001',
+    dateFormat: 'yyyy-MM-dd',
+    theme: 'light',
+    demoMode: false,
+    created: '2026-01-01T00:00:00.000Z',
+    updated: '2026-01-01T00:00:00.000Z',
+  }),
+  updateSettings: vi.fn(),
+}))
+
 vi.mock('@/services/auth', () => ({
   login: vi.fn(),
   logout: vi.fn(),
@@ -66,9 +79,9 @@ describe('App Router', () => {
       expect(screen.getByTestId('page-vehicles')).toBeInTheDocument()
     })
 
-    it('renders Settings page at /settings', () => {
+    it('renders Settings page at /settings', async () => {
       renderWithProviders(<App />, { initialEntries: ['/settings'] })
-      expect(screen.getByTestId('page-settings')).toBeInTheDocument()
+      expect(await screen.findByRole('heading', { name: 'Settings' })).toBeInTheDocument()
     })
 
     it('renders Utility Detail page at /home/:utilityId', () => {

@@ -60,7 +60,7 @@ describe('Test Infrastructure Smoke Tests', () => {
       const settings = buildSettings()
       expect(settings.id).toBeTruthy()
       expect(settings.userId).toBeTruthy()
-      expect(settings.dateFormat).toBe('YYYY-MM-DD')
+      expect(settings.dateFormat).toBe('yyyy-MM-dd')
       expect(settings.theme).toBe('light')
       expect(settings.demoMode).toBe(false)
       expect(settings.created).toBeTruthy()

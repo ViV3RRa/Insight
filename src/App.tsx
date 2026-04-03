@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Login from '@/components/layout/Login'
 import ProtectedRoute from '@/components/layout/ProtectedRoute'
 import AppShell from '@/components/layout/AppShell'
+import Settings from '@/components/layout/Settings'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,7 +36,7 @@ function App() {
             <Route path="/investment/platform/:platformId" element={<PlaceholderPage title="Platform Detail" />} />
             <Route path="/vehicles" element={<PlaceholderPage title="Vehicles" />} />
             <Route path="/vehicles/:vehicleId" element={<PlaceholderPage title="Vehicle Detail" />} />
-            <Route path="/settings" element={<PlaceholderPage title="Settings" />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Route>
         </Route>

@@ -1,19 +1,10 @@
 import { generateId, buildEntity } from './base'
-
-export interface Settings {
-  id: string
-  userId: string
-  dateFormat: 'YYYY-MM-DD' | 'DD/MM/YYYY'
-  theme: 'light' | 'dark'
-  demoMode: boolean
-  created: string
-  updated: string
-}
+import type { Settings } from '@/types/settings'
 
 const settingsDefaults: Settings = {
   id: '',
   userId: '',
-  dateFormat: 'YYYY-MM-DD',
+  dateFormat: 'yyyy-MM-dd',
   theme: 'light',
   demoMode: false,
   created: '2026-01-01T00:00:00.000Z',
