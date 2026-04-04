@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, type Mock } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import type { ReactNode } from 'react'
 import { renderWithProviders, screen, userEvent } from '@/test/utils'
 import {

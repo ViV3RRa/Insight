@@ -23,7 +23,11 @@ interface DataTableProps<T> {
   keyExtractor: (row: T) => string
 }
 
-function DataTable<T extends Record<string, unknown>>({
+function field(row: unknown, key: string): unknown {
+  return (row as Record<string, unknown>)[key]
+}
+
+function DataTable<T>({
   columns,
   data,
   sortable = false,
@@ -46,8 +50,8 @@ function DataTable<T extends Record<string, unknown>>({
     if (!sort) return data
     const { key, direction } = sort
     return [...data].sort((a, b) => {
-      const aVal = a[key]
-      const bVal = b[key]
+      const aVal = field(a, key)
+      const bVal = field(b, key)
       if (aVal == null && bVal == null) return 0
       if (aVal == null) return 1
       if (bVal == null) return -1
@@ -73,7 +77,7 @@ function DataTable<T extends Record<string, unknown>>({
   }
 
   function getCellValue(row: T, col: ColumnDef<T>): ReactNode {
-    const raw = row[col.key]
+    const raw = field(row, col.key)
     if (col.format) return col.format(raw, row)
     if (raw == null) return ''
     return String(raw)

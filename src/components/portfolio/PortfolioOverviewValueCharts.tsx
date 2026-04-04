@@ -112,8 +112,6 @@ function PortfolioOverviewValueCharts({
     yoyValue: yoyBarData?.[i]?.yoyValue ?? 0,
   }))
 
-  const isEmpty = compositeData.length === 0 && monthlyPerformance.length === 0
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
       <ChartCard

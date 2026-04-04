@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderWithProviders, screen } from '@/test/utils'
 import userEvent from '@testing-library/user-event'
 import { PortfolioOverview, type PortfolioOverviewProps } from './PortfolioOverview'
@@ -176,33 +176,6 @@ describe('PortfolioOverview', () => {
       const sections = container.querySelectorAll('[data-testid]')
       const testIds = Array.from(sections).map((el) => el.getAttribute('data-testid'))
 
-      const expectedOrder = [
-        'section-header',
-        'section-mobile-actions',
-        'section-summary-cards',
-        'mock-summary',
-        'section-yoy',
-        'mock-yoy',
-        'section-performance',
-        'mock-performance-accordion',
-        'mock-value-charts',
-        'mock-perf-yearly',
-        'mock-perf-monthly',
-        'section-platforms',
-        'mock-platforms-table',
-        'platform-row-click',
-        'platform-add-dp',
-        'platform-add-tx',
-        'section-cash',
-        'mock-cash-table',
-        'cash-row-click',
-        'section-closed',
-        'mock-closed',
-        'section-allocation',
-        'mock-allocation',
-        'add-platform-button',
-      ]
-
       // Verify relative order of key section wrappers
       const keySections = [
         'section-summary-cards',
@@ -217,7 +190,7 @@ describe('PortfolioOverview', () => {
 
       const indices = keySections.map((id) => testIds.indexOf(id))
       for (let i = 1; i < indices.length; i++) {
-        expect(indices[i]).toBeGreaterThan(indices[i - 1])
+        expect(indices[i]!).toBeGreaterThan(indices[i - 1]!)
       }
     })
 
