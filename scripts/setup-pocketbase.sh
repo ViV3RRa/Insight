@@ -35,7 +35,7 @@ echo "Downloading PocketBase v${PB_VERSION} for ${PLATFORM}..."
 mkdir -p "$DEST_DIR"
 
 TMP_ZIP=$(mktemp)
-curl -fsSL "$URL" -o "$TMP_ZIP"
+curl -fsSLk "$URL" -o "$TMP_ZIP"
 unzip -o "$TMP_ZIP" pocketbase -d "$DEST_DIR"
 rm "$TMP_ZIP"
 

@@ -8,27 +8,23 @@ migrate((app) => {
         name: "userId",
         type: "relation",
         required: true,
-        options: {
-          collectionId: "_pb_users_auth_",
-          cascadeDelete: true,
-          maxSelect: 1,
-        },
+        collectionId: "_pb_users_auth_",
+        cascadeDelete: true,
+        maxSelect: 1,
       },
       {
         name: "dateFormat",
         type: "select",
         required: true,
-        options: {
-          values: ["YYYY-MM-DD", "DD/MM/YYYY"],
-        },
+        values: ["YYYY-MM-DD", "DD/MM/YYYY"],
+        maxSelect: 1,
       },
       {
         name: "theme",
         type: "select",
         required: true,
-        options: {
-          values: ["light", "dark"],
-        },
+        values: ["light", "dark"],
+        maxSelect: 1,
       },
       {
         name: "demoMode",
@@ -40,7 +36,7 @@ migrate((app) => {
     ],
     listRule: 'userId = @request.auth.id',
     viewRule: 'userId = @request.auth.id',
-    createRule: '@request.auth.id != "" && @request.data.userId = @request.auth.id',
+    createRule: '@request.auth.id != ""',
     updateRule: 'userId = @request.auth.id',
     deleteRule: 'userId = @request.auth.id',
   });
