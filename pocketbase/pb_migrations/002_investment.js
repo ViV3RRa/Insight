@@ -16,6 +16,8 @@ migrate((app) => {
       { name: "name", type: "text", required: true },
       { name: "ownerName", type: "text", required: true },
       { name: "isDefault", type: "bool" },
+      { name: "created", type: "autodate", onCreate: true, onUpdate: false },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [],
     listRule: 'ownerId = @request.auth.id',
@@ -74,6 +76,8 @@ migrate((app) => {
       },
       { name: "closedDate", type: "date" },
       { name: "closureNote", type: "text" },
+      { name: "created", type: "autodate", onCreate: true, onUpdate: false },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [
       "CREATE INDEX idx_platforms_owner_portfolio ON platforms (ownerId, portfolioId)",
@@ -112,6 +116,8 @@ migrate((app) => {
       { name: "timestamp", type: "date", required: true },
       { name: "isInterpolated", type: "bool" },
       { name: "note", type: "text" },
+      { name: "created", type: "autodate", onCreate: true, onUpdate: false },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [
       "CREATE INDEX idx_data_points_owner_platform_ts ON data_points (ownerId, platformId, timestamp)",
@@ -164,6 +170,8 @@ migrate((app) => {
         maxSize: 5242880,
         mimeTypes: ["image/jpeg", "image/png", "image/webp", "application/pdf"],
       },
+      { name: "created", type: "autodate", onCreate: true, onUpdate: false },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [
       "CREATE INDEX idx_transactions_owner_platform_ts ON transactions (ownerId, platformId, timestamp)",
@@ -201,6 +209,8 @@ migrate((app) => {
         values: ["auto", "manual"],
         maxSelect: 1,
       },
+      { name: "created", type: "autodate", onCreate: true, onUpdate: false },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [
       "CREATE UNIQUE INDEX idx_exchange_rates_unique ON exchange_rates (ownerId, fromCurrency, toCurrency, date)",

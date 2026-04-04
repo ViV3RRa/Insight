@@ -35,11 +35,13 @@ export const utilitySchema = z.object({
   color: utilityColorSchema,
   ownerId: UserId,
   created: z.string().datetime(),
+  updated: z.string().datetime(),
 })
 
 export const utilityCreateSchema = utilitySchema.omit({
   id: true,
   created: true,
+  updated: true,
   ownerId: true,
 })
 
@@ -59,11 +61,13 @@ export const meterReadingSchema = z.object({
   attachment: z.string().nullable(),
   ownerId: UserId,
   created: z.string().datetime(),
+  updated: z.string().datetime(),
 })
 
 export const meterReadingCreateSchema = meterReadingSchema.omit({
   id: true,
   created: true,
+  updated: true,
   ownerId: true,
 })
 
@@ -83,11 +87,13 @@ export const utilityBillSchema = z.object({
   attachment: z.string().nullable(),
   ownerId: UserId,
   created: z.string().datetime(),
+  updated: z.string().datetime(),
 })
 
 export const utilityBillCreateSchema = utilityBillSchema.omit({
   id: true,
   created: true,
+  updated: true,
   ownerId: true,
 })
 

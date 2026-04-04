@@ -14,6 +14,7 @@ const portfolioDefaults: Portfolio = {
   isDefault: false,
   ownerId: '' as Portfolio['ownerId'],
   created: '2026-01-01T00:00:00.000Z',
+  updated: '2026-01-01T00:00:00.000Z',
 }
 
 export function buildPortfolio(overrides?: Partial<Portfolio>): Portfolio {
@@ -39,6 +40,7 @@ const platformDefaults: Platform = {
   closureNote: null,
   ownerId: '' as Platform['ownerId'],
   created: '2026-01-01T00:00:00.000Z',
+  updated: '2026-01-01T00:00:00.000Z',
 }
 
 export function buildPlatform(overrides?: Partial<Platform>): Platform {
@@ -62,6 +64,7 @@ const dataPointDefaults: DataPoint = {
   note: null,
   ownerId: '' as DataPoint['ownerId'],
   created: '2026-01-15T00:00:00.000Z',
+  updated: '2026-01-15T00:00:00.000Z',
 }
 
 export function buildDataPoint(overrides?: Partial<DataPoint>): DataPoint {
@@ -87,6 +90,7 @@ const transactionDefaults: Transaction = {
   attachment: null,
   ownerId: '' as Transaction['ownerId'],
   created: '2026-01-10T00:00:00.000Z',
+  updated: '2026-01-10T00:00:00.000Z',
 }
 
 export function buildTransaction(overrides?: Partial<Transaction>): Transaction {
@@ -110,6 +114,7 @@ const exchangeRateDefaults: ExchangeRate = {
   source: 'auto',
   ownerId: '' as ExchangeRate['ownerId'],
   created: '2026-01-15T00:00:00.000Z',
+  updated: '2026-01-15T00:00:00.000Z',
 }
 
 export function buildExchangeRate(overrides?: Partial<ExchangeRate>): ExchangeRate {

@@ -8,6 +8,41 @@ import { useInvestmentUIStore } from '@/stores/investmentUIStore'
 vi.mock('@/services/platforms', () => ({
   getByPortfolio: vi.fn().mockResolvedValue([]),
   getPlatformIconUrl: vi.fn().mockReturnValue('/icons/test.png'),
+  create: vi.fn(),
+}))
+
+vi.mock('@/services/portfolios', () => ({
+  getAll: vi.fn().mockResolvedValue([]),
+  create: vi.fn(),
+  update: vi.fn(),
+}))
+
+vi.mock('@/services/dataPoints', () => ({
+  getByPlatform: vi.fn().mockResolvedValue([]),
+  create: vi.fn(),
+}))
+
+vi.mock('@/services/transactions', () => ({
+  getByPlatform: vi.fn().mockResolvedValue([]),
+  create: vi.fn(),
+}))
+
+// Mock dialog components
+vi.mock('./dialogs/PortfolioDialog', () => ({
+  PortfolioDialog: ({ isOpen }: { isOpen: boolean }) =>
+    isOpen ? <div data-testid="portfolio-dialog" /> : null,
+}))
+vi.mock('./dialogs/PlatformDialog', () => ({
+  PlatformDialog: ({ isOpen }: { isOpen: boolean }) =>
+    isOpen ? <div data-testid="platform-dialog" /> : null,
+}))
+vi.mock('./dialogs/DataPointDialog', () => ({
+  DataPointDialog: ({ isOpen }: { isOpen: boolean }) =>
+    isOpen ? <div data-testid="data-point-dialog" /> : null,
+}))
+vi.mock('./dialogs/TransactionDialog', () => ({
+  TransactionDialog: ({ isOpen }: { isOpen: boolean }) =>
+    isOpen ? <div data-testid="transaction-dialog" /> : null,
 }))
 
 // Mock all child components to keep tests focused on page assembly
@@ -118,6 +153,7 @@ describe('PortfolioOverview', () => {
       renderWithProviders(<PortfolioOverview />)
 
       expect(screen.getByTestId('section-header')).toBeInTheDocument()
+      expect(screen.getByTestId('section-mobile-switcher')).toBeInTheDocument()
       expect(screen.getByTestId('section-mobile-actions')).toBeInTheDocument()
       expect(screen.getByTestId('section-summary-cards')).toBeInTheDocument()
       expect(screen.getByTestId('section-yoy')).toBeInTheDocument()
@@ -329,6 +365,28 @@ describe('PortfolioOverview', () => {
 
       const mobileActions = screen.getByTestId('section-mobile-actions')
       expect(mobileActions.className).toContain('lg:hidden')
+    })
+
+    it('mobile switcher is hidden on desktop (has lg:hidden)', () => {
+      renderWithProviders(<PortfolioOverview />)
+
+      const mobileSwitcher = screen.getByTestId('section-mobile-switcher')
+      expect(mobileSwitcher.className).toContain('lg:hidden')
+    })
+
+    it('mobile switcher renders PortfolioSwitcher', () => {
+      renderWithProviders(<PortfolioOverview />)
+
+      const mobileSwitcher = screen.getByTestId('section-mobile-switcher')
+      expect(mobileSwitcher.querySelector('[data-testid="mock-portfolio-switcher"]')).toBeInTheDocument()
+    })
+
+    it('container has relative z-0 for stacking below navbar', () => {
+      const { container } = renderWithProviders(<PortfolioOverview />)
+
+      const wrapper = container.firstElementChild as HTMLElement
+      expect(wrapper.className).toContain('relative')
+      expect(wrapper.className).toContain('z-0')
     })
   })
 })

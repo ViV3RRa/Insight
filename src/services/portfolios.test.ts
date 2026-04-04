@@ -38,7 +38,7 @@ describe('portfolios service', () => {
   })
 
   describe('getAll', () => {
-    it('returns portfolios filtered by ownerId and sorted by created', async () => {
+    it('returns portfolios filtered by ownerId and sorted by name', async () => {
       const portfolios = [
         buildPortfolio({ ownerId: 'user_001' as never }),
         buildPortfolio({ ownerId: 'user_001' as never }),
@@ -49,7 +49,7 @@ describe('portfolios service', () => {
 
       expect(mockGetFullList).toHaveBeenCalledWith({
         filter: 'ownerId = "user_001"',
-        sort: 'created',
+        sort: 'name',
       })
       expect(result).toHaveLength(2)
     })

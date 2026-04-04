@@ -19,7 +19,7 @@ export async function getAll(): Promise<Portfolio[]> {
   const userId = getUserId()
   const records = await pb.collection(COLLECTION).getFullList({
     filter: `ownerId = "${userId}"`,
-    sort: 'created',
+    sort: 'name',
   })
   return z.array(portfolioSchema).parse(records)
 }

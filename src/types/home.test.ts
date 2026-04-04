@@ -22,6 +22,7 @@ const validUtility = {
   color: 'amber' as const,
   ownerId: 'user_001',
   created: '2026-01-01T00:00:00.000Z',
+  updated: '2026-01-01T00:00:00.000Z',
 }
 
 const validMeterReading = {
@@ -33,6 +34,7 @@ const validMeterReading = {
   attachment: null,
   ownerId: 'user_001',
   created: '2026-01-15T10:00:00.000Z',
+  updated: '2026-01-15T10:00:00.000Z',
 }
 
 const validUtilityBill = {
@@ -46,6 +48,7 @@ const validUtilityBill = {
   attachment: null,
   ownerId: 'user_001',
   created: '2026-01-01T00:00:00.000Z',
+  updated: '2026-01-01T00:00:00.000Z',
 }
 
 // --- Utility Icon enum ---
@@ -137,7 +140,7 @@ describe('utilitySchema', () => {
 })
 
 describe('utilityCreateSchema', () => {
-  it('accepts valid create payload (no id, created, ownerId)', () => {
+  it('accepts valid create payload (no id, created, updated, ownerId)', () => {
     const payload = {
       name: 'Water',
       unit: 'm³',
@@ -149,7 +152,7 @@ describe('utilityCreateSchema', () => {
     expect(result.unit).toBe('m³')
   })
 
-  it('omits id, created, ownerId', () => {
+  it('omits id, created, updated, ownerId', () => {
     const payload = {
       id: 'util_001',
       name: 'Water',
@@ -158,10 +161,12 @@ describe('utilityCreateSchema', () => {
       color: 'blue' as const,
       ownerId: 'user_001',
       created: '2026-01-01T00:00:00.000Z',
+      updated: '2026-01-01T00:00:00.000Z',
     }
     const result = utilityCreateSchema.parse(payload)
     expect((result as Record<string, unknown>).id).toBeUndefined()
     expect((result as Record<string, unknown>).created).toBeUndefined()
+    expect((result as Record<string, unknown>).updated).toBeUndefined()
     expect((result as Record<string, unknown>).ownerId).toBeUndefined()
   })
 
@@ -251,7 +256,7 @@ describe('meterReadingCreateSchema', () => {
     expect(result.value).toBe(12500)
   })
 
-  it('omits id, created, ownerId', () => {
+  it('omits id, created, updated, ownerId', () => {
     const payload = {
       utilityId: 'util_001',
       value: 12500,
@@ -262,6 +267,7 @@ describe('meterReadingCreateSchema', () => {
     const result = meterReadingCreateSchema.parse(payload)
     expect((result as Record<string, unknown>).id).toBeUndefined()
     expect((result as Record<string, unknown>).created).toBeUndefined()
+    expect((result as Record<string, unknown>).updated).toBeUndefined()
     expect((result as Record<string, unknown>).ownerId).toBeUndefined()
   })
 })
@@ -366,7 +372,7 @@ describe('utilityBillCreateSchema', () => {
     expect(result.periodStart).toBe('2026-04-01')
   })
 
-  it('omits id, created, ownerId', () => {
+  it('omits id, created, updated, ownerId', () => {
     const payload = {
       utilityId: 'util_001',
       amount: 900,
@@ -379,6 +385,7 @@ describe('utilityBillCreateSchema', () => {
     const result = utilityBillCreateSchema.parse(payload)
     expect((result as Record<string, unknown>).id).toBeUndefined()
     expect((result as Record<string, unknown>).created).toBeUndefined()
+    expect((result as Record<string, unknown>).updated).toBeUndefined()
     expect((result as Record<string, unknown>).ownerId).toBeUndefined()
   })
 

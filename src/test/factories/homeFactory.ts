@@ -9,6 +9,7 @@ const utilityDefaults: Utility = {
   color: 'amber',
   ownerId: '' as Utility['ownerId'],
   created: '2026-01-01T00:00:00.000Z',
+  updated: '2026-01-01T00:00:00.000Z',
 }
 
 export function buildUtility(overrides?: Partial<Utility>): Utility {
@@ -31,6 +32,7 @@ const meterReadingDefaults: MeterReading = {
   attachment: null,
   ownerId: '' as MeterReading['ownerId'],
   created: '2026-01-15T10:00:00.000Z',
+  updated: '2026-01-15T10:00:00.000Z',
 }
 
 export function buildMeterReading(overrides?: Partial<MeterReading>): MeterReading {
@@ -56,6 +58,7 @@ const utilityBillDefaults: UtilityBill = {
   attachment: null,
   ownerId: '' as UtilityBill['ownerId'],
   created: '2026-01-01T00:00:00.000Z',
+  updated: '2026-01-01T00:00:00.000Z',
 }
 
 export function buildUtilityBill(overrides?: Partial<UtilityBill>): UtilityBill {

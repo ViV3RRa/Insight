@@ -33,6 +33,7 @@ const validPortfolio = {
   isDefault: true,
   ownerId: 'user_001',
   created: '2026-01-01T00:00:00.000Z',
+  updated: '2026-01-01T00:00:00.000Z',
 }
 
 const validPlatform = {
@@ -47,6 +48,7 @@ const validPlatform = {
   closureNote: null,
   ownerId: 'user_001',
   created: '2026-01-01T00:00:00.000Z',
+  updated: '2026-01-01T00:00:00.000Z',
 }
 
 const validDataPoint = {
@@ -58,6 +60,7 @@ const validDataPoint = {
   note: null,
   ownerId: 'user_001',
   created: '2026-01-15T00:00:00.000Z',
+  updated: '2026-01-15T00:00:00.000Z',
 }
 
 const validTransaction = {
@@ -71,6 +74,7 @@ const validTransaction = {
   attachment: null,
   ownerId: 'user_001',
   created: '2026-01-10T00:00:00.000Z',
+  updated: '2026-01-10T00:00:00.000Z',
 }
 
 const validExchangeRate = {
@@ -82,6 +86,7 @@ const validExchangeRate = {
   source: 'auto' as const,
   ownerId: 'user_001',
   created: '2026-01-15T00:00:00.000Z',
+  updated: '2026-01-15T00:00:00.000Z',
 }
 
 // --- Portfolio ---
@@ -124,7 +129,7 @@ describe('portfolioSchema', () => {
 })
 
 describe('portfolioCreateSchema', () => {
-  it('accepts valid create payload (no id, created, ownerId)', () => {
+  it('accepts valid create payload (no id, created, updated, ownerId)', () => {
     const payload = { name: 'New Portfolio', ownerName: 'Me', isDefault: false }
     const result = portfolioCreateSchema.parse(payload)
     expect(result.name).toBe('New Portfolio')
@@ -135,6 +140,7 @@ describe('portfolioCreateSchema', () => {
     // id is not in the create schema, so it should be stripped (Zod strict would reject)
     const result = portfolioCreateSchema.parse(payload)
     expect((result as Record<string, unknown>).id).toBeUndefined()
+    expect((result as Record<string, unknown>).updated).toBeUndefined()
   })
 
   it('rejects missing name', () => {
@@ -216,7 +222,7 @@ describe('platformSchema', () => {
 })
 
 describe('platformCreateSchema', () => {
-  it('accepts valid create payload (no id, created, ownerId, status, closedDate, closureNote)', () => {
+  it('accepts valid create payload (no id, created, updated, ownerId, status, closedDate, closureNote)', () => {
     const payload = {
       portfolioId: 'port_001',
       name: 'Nordnet',
@@ -228,7 +234,7 @@ describe('platformCreateSchema', () => {
     expect(result.name).toBe('Nordnet')
   })
 
-  it('omits id, created, ownerId, status, closedDate, closureNote', () => {
+  it('omits id, created, updated, ownerId, status, closedDate, closureNote', () => {
     const payload = {
       portfolioId: 'port_001',
       name: 'Test',
@@ -239,6 +245,7 @@ describe('platformCreateSchema', () => {
     const result = platformCreateSchema.parse(payload)
     expect((result as Record<string, unknown>).id).toBeUndefined()
     expect((result as Record<string, unknown>).created).toBeUndefined()
+    expect((result as Record<string, unknown>).updated).toBeUndefined()
     expect((result as Record<string, unknown>).ownerId).toBeUndefined()
     expect((result as Record<string, unknown>).status).toBeUndefined()
   })
@@ -320,7 +327,7 @@ describe('dataPointCreateSchema', () => {
     expect(result.value).toBe(15000)
   })
 
-  it('omits id, created, ownerId', () => {
+  it('omits id, created, updated, ownerId', () => {
     const payload = {
       platformId: 'plat_001',
       value: 15000,
@@ -330,6 +337,7 @@ describe('dataPointCreateSchema', () => {
     }
     const result = dataPointCreateSchema.parse(payload)
     expect((result as Record<string, unknown>).id).toBeUndefined()
+    expect((result as Record<string, unknown>).updated).toBeUndefined()
     expect((result as Record<string, unknown>).ownerId).toBeUndefined()
   })
 })
@@ -418,7 +426,7 @@ describe('transactionCreateSchema', () => {
     expect(result.amount).toBe(2000)
   })
 
-  it('omits id, created, ownerId', () => {
+  it('omits id, created, updated, ownerId', () => {
     const payload = {
       platformId: 'plat_001',
       type: 'deposit' as const,
@@ -430,6 +438,7 @@ describe('transactionCreateSchema', () => {
     }
     const result = transactionCreateSchema.parse(payload)
     expect((result as Record<string, unknown>).id).toBeUndefined()
+    expect((result as Record<string, unknown>).updated).toBeUndefined()
     expect((result as Record<string, unknown>).ownerId).toBeUndefined()
   })
 })
@@ -495,7 +504,7 @@ describe('exchangeRateCreateSchema', () => {
     expect(result.rate).toBe(7.46)
   })
 
-  it('omits id, created, ownerId', () => {
+  it('omits id, created, updated, ownerId', () => {
     const payload = {
       fromCurrency: 'EUR',
       toCurrency: 'DKK',
@@ -505,6 +514,7 @@ describe('exchangeRateCreateSchema', () => {
     }
     const result = exchangeRateCreateSchema.parse(payload)
     expect((result as Record<string, unknown>).id).toBeUndefined()
+    expect((result as Record<string, unknown>).updated).toBeUndefined()
     expect((result as Record<string, unknown>).ownerId).toBeUndefined()
   })
 })

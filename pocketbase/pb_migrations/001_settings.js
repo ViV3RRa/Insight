@@ -30,6 +30,8 @@ migrate((app) => {
         name: "demoMode",
         type: "bool",
       },
+      { name: "created", type: "autodate", onCreate: true, onUpdate: false },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [
       "CREATE UNIQUE INDEX idx_settings_userId ON settings (userId)",

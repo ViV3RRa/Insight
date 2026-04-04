@@ -22,11 +22,13 @@ export const portfolioSchema = z.object({
   isDefault: z.boolean(),
   ownerId: UserId,
   created: z.string().datetime(),
+  updated: z.string().datetime(),
 })
 
 export const portfolioCreateSchema = portfolioSchema.omit({
   id: true,
   created: true,
+  updated: true,
   ownerId: true,
 })
 
@@ -50,11 +52,13 @@ export const platformSchema = z.object({
   closureNote: z.string().nullable(),
   ownerId: UserId,
   created: z.string().datetime(),
+  updated: z.string().datetime(),
 })
 
 export const platformCreateSchema = platformSchema.omit({
   id: true,
   created: true,
+  updated: true,
   ownerId: true,
   status: true,
   closedDate: true,
@@ -77,11 +81,13 @@ export const dataPointSchema = z.object({
   note: z.string().nullable(),
   ownerId: UserId,
   created: z.string().datetime(),
+  updated: z.string().datetime(),
 })
 
 export const dataPointCreateSchema = dataPointSchema.omit({
   id: true,
   created: true,
+  updated: true,
   ownerId: true,
 })
 
@@ -103,11 +109,13 @@ export const transactionSchema = z.object({
   attachment: z.string().nullable(),
   ownerId: UserId,
   created: z.string().datetime(),
+  updated: z.string().datetime(),
 })
 
 export const transactionCreateSchema = transactionSchema.omit({
   id: true,
   created: true,
+  updated: true,
   ownerId: true,
 })
 
@@ -128,11 +136,13 @@ export const exchangeRateSchema = z.object({
   source: exchangeRateSourceSchema,
   ownerId: UserId,
   created: z.string().datetime(),
+  updated: z.string().datetime(),
 })
 
 export const exchangeRateCreateSchema = exchangeRateSchema.omit({
   id: true,
   created: true,
+  updated: true,
   ownerId: true,
 })
 

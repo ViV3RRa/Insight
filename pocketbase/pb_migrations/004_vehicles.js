@@ -45,6 +45,8 @@ migrate((app) => {
         maxSize: 5242880,
         mimeTypes: ["image/jpeg", "image/png", "image/webp"],
       },
+      { name: "created", type: "autodate", onCreate: true, onUpdate: false },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [],
     listRule: 'ownerId = @request.auth.id',
@@ -99,6 +101,8 @@ migrate((app) => {
         maxSize: 5242880,
         mimeTypes: ["image/jpeg", "image/png", "image/webp"],
       },
+      { name: "created", type: "autodate", onCreate: true, onUpdate: false },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [
       "CREATE INDEX idx_refuelings_owner_vehicle_date ON refuelings (ownerId, vehicleId, date)",
@@ -144,6 +148,8 @@ migrate((app) => {
         maxSize: 5242880,
         mimeTypes: ["image/jpeg", "image/png", "image/webp", "application/pdf"],
       },
+      { name: "created", type: "autodate", onCreate: true, onUpdate: false },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [
       "CREATE INDEX idx_maintenance_owner_vehicle_date ON maintenance_events (ownerId, vehicleId, date)",

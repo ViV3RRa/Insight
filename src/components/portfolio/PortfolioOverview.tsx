@@ -1,9 +1,29 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import { useInvestmentUIStore } from '@/stores/investmentUIStore'
 import * as platformService from '@/services/platforms'
+import * as portfolioService from '@/services/portfolios'
+import * as dataPointService from '@/services/dataPoints'
+import * as transactionService from '@/services/transactions'
+import {
+  computePlatformGainLoss,
+  computeMonthlyEarningsForPlatform,
+  computePortfolioAllocation,
+  findValueAtOrBefore,
+  type PlatformAllocationInput,
+} from '@/utils/calculations'
+import {
+  computeTotalPortfolioValue,
+  computePortfolioGainLoss,
+  computePortfolioXIRR,
+  computePortfolioMonthlyEarnings,
+  buildCompositeValueSeries,
+  type PlatformWithData,
+} from '@/utils/portfolioAggregation'
+import { buildCashFlows, calculateXIRR } from '@/utils/xirr'
+import { formatCurrency } from '@/utils/formatters'
 import { PortfolioSwitcher } from './PortfolioSwitcher'
 import { PortfolioOverviewSummary } from './PortfolioOverviewSummary'
 import { PortfolioOverviewYoY } from './PortfolioOverviewYoY'
@@ -18,51 +38,123 @@ import type { CashPlatformRow } from './PortfolioOverviewCashTable'
 import { PortfolioOverviewClosed } from './PortfolioOverviewClosed'
 import type { ClosedPlatformRow } from './PortfolioOverviewClosed'
 import { PortfolioOverviewAllocation } from './PortfolioOverviewAllocation'
+import { PortfolioDialog } from './dialogs/PortfolioDialog'
+import { PlatformDialog } from './dialogs/PlatformDialog'
+import { DataPointDialog } from './dialogs/DataPointDialog'
+import { TransactionDialog } from './dialogs/TransactionDialog'
 import { Button } from '@/components/shared/Button'
-import type { Platform } from '@/types/investment'
+import type { Platform, Portfolio } from '@/types/investment'
 
-function mapInvestmentPlatforms(platforms: Platform[]): PlatformRow[] {
+const PLATFORM_COLORS = [
+  '#6366f1', '#8b5cf6', '#ec4899', '#f97316',
+  '#14b8a6', '#06b6d4', '#84cc16', '#eab308',
+]
+
+const MONTH_NAMES = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+]
+
+const EPOCH_START = new Date(2000, 0, 1)
+
+function getLatestDataPoint(
+  dataPoints: { value: number; timestamp: string }[],
+): { value: number; timestamp: string } | null {
+  if (dataPoints.length === 0) return null
+  return [...dataPoints].sort((a, b) => b.timestamp.localeCompare(a.timestamp))[0] ?? null
+}
+
+function mapInvestmentPlatforms(
+  platforms: Platform[],
+  pwdList: PlatformWithData[],
+): PlatformRow[] {
+  const now = new Date()
+
   return platforms
     .filter((p) => p.type === 'investment' && p.status === 'active')
-    .map((p) => ({
-      id: p.id as string,
-      name: p.name,
-      iconUrl: platformService.getPlatformIconUrl(p),
-      currency: p.currency,
-      currentValue: 0,
-      monthEarnings: 0,
-      allTimeGainLoss: 0,
-      allTimeGainLossPercent: 0,
-      allTimeXirr: null,
-      lastUpdated: p.created,
-    }))
+    .map((p) => {
+      const pwd = pwdList.find((d) => (d.platform.id as string) === (p.id as string))
+      const dataPoints = pwd?.dataPoints ?? []
+      const transactions = pwd?.transactions ?? []
+
+      const latest = getLatestDataPoint(dataPoints)
+      const currentValue = latest?.value ?? 0
+      const lastUpdated = latest?.timestamp ?? p.created
+
+      const monthEntry = computeMonthlyEarningsForPlatform(
+        dataPoints, transactions, now.getFullYear(), now.getMonth() + 1,
+      )
+
+      const gainLoss = computePlatformGainLoss(dataPoints, transactions, EPOCH_START, now)
+
+      const startVal = findValueAtOrBefore(dataPoints, EPOCH_START)
+      const cashFlows = buildCashFlows(
+        startVal?.value ?? 0, EPOCH_START, currentValue, now, transactions,
+      )
+      const xirr = calculateXIRR(cashFlows)
+
+      return {
+        id: p.id as string,
+        name: p.name,
+        iconUrl: platformService.getPlatformIconUrl(p),
+        currency: p.currency,
+        currentValue,
+        monthEarnings: monthEntry?.earnings ?? 0,
+        allTimeGainLoss: gainLoss?.gain ?? 0,
+        allTimeGainLossPercent: gainLoss?.gainPercent ?? 0,
+        allTimeXirr: xirr,
+        lastUpdated,
+      }
+    })
 }
 
-function mapCashPlatforms(platforms: Platform[]): CashPlatformRow[] {
+function mapCashPlatforms(
+  platforms: Platform[],
+  pwdList: PlatformWithData[],
+): CashPlatformRow[] {
   return platforms
     .filter((p) => p.type === 'cash' && p.status === 'active')
-    .map((p) => ({
-      id: p.id as string,
-      name: p.name,
-      iconUrl: platformService.getPlatformIconUrl(p),
-      currency: p.currency,
-      currentBalance: 0,
-      lastUpdated: p.created,
-    }))
+    .map((p) => {
+      const pwd = pwdList.find((d) => (d.platform.id as string) === (p.id as string))
+      const latest = getLatestDataPoint(pwd?.dataPoints ?? [])
+
+      return {
+        id: p.id as string,
+        name: p.name,
+        iconUrl: platformService.getPlatformIconUrl(p),
+        currency: p.currency,
+        currentBalance: latest?.value ?? 0,
+        lastUpdated: latest?.timestamp ?? p.created,
+      }
+    })
 }
 
-function mapClosedPlatforms(platforms: Platform[]): ClosedPlatformRow[] {
+function mapClosedPlatforms(
+  platforms: Platform[],
+  pwdList: PlatformWithData[],
+): ClosedPlatformRow[] {
+  const now = new Date()
+
   return platforms
     .filter((p) => p.status === 'closed')
-    .map((p) => ({
-      id: p.id as string,
-      name: p.name,
-      iconUrl: platformService.getPlatformIconUrl(p),
-      finalValue: 0,
-      allTimeGainLoss: 0,
-      allTimeGainLossPercent: 0,
-      closedDate: p.closedDate ?? '',
-    }))
+    .map((p) => {
+      const pwd = pwdList.find((d) => (d.platform.id as string) === (p.id as string))
+      const dataPoints = pwd?.dataPoints ?? []
+      const transactions = pwd?.transactions ?? []
+      const latest = getLatestDataPoint(dataPoints)
+
+      const gainLoss = computePlatformGainLoss(dataPoints, transactions, EPOCH_START, now)
+
+      return {
+        id: p.id as string,
+        name: p.name,
+        iconUrl: platformService.getPlatformIconUrl(p),
+        finalValue: latest?.value ?? 0,
+        allTimeGainLoss: gainLoss?.gain ?? 0,
+        allTimeGainLossPercent: gainLoss?.gainPercent ?? 0,
+        closedDate: p.closedDate ?? '',
+      }
+    })
 }
 
 function PortfolioOverview() {
@@ -75,9 +167,18 @@ function PortfolioOverview() {
   const setYoyActive = useInvestmentUIStore((s) => s.setYoyActive)
   const chartMode = useInvestmentUIStore((s) => s.chartMode)
 
+  const queryClient = useQueryClient()
+
   const [dataPointDialogOpen, setDataPointDialogOpen] = useState(false)
   const [transactionDialogOpen, setTransactionDialogOpen] = useState(false)
   const [platformDialogOpen, setPlatformDialogOpen] = useState(false)
+  const [portfolioDialogOpen, setPortfolioDialogOpen] = useState(false)
+  const [editingPortfolio, setEditingPortfolio] = useState<Portfolio | null>(null)
+
+  const { data: portfolios } = useQuery({
+    queryKey: ['portfolios'],
+    queryFn: portfolioService.getAll,
+  })
 
   const { data: platforms, isLoading } = useQuery({
     queryKey: ['platforms', selectedPortfolioId],
@@ -85,9 +186,253 @@ function PortfolioOverview() {
     enabled: !!selectedPortfolioId,
   })
 
-  const investmentPlatforms = platforms ? mapInvestmentPlatforms(platforms) : []
-  const cashPlatforms = platforms ? mapCashPlatforms(platforms) : []
-  const closedPlatforms = platforms ? mapClosedPlatforms(platforms) : []
+  // Fetch data points and transactions for all platforms
+  const { data: platformsWithData, isLoading: isPlatformDataLoading } = useQuery({
+    queryKey: ['platformsWithData', selectedPortfolioId],
+    queryFn: async () => {
+      if (!platforms) return []
+      const result: PlatformWithData[] = []
+      for (const platform of platforms) {
+        const [dataPoints, transactions] = await Promise.all([
+          dataPointService.getByPlatform(platform.id as string),
+          transactionService.getByPlatform(platform.id as string),
+        ])
+        result.push({ platform, dataPoints, transactions })
+      }
+      return result
+    },
+    enabled: !!platforms && platforms.length > 0,
+  })
+
+  // Compute portfolio-level aggregates (async due to currency conversion)
+  const { data: aggregatedData, isLoading: isAggregating } = useQuery({
+    queryKey: ['portfolioAggregation', selectedPortfolioId, platformsWithData?.length],
+    queryFn: async () => {
+      if (!platformsWithData || platformsWithData.length === 0) return null
+
+      const now = new Date()
+      const currentYear = now.getFullYear()
+      const yearStart = new Date(currentYear, 0, 1)
+      const prevYearStart = new Date(currentYear - 1, 0, 1)
+      const prevYearSameDate = new Date(currentYear - 1, now.getMonth(), now.getDate())
+
+      const prevMonth = now.getMonth() === 0 ? 12 : now.getMonth()
+      const prevMonthYear = now.getMonth() === 0 ? currentYear - 1 : currentYear
+
+      const allocationInputs: PlatformAllocationInput[] = platformsWithData
+        .filter((pwd) => pwd.platform.status === 'active')
+        .map((pwd) => ({
+          platform: pwd.platform,
+          currentValue: getLatestDataPoint(pwd.dataPoints)?.value ?? 0,
+        }))
+
+      // Parallel computation of independent aggregates
+      const [
+        totalValue,
+        allTimeGainLoss,
+        allTimeXirr,
+        ytdGainLoss,
+        ytdXirr,
+        monthEarnings,
+        prevYtdGainLoss,
+        prevYtdXirr,
+        prevMonthEarnings,
+        allocation,
+        compositeSeriesRaw,
+      ] = await Promise.all([
+        computeTotalPortfolioValue(platformsWithData),
+        computePortfolioGainLoss(platformsWithData, EPOCH_START, now),
+        computePortfolioXIRR(platformsWithData, EPOCH_START, now),
+        computePortfolioGainLoss(platformsWithData, yearStart, now),
+        computePortfolioXIRR(platformsWithData, yearStart, now),
+        computePortfolioMonthlyEarnings(platformsWithData, currentYear, now.getMonth() + 1),
+        computePortfolioGainLoss(platformsWithData, prevYearStart, prevYearSameDate),
+        computePortfolioXIRR(platformsWithData, prevYearStart, prevYearSameDate),
+        computePortfolioMonthlyEarnings(platformsWithData, prevMonthYear, prevMonth),
+        computePortfolioAllocation(allocationInputs),
+        buildCompositeValueSeries(platformsWithData, EPOCH_START, now),
+      ])
+
+      // Find earliest year with data for yearly table
+      let firstYear = currentYear
+      for (const { dataPoints } of platformsWithData) {
+        for (const dp of dataPoints) {
+          const year = new Date(dp.timestamp).getFullYear()
+          if (year < firstYear) firstYear = year
+        }
+      }
+
+      // Yearly performance data (parallel per-year)
+      const yearlyPromises = Array.from(
+        { length: currentYear - firstYear + 1 },
+        (_, i) => {
+          const year = firstYear + i
+          const yStart = new Date(year, 0, 1)
+          const yEnd = year === currentYear ? now : new Date(year + 1, 0, 0, 23, 59, 59)
+          return Promise.all([
+            computePortfolioGainLoss(platformsWithData, yStart, yEnd),
+            computePortfolioXIRR(platformsWithData, yStart, yEnd),
+          ]).then(([gl, yearXirr]) =>
+            gl
+              ? {
+                  year,
+                  startingValue: gl.startingValue,
+                  endingValue: gl.endingValue,
+                  netDeposits: gl.netDeposits,
+                  earnings: gl.gain,
+                  earningsPercent: gl.gainPercent ?? 0,
+                  xirr: yearXirr,
+                }
+              : null,
+          )
+        },
+      )
+      const yearlyData = (await Promise.all(yearlyPromises)).filter(
+        (d): d is NonNullable<typeof d> => d !== null,
+      )
+
+      // Monthly performance data for current year (parallel per-month)
+      const monthlyPromises = Array.from(
+        { length: now.getMonth() + 1 },
+        (_, i) => {
+          const month = i + 1
+          const mStart = new Date(currentYear, month - 1, 1)
+          const mEnd =
+            month - 1 === now.getMonth()
+              ? now
+              : new Date(currentYear, month, 0, 23, 59, 59)
+          return Promise.all([
+            computePortfolioGainLoss(platformsWithData, mStart, mEnd),
+            computePortfolioXIRR(platformsWithData, mStart, mEnd),
+          ]).then(([gl, monthXirr]) => ({
+            period: `${currentYear}-${String(month).padStart(2, '0')}`,
+            periodLabel: `${MONTH_NAMES[month - 1]} ${currentYear}`,
+            startingValue: gl?.startingValue ?? 0,
+            endingValue: gl?.endingValue ?? 0,
+            netDeposits: gl?.netDeposits ?? 0,
+            earnings: gl?.gain ?? 0,
+            monthlyXirr: monthXirr,
+          }))
+        },
+      )
+      const monthlyData = await Promise.all(monthlyPromises)
+
+      return {
+        totalValue,
+        allTimeGainLoss,
+        allTimeXirr,
+        ytdGainLoss,
+        ytdXirr,
+        monthEarnings,
+        prevYtdGainLoss,
+        prevYtdXirr,
+        prevMonthEarnings,
+        allocation,
+        compositeSeriesRaw,
+        yearlyData,
+        monthlyData,
+      }
+    },
+    enabled: !!platformsWithData && platformsWithData.length > 0,
+  })
+
+  const dataLoading = isLoading || isPlatformDataLoading || isAggregating
+
+  const pwdList = platformsWithData ?? []
+  const investmentPlatforms = platforms ? mapInvestmentPlatforms(platforms, pwdList) : []
+  const cashPlatforms = platforms ? mapCashPlatforms(platforms, pwdList) : []
+  const closedPlatforms = platforms ? mapClosedPlatforms(platforms, pwdList) : []
+
+  // Latest data point date across all platforms
+  const latestDataPointDate = useMemo(() => {
+    if (!platformsWithData || platformsWithData.length === 0) return null
+    let latest: string | null = null
+    for (const { dataPoints } of platformsWithData) {
+      for (const dp of dataPoints) {
+        if (!latest || dp.timestamp > latest) latest = dp.timestamp
+      }
+    }
+    return latest
+  }, [platformsWithData])
+
+  // Chart data: composite value series
+  const compositeData = useMemo(
+    () =>
+      (aggregatedData?.compositeSeriesRaw ?? []).map((cp) => ({
+        timestamp: cp.date.toISOString(),
+        totalValue: cp.totalValueDKK,
+        platformValues: cp.platformBreakdown,
+      })),
+    [aggregatedData?.compositeSeriesRaw],
+  )
+
+  // Chart data: platform series for legend
+  const chartPlatforms = useMemo(
+    () =>
+      (platforms ?? [])
+        .filter((p) => p.status === 'active')
+        .map((p, i) => ({
+          name: p.name,
+          color: PLATFORM_COLORS[i % PLATFORM_COLORS.length]!,
+        })),
+    [platforms],
+  )
+
+  // Chart data: monthly performance for bar chart
+  const monthlyPerformance = useMemo(
+    () =>
+      (aggregatedData?.monthlyData ?? []).map((m) => ({
+        month: m.periodLabel,
+        earnings: m.earnings,
+        xirr: m.monthlyXirr,
+      })),
+    [aggregatedData?.monthlyData],
+  )
+
+  // Yearly performance totals
+  const yearlyTotals = useMemo(() => {
+    const gl = aggregatedData?.allTimeGainLoss
+    return gl
+      ? {
+          startingValue: gl.startingValue,
+          endingValue: gl.endingValue,
+          netDeposits: gl.netDeposits,
+          earnings: gl.gain,
+          earningsPercent: gl.gainPercent ?? 0,
+          xirr: aggregatedData?.allTimeXirr ?? null,
+        }
+      : {
+          startingValue: 0,
+          endingValue: 0,
+          netDeposits: 0,
+          earnings: 0,
+          earningsPercent: 0,
+          xirr: null,
+        }
+  }, [aggregatedData?.allTimeGainLoss, aggregatedData?.allTimeXirr])
+
+  // Allocation segments
+  const allocationSegments = useMemo(
+    () =>
+      (aggregatedData?.allocation ?? []).map((a, i) => ({
+        label: a.platformName,
+        value: a.allocationPercent ?? 0,
+        formattedValue: formatCurrency(a.valueDKK, 'DKK'),
+        color: PLATFORM_COLORS[i % PLATFORM_COLORS.length]!,
+        isCash: a.type === 'cash',
+      })),
+    [aggregatedData?.allocation],
+  )
+
+  const platformOptions = (platforms ?? [])
+    .filter((p) => p.status === 'active')
+    .map((p) => ({
+      id: p.id as string,
+      name: p.name,
+      type: p.type,
+      currency: p.currency,
+      icon: platformService.getPlatformIconUrl(p),
+    }))
 
   const activePlatformCount = investmentPlatforms.length + cashPlatforms.length
   const platformCountSummary = activePlatformCount > 0
@@ -102,8 +447,14 @@ function PortfolioOverview() {
     navigate(`/investment/cash/${platformId}`)
   }
 
+  function invalidatePortfolioData() {
+    queryClient.invalidateQueries({ queryKey: ['platforms', selectedPortfolioId] })
+    queryClient.invalidateQueries({ queryKey: ['platformsWithData', selectedPortfolioId] })
+    queryClient.invalidateQueries({ queryKey: ['portfolioAggregation', selectedPortfolioId] })
+  }
+
   return (
-    <div className="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+    <div className="relative z-0 max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
       {/* Desktop page header */}
       <div
         className="hidden lg:flex items-center justify-between mb-8"
@@ -114,12 +465,37 @@ function PortfolioOverview() {
             <h1 className="text-2xl font-bold tracking-tight text-base-900 dark:text-white">
               Investment Portfolio
             </h1>
-            <PortfolioSwitcher />
+            <PortfolioSwitcher
+              onAddPortfolio={() => {
+                setEditingPortfolio(null)
+                setPortfolioDialogOpen(true)
+              }}
+              onEditPortfolio={(id) => {
+                const p = portfolios?.find((port) => port.id === id) ?? null
+                setEditingPortfolio(p)
+                setPortfolioDialogOpen(true)
+              }}
+            />
           </div>
           {platformCountSummary && (
             <p className="text-sm text-base-400">{platformCountSummary}</p>
           )}
         </div>
+      </div>
+
+      {/* Mobile portfolio switcher */}
+      <div className="lg:hidden mb-4" data-testid="section-mobile-switcher">
+        <PortfolioSwitcher
+          onAddPortfolio={() => {
+            setEditingPortfolio(null)
+            setPortfolioDialogOpen(true)
+          }}
+          onEditPortfolio={(id) => {
+            const p = portfolios?.find((port) => port.id === id) ?? null
+            setEditingPortfolio(p)
+            setPortfolioDialogOpen(true)
+          }}
+        />
       </div>
 
       {/* Mobile action buttons */}
@@ -146,30 +522,30 @@ function PortfolioOverview() {
       {/* Summary Cards */}
       <div data-testid="section-summary-cards">
         <PortfolioOverviewSummary
-          totalValue={0}
-          latestDataPointDate={null}
-          allTimeGain={0}
-          allTimeGainPercent={0}
-          allTimeXirr={null}
-          ytdGain={0}
-          ytdGainPercent={0}
-          ytdXirr={null}
-          monthEarnings={0}
+          totalValue={aggregatedData?.totalValue ?? 0}
+          latestDataPointDate={latestDataPointDate}
+          allTimeGain={aggregatedData?.allTimeGainLoss?.gain ?? 0}
+          allTimeGainPercent={aggregatedData?.allTimeGainLoss?.gainPercent ?? 0}
+          allTimeXirr={aggregatedData?.allTimeXirr ?? null}
+          ytdGain={aggregatedData?.ytdGainLoss?.gain ?? 0}
+          ytdGainPercent={aggregatedData?.ytdGainLoss?.gainPercent ?? 0}
+          ytdXirr={aggregatedData?.ytdXirr ?? null}
+          monthEarnings={aggregatedData?.monthEarnings ?? 0}
           currentMonth={new Date()}
-          isLoading={isLoading}
+          isLoading={dataLoading}
         />
       </div>
 
       {/* YoY Comparison */}
       <div data-testid="section-yoy" className="mt-6 lg:mt-8">
         <PortfolioOverviewYoY
-          ytdEarnings={0}
-          prevYtdEarnings={0}
-          ytdXirr={null}
-          prevYtdXirr={null}
-          monthEarnings={0}
-          prevMonthEarnings={0}
-          isLoading={isLoading}
+          ytdEarnings={aggregatedData?.ytdGainLoss?.gain ?? 0}
+          prevYtdEarnings={aggregatedData?.prevYtdGainLoss?.gain ?? 0}
+          ytdXirr={aggregatedData?.ytdXirr ?? null}
+          prevYtdXirr={aggregatedData?.prevYtdXirr ?? null}
+          monthEarnings={aggregatedData?.monthEarnings ?? 0}
+          prevMonthEarnings={aggregatedData?.prevMonthEarnings ?? 0}
+          isLoading={dataLoading}
         />
       </div>
 
@@ -177,31 +553,24 @@ function PortfolioOverview() {
       <div data-testid="section-performance" className="mt-6 lg:mt-8">
         <PortfolioOverviewPerformanceAccordion>
           <PortfolioOverviewValueCharts
-            compositeData={[]}
-            platforms={[]}
-            monthlyPerformance={[]}
+            compositeData={compositeData}
+            platforms={chartPlatforms}
+            monthlyPerformance={monthlyPerformance}
             timeSpan={timeSpan}
             onTimeSpanChange={setTimeSpan}
             yoyActive={yoyActive}
             onYoYChange={setYoyActive}
-            isLoading={isLoading}
+            isLoading={dataLoading}
           />
           <PortfolioOverviewPerfYearly
-            yearlyData={[]}
-            totals={{
-              startingValue: 0,
-              endingValue: 0,
-              netDeposits: 0,
-              earnings: 0,
-              earningsPercent: 0,
-              xirr: null,
-            }}
-            isLoading={isLoading}
+            yearlyData={aggregatedData?.yearlyData ?? []}
+            totals={yearlyTotals}
+            isLoading={dataLoading}
           />
           <PortfolioOverviewPerfMonthly
-            monthlyData={[]}
+            monthlyData={aggregatedData?.monthlyData ?? []}
             chartMode={chartMode}
-            isLoading={isLoading}
+            isLoading={dataLoading}
           />
         </PortfolioOverviewPerformanceAccordion>
       </div>
@@ -238,8 +607,8 @@ function PortfolioOverview() {
       {/* Portfolio Allocation */}
       <div data-testid="section-allocation" className="mt-6 lg:mt-8">
         <PortfolioOverviewAllocation
-          segments={[]}
-          isLoading={isLoading}
+          segments={allocationSegments}
+          isLoading={dataLoading}
         />
       </div>
 
@@ -253,16 +622,78 @@ function PortfolioOverview() {
         Add Platform
       </button>
 
-      {/* Dialog placeholders — actual dialogs wired during integration */}
-      {dataPointDialogOpen && (
-        <div data-testid="data-point-dialog" hidden />
-      )}
-      {transactionDialogOpen && (
-        <div data-testid="transaction-dialog" hidden />
-      )}
-      {platformDialogOpen && (
-        <div data-testid="platform-dialog" hidden />
-      )}
+      {/* Dialogs */}
+      <PortfolioDialog
+        isOpen={portfolioDialogOpen}
+        onClose={() => {
+          setPortfolioDialogOpen(false)
+          setEditingPortfolio(null)
+        }}
+        onSave={async (data) => {
+          if (editingPortfolio) {
+            await portfolioService.update(editingPortfolio.id, data)
+          } else {
+            await portfolioService.create(data)
+          }
+          queryClient.invalidateQueries({ queryKey: ['portfolios'] })
+          setPortfolioDialogOpen(false)
+          setEditingPortfolio(null)
+        }}
+        portfolio={editingPortfolio ?? undefined}
+      />
+
+      <PlatformDialog
+        isOpen={platformDialogOpen}
+        onClose={() => setPlatformDialogOpen(false)}
+        onSave={async (data) => {
+          if (!selectedPortfolioId) return
+          await platformService.create({
+            portfolioId: selectedPortfolioId as never,
+            name: data.name,
+            icon: data.icon?.name ?? '',
+            type: data.type ?? 'investment',
+            currency: data.currency ?? 'DKK',
+          })
+          invalidatePortfolioData()
+          setPlatformDialogOpen(false)
+        }}
+      />
+
+      <DataPointDialog
+        isOpen={dataPointDialogOpen}
+        onClose={() => setDataPointDialogOpen(false)}
+        onSave={async (data) => {
+          await dataPointService.create({
+            platformId: data.platformId as never,
+            value: data.value,
+            timestamp: data.timestamp,
+            isInterpolated: false,
+            note: data.note || null,
+          })
+          invalidatePortfolioData()
+          setDataPointDialogOpen(false)
+        }}
+        platforms={platformOptions}
+      />
+
+      <TransactionDialog
+        isOpen={transactionDialogOpen}
+        onClose={() => setTransactionDialogOpen(false)}
+        onSave={async (data) => {
+          await transactionService.create({
+            platformId: data.platformId as never,
+            type: data.type,
+            amount: data.amount,
+            exchangeRate: data.exchangeRate,
+            timestamp: data.timestamp,
+            note: data.note || null,
+            attachment: data.attachment?.name ?? null,
+          })
+          invalidatePortfolioData()
+          setTransactionDialogOpen(false)
+        }}
+        platforms={platformOptions}
+      />
     </div>
   )
 }

@@ -17,6 +17,8 @@ migrate((app) => {
       { name: "unit", type: "text", required: true },
       { name: "icon", type: "text", required: true },
       { name: "color", type: "text", required: true },
+      { name: "created", type: "autodate", onCreate: true, onUpdate: false },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [],
     listRule: 'ownerId = @request.auth.id',
@@ -59,6 +61,8 @@ migrate((app) => {
         maxSize: 5242880,
         mimeTypes: ["image/jpeg", "image/png", "image/webp"],
       },
+      { name: "created", type: "autodate", onCreate: true, onUpdate: false },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [
       "CREATE INDEX idx_meter_readings_owner_utility_ts ON meter_readings (ownerId, utilityId, timestamp)",
@@ -105,6 +109,8 @@ migrate((app) => {
         maxSize: 10485760,
         mimeTypes: ["image/jpeg", "image/png", "image/webp", "application/pdf"],
       },
+      { name: "created", type: "autodate", onCreate: true, onUpdate: false },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [
       "CREATE INDEX idx_utility_bills_owner_utility_start ON utility_bills (ownerId, utilityId, periodStart)",
