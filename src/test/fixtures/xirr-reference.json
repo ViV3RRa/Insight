@@ -1,0 +1,106 @@
+[
+  {
+    "description": "Simple annual return ~10%",
+    "cashFlows": [
+      { "amount": -10000, "date": "2025-01-01" },
+      { "amount": 11000, "date": "2025-12-31" }
+    ],
+    "expectedXIRR": 0.1003
+  },
+  {
+    "description": "Simple annual return ~20%",
+    "cashFlows": [
+      { "amount": -10000, "date": "2025-01-01" },
+      { "amount": 12000, "date": "2025-12-31" }
+    ],
+    "expectedXIRR": 0.2007
+  },
+  {
+    "description": "Loss of 10%",
+    "cashFlows": [
+      { "amount": -10000, "date": "2025-01-01" },
+      { "amount": 9000, "date": "2025-12-31" }
+    ],
+    "expectedXIRR": -0.0997
+  },
+  {
+    "description": "Investment with mid-year deposit",
+    "cashFlows": [
+      { "amount": -10000, "date": "2025-01-01" },
+      { "amount": -5000, "date": "2025-07-01" },
+      { "amount": 16000, "date": "2025-12-31" }
+    ],
+    "expectedXIRR": 0.0805
+  },
+  {
+    "description": "Half-year holding period ~10.25% annualized",
+    "cashFlows": [
+      { "amount": -10000, "date": "2025-01-01" },
+      { "amount": 10500, "date": "2025-07-01" }
+    ],
+    "expectedXIRR": 0.1025
+  },
+  {
+    "description": "Investment with withdrawal",
+    "cashFlows": [
+      { "amount": -10000, "date": "2025-01-01" },
+      { "amount": 2000, "date": "2025-04-01" },
+      { "amount": 8500, "date": "2025-12-31" }
+    ],
+    "expectedXIRR": 0.0583
+  },
+  {
+    "description": "Double the money in a year",
+    "cashFlows": [
+      { "amount": -10000, "date": "2025-01-01" },
+      { "amount": 20000, "date": "2025-12-31" }
+    ],
+    "expectedXIRR": 1.0014
+  },
+  {
+    "description": "Multiple deposits and withdrawals",
+    "cashFlows": [
+      { "amount": -5000, "date": "2025-01-01" },
+      { "amount": -3000, "date": "2025-03-15" },
+      { "amount": 1000, "date": "2025-06-01" },
+      { "amount": -2000, "date": "2025-09-01" },
+      { "amount": 10500, "date": "2025-12-31" }
+    ],
+    "expectedXIRR": 0.1870
+  },
+  {
+    "description": "Break even — zero return",
+    "cashFlows": [
+      { "amount": -10000, "date": "2025-01-01" },
+      { "amount": 10000, "date": "2025-12-31" }
+    ],
+    "expectedXIRR": 0.0
+  },
+  {
+    "description": "Large loss of 50%",
+    "cashFlows": [
+      { "amount": -10000, "date": "2025-01-01" },
+      { "amount": 5000, "date": "2025-12-31" }
+    ],
+    "expectedXIRR": -0.4993
+  },
+  {
+    "description": "Multi-year investment",
+    "cashFlows": [
+      { "amount": -10000, "date": "2024-01-01" },
+      { "amount": 12500, "date": "2025-12-31" }
+    ],
+    "expectedXIRR": 0.1180
+  },
+  {
+    "description": "Quarterly deposits with final value",
+    "cashFlows": [
+      { "amount": -1000, "date": "2025-01-01" },
+      { "amount": -1000, "date": "2025-04-01" },
+      { "amount": -1000, "date": "2025-07-01" },
+      { "amount": -1000, "date": "2025-10-01" },
+      { "amount": 4200, "date": "2025-12-31" }
+    ],
+    "expectedXIRR": 0.0794
+  }
+]
