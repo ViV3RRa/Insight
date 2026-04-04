@@ -31,15 +31,25 @@ export async function getOne(id: string): Promise<Platform> {
   return platformSchema.parse(record)
 }
 
-export async function create(data: PlatformCreate): Promise<Platform> {
+export async function create(data: PlatformCreate | FormData): Promise<Platform> {
   const userId = getUserId()
-  const record = await pb.collection(COLLECTION).create({
-    ...data,
-    status: 'active',
-    closedDate: null,
-    closureNote: null,
-    ownerId: userId,
-  })
+  let body: FormData | Record<string, unknown>
+  if (data instanceof FormData) {
+    data.set('status', 'active')
+    data.set('closedDate', '')
+    data.set('closureNote', '')
+    data.set('ownerId', userId)
+    body = data
+  } else {
+    body = {
+      ...data,
+      status: 'active',
+      closedDate: null,
+      closureNote: null,
+      ownerId: userId,
+    }
+  }
+  const record = await pb.collection(COLLECTION).create(body)
   return platformSchema.parse(record)
 }
 

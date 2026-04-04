@@ -647,13 +647,15 @@ function PortfolioOverview() {
         onClose={() => setPlatformDialogOpen(false)}
         onSave={async (data) => {
           if (!selectedPortfolioId) return
-          await platformService.create({
-            portfolioId: selectedPortfolioId as never,
-            name: data.name,
-            icon: data.icon?.name ?? '',
-            type: data.type ?? 'investment',
-            currency: data.currency ?? 'DKK',
-          })
+          const formData = new FormData()
+          formData.set('portfolioId', selectedPortfolioId as string)
+          formData.set('name', data.name)
+          formData.set('type', data.type ?? 'investment')
+          formData.set('currency', data.currency ?? 'DKK')
+          if (data.icon) {
+            formData.set('icon', data.icon)
+          }
+          await platformService.create(formData)
           invalidatePortfolioData()
           setPlatformDialogOpen(false)
         }}
