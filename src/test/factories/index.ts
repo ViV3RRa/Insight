@@ -7,6 +7,11 @@ export {
   buildTransaction,
   buildExchangeRate,
 } from './investmentFactory'
+export {
+  buildUtility,
+  buildMeterReading,
+  buildUtilityBill,
+} from './homeFactory'
 export type { Settings } from '@/types/settings'
 export type {
   Portfolio,
@@ -15,3 +20,8 @@ export type {
   Transaction,
   ExchangeRate,
 } from '@/types/investment'
+export type {
+  Utility,
+  MeterReading,
+  UtilityBill,
+} from '@/types/home'

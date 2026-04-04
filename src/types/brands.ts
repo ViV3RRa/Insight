@@ -7,6 +7,9 @@ export const DataPointId = z.string().brand<'DataPointId'>()
 export const TransactionId = z.string().brand<'TransactionId'>()
 export const ExchangeRateId = z.string().brand<'ExchangeRateId'>()
 export const SettingsId = z.string().brand<'SettingsId'>()
+export const UtilityId = z.string().brand<'UtilityId'>()
+export const MeterReadingId = z.string().brand<'MeterReadingId'>()
+export const UtilityBillId = z.string().brand<'UtilityBillId'>()
 
 export type UserId = z.infer<typeof UserId>
 export type PortfolioId = z.infer<typeof PortfolioId>
@@ -15,3 +18,6 @@ export type DataPointId = z.infer<typeof DataPointId>
 export type TransactionId = z.infer<typeof TransactionId>
 export type ExchangeRateId = z.infer<typeof ExchangeRateId>
 export type SettingsId = z.infer<typeof SettingsId>
+export type UtilityId = z.infer<typeof UtilityId>
+export type MeterReadingId = z.infer<typeof MeterReadingId>
+export type UtilityBillId = z.infer<typeof UtilityBillId>

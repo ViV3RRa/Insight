@@ -6,6 +6,9 @@ export {
   TransactionId,
   ExchangeRateId,
   SettingsId,
+  UtilityId,
+  MeterReadingId,
+  UtilityBillId,
 } from './brands'
 
 export {
@@ -53,3 +56,29 @@ export type {
   Settings,
   SettingsCreate,
 } from './settings'
+
+export {
+  utilityIconSchema,
+  utilityColorSchema,
+  utilitySchema,
+  utilityCreateSchema,
+  meterReadingSchema,
+  meterReadingCreateSchema,
+  utilityBillSchema,
+  utilityBillCreateSchema,
+} from './home'
+
+export type {
+  Utility,
+  UtilityCreate,
+  UtilityIcon,
+  UtilityColor,
+  MeterReading,
+  MeterReadingCreate,
+  UtilityBill,
+  UtilityBillCreate,
+  MonthlyConsumption,
+  MonthlyCost,
+  UtilityYearlySummary,
+  UtilityMonthlySummary,
+} from './home'
