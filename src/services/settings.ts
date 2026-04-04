@@ -1,5 +1,6 @@
 import pb from './pb'
 import { settingsSchema, type Settings, type SettingsCreate } from '@/types/settings'
+import { isNotFoundError } from './errors'
 
 const DEFAULTS: SettingsCreate = {
   dateFormat: 'yyyy-MM-dd',
@@ -14,7 +15,10 @@ export async function getOrCreateSettings(): Promise<Settings> {
   try {
     const record = await pb.collection('settings').getFirstListItem(`userId="${userId}"`)
     return settingsSchema.parse(record)
-  } catch {
+  } catch (error: unknown) {
+    if (!isNotFoundError(error)) {
+      throw error
+    }
     // No settings found — create with defaults
     const record = await pb.collection('settings').create({ ...DEFAULTS, userId })
     return settingsSchema.parse(record)

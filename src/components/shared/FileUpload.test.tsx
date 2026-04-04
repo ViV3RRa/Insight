@@ -299,6 +299,83 @@ describe('FileUpload', () => {
     })
   })
 
+  describe('file type validation on drag-and-drop', () => {
+    it('rejects file with wrong type on drag-and-drop', () => {
+      const onChange = vi.fn()
+      renderWithProviders(
+        <FileUpload onChange={onChange} accept="image/*" />,
+      )
+      const zone = screen.getByRole('button')
+
+      const file = createFile('document.pdf', 500, 'application/pdf')
+      fireEvent.drop(zone, {
+        dataTransfer: { files: [file] },
+      })
+
+      expect(onChange).not.toHaveBeenCalled()
+      expect(screen.getByText('File type not accepted. Allowed: image/*')).toBeInTheDocument()
+    })
+
+    it('accepts file with correct type on drag-and-drop', () => {
+      const onChange = vi.fn()
+      renderWithProviders(
+        <FileUpload onChange={onChange} accept="image/*" />,
+      )
+      const zone = screen.getByRole('button')
+
+      const file = createFile('photo.png', 500, 'image/png')
+      fireEvent.drop(zone, {
+        dataTransfer: { files: [file] },
+      })
+
+      expect(onChange).toHaveBeenCalledWith(file)
+    })
+
+    it('rejects file with wrong extension when accept uses dot notation', () => {
+      const onChange = vi.fn()
+      renderWithProviders(
+        <FileUpload onChange={onChange} accept=".jpg,.png" />,
+      )
+      const zone = screen.getByRole('button')
+
+      const file = createFile('document.pdf', 500, 'application/pdf')
+      fireEvent.drop(zone, {
+        dataTransfer: { files: [file] },
+      })
+
+      expect(onChange).not.toHaveBeenCalled()
+      expect(screen.getByText('File type not accepted. Allowed: .jpg,.png')).toBeInTheDocument()
+    })
+
+    it('accepts file with correct extension when accept uses dot notation', () => {
+      const onChange = vi.fn()
+      renderWithProviders(
+        <FileUpload onChange={onChange} accept=".jpg,.png" />,
+      )
+      const zone = screen.getByRole('button')
+
+      const file = createFile('photo.png', 500, 'image/png')
+      fireEvent.drop(zone, {
+        dataTransfer: { files: [file] },
+      })
+
+      expect(onChange).toHaveBeenCalledWith(file)
+    })
+
+    it('skips type validation when accept is not specified', () => {
+      const onChange = vi.fn()
+      renderWithProviders(<FileUpload onChange={onChange} />)
+      const zone = screen.getByRole('button')
+
+      const file = createFile('anything.xyz', 500, 'application/octet-stream')
+      fireEvent.drop(zone, {
+        dataTransfer: { files: [file] },
+      })
+
+      expect(onChange).toHaveBeenCalledWith(file)
+    })
+  })
+
   describe('attached state border', () => {
     it('uses solid border (not dashed) when file is attached', () => {
       const onChange = vi.fn()

@@ -17,8 +17,8 @@ export type Currency = z.infer<typeof currencySchema>
 
 export const portfolioSchema = z.object({
   id: PortfolioId,
-  name: z.string(),
-  ownerName: z.string(),
+  name: z.string().min(1),
+  ownerName: z.string().min(1),
   isDefault: z.boolean(),
   ownerId: UserId,
   created: z.string().datetime(),
@@ -41,7 +41,7 @@ export const platformStatusSchema = z.enum(['active', 'closed'])
 export const platformSchema = z.object({
   id: PlatformId,
   portfolioId: PortfolioId,
-  name: z.string(),
+  name: z.string().min(1),
   icon: z.string(),
   type: platformTypeSchema,
   currency: z.string(),
@@ -56,6 +56,7 @@ export const platformCreateSchema = platformSchema.omit({
   id: true,
   created: true,
   ownerId: true,
+  status: true,
   closedDate: true,
   closureNote: true,
 })
@@ -95,7 +96,7 @@ export const transactionSchema = z.object({
   id: TransactionId,
   platformId: PlatformId,
   type: transactionTypeSchema,
-  amount: z.number(),
+  amount: z.number().positive(),
   exchangeRate: z.number().nullable(),
   timestamp: z.string().datetime(),
   note: z.string().nullable(),
@@ -122,7 +123,7 @@ export const exchangeRateSchema = z.object({
   id: ExchangeRateId,
   fromCurrency: z.string(),
   toCurrency: z.string(),
-  rate: z.number(),
+  rate: z.number().positive(),
   date: z.string(),
   source: exchangeRateSourceSchema,
   ownerId: UserId,

@@ -36,14 +36,14 @@ describe('settings service', () => {
       expect(result).toEqual(existing)
     })
 
-    it('creates default settings when none found', async () => {
+    it('creates default settings when none found (404)', async () => {
       const created = buildSettings({
         userId: 'user_001',
         dateFormat: 'yyyy-MM-dd',
         theme: 'light',
         demoMode: false,
       })
-      mockGetFirstListItem.mockRejectedValueOnce(new Error('Not found'))
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 404 })
       mockCreate.mockResolvedValueOnce(created)
 
       const result = await getOrCreateSettings()
@@ -55,6 +55,16 @@ describe('settings service', () => {
         userId: 'user_001',
       })
       expect(result).toEqual(created)
+    })
+
+    it('re-throws non-404 errors', async () => {
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 500, message: 'Server error' })
+
+      await expect(getOrCreateSettings()).rejects.toEqual({
+        status: 500,
+        message: 'Server error',
+      })
+      expect(mockCreate).not.toHaveBeenCalled()
     })
 
     it('throws when not authenticated', async () => {

@@ -22,8 +22,17 @@ export default function Login() {
     try {
       await login(email, password)
       navigate('/home', { replace: true })
-    } catch {
-      setError('Invalid email or password.')
+    } catch (err: unknown) {
+      if (err && typeof err === 'object' && 'status' in err) {
+        const status = (err as { status: number }).status
+        if (status >= 500) {
+          setError('Server error. Please try again later.')
+        } else {
+          setError('Invalid email or password.')
+        }
+      } else {
+        setError('Unable to connect to the server.')
+      }
     } finally {
       setLoading(false)
     }

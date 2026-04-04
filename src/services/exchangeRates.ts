@@ -5,6 +5,7 @@ import {
   type ExchangeRate,
   type ExchangeRateCreate,
 } from '@/types/investment'
+import { isNotFoundError } from './errors'
 
 const COLLECTION = 'exchange_rates'
 
@@ -87,9 +88,8 @@ export async function getRate(
   toCurrency: string,
   date: string,
 ): Promise<number | null> {
-  // DKK-to-DKK: no lookup needed
+  // DKK-to-DKK (or any same-currency): no lookup needed
   if (fromCurrency === toCurrency) return 1.0
-  if (fromCurrency === 'DKK' && toCurrency === 'DKK') return 1.0
 
   const userId = getUserId()
 
@@ -100,7 +100,10 @@ export async function getRate(
     )
     const parsed = exchangeRateSchema.parse(record)
     return parsed.rate
-  } catch {
+  } catch (error: unknown) {
+    if (!isNotFoundError(error)) {
+      throw error
+    }
     // No exact match — try nearest prior
   }
 
@@ -112,7 +115,10 @@ export async function getRate(
     )
     const parsed = exchangeRateSchema.parse(record)
     return parsed.rate
-  } catch {
+  } catch (error: unknown) {
+    if (!isNotFoundError(error)) {
+      throw error
+    }
     // No stored rate — try auto-fetch
   }
 
@@ -175,7 +181,10 @@ export async function fetchMonthlyRates(fromCurrency: string): Promise<void> {
     )
     // Rate exists, nothing to do
     return
-  } catch {
+  } catch (error: unknown) {
+    if (!isNotFoundError(error)) {
+      throw error
+    }
     // Rate doesn't exist — fetch it
   }
 
@@ -197,7 +206,10 @@ export async function fetchTransactionDayRate(
     )
     // Rate exists, nothing to do
     return
-  } catch {
+  } catch (error: unknown) {
+    if (!isNotFoundError(error)) {
+      throw error
+    }
     // Rate doesn't exist — fetch it
   }
 

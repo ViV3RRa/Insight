@@ -121,7 +121,6 @@ describe('platforms service', () => {
         icon: 'nordnet.png',
         type: 'investment' as const,
         currency: 'DKK',
-        status: 'active' as const,
       }
       const created = buildPlatform({
         ...data,
@@ -150,7 +149,6 @@ describe('platforms service', () => {
         icon: 'test.png',
         type: 'investment' as const,
         currency: 'DKK',
-        status: 'active' as const,
       }
       mockCreate.mockResolvedValueOnce({ id: 123 }) // invalid
 

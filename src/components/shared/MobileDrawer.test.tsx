@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { renderWithProviders, screen, userEvent } from '@/test/utils'
+import { renderWithProviders, screen, userEvent, fireEvent } from '@/test/utils'
 import { MobileDrawer } from './MobileDrawer'
 
 const defaultFields = [
@@ -148,6 +148,26 @@ describe('MobileDrawer', () => {
   })
 
   // --- Dark mode classes ---
+
+  // --- Escape key ---
+
+  it('Escape key calls onClose when open', () => {
+    const onClose = vi.fn()
+    renderDrawer({ onClose })
+
+    fireEvent.keyDown(document, { key: 'Escape' })
+
+    expect(onClose).toHaveBeenCalledOnce()
+  })
+
+  it('Escape key does not call onClose when closed', () => {
+    const onClose = vi.fn()
+    renderDrawer({ isOpen: false, onClose })
+
+    fireEvent.keyDown(document, { key: 'Escape' })
+
+    expect(onClose).not.toHaveBeenCalled()
+  })
 
   it('has dark mode classes', () => {
     renderDrawer()

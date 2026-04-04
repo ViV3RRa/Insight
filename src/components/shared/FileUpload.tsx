@@ -60,6 +60,20 @@ function FileUpload({ value, onChange, accept, maxSizeMB = 10 }: FileUploadProps
 
   const validateAndSet = useCallback(
     (file: File) => {
+      // Validate file type if accept prop is specified
+      if (accept) {
+        const acceptedTypes = accept.split(',').map(t => t.trim())
+        const isAccepted = acceptedTypes.some(type => {
+          if (type.startsWith('.')) return file.name.toLowerCase().endsWith(type.toLowerCase())
+          if (type.endsWith('/*')) return file.type.startsWith(type.replace('/*', '/'))
+          return file.type === type
+        })
+        if (!isAccepted) {
+          setSizeError(`File type not accepted. Allowed: ${accept}`)
+          return
+        }
+      }
+
       const maxBytes = maxSizeMB * 1024 * 1024
       if (file.size > maxBytes) {
         setSizeError(`File exceeds ${maxSizeMB}MB limit`)
@@ -68,7 +82,7 @@ function FileUpload({ value, onChange, accept, maxSizeMB = 10 }: FileUploadProps
       setSizeError(null)
       onChange(file)
     },
-    [maxSizeMB, onChange],
+    [accept, maxSizeMB, onChange],
   )
 
   function handleClick() {

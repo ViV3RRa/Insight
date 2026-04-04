@@ -190,6 +190,36 @@ describe('transactions service', () => {
       expect(mockCreate).toHaveBeenCalledWith(formData)
       expect(result).toEqual(created)
     })
+
+    it('validates FormData amount and rejects zero', async () => {
+      const formData = new FormData()
+      formData.set('platformId', PLATFORM_ID)
+      formData.set('type', 'deposit')
+      formData.set('amount', '0')
+
+      await expect(create(formData)).rejects.toThrow('Amount must be positive')
+      expect(mockCreate).not.toHaveBeenCalled()
+    })
+
+    it('validates FormData amount and rejects negative', async () => {
+      const formData = new FormData()
+      formData.set('platformId', PLATFORM_ID)
+      formData.set('type', 'deposit')
+      formData.set('amount', '-100')
+
+      await expect(create(formData)).rejects.toThrow('Amount must be positive')
+      expect(mockCreate).not.toHaveBeenCalled()
+    })
+
+    it('validates FormData amount and rejects non-numeric', async () => {
+      const formData = new FormData()
+      formData.set('platformId', PLATFORM_ID)
+      formData.set('type', 'deposit')
+      formData.set('amount', 'abc')
+
+      await expect(create(formData)).rejects.toThrow('Amount must be positive')
+      expect(mockCreate).not.toHaveBeenCalled()
+    })
   })
 
   describe('update', () => {
@@ -234,6 +264,35 @@ describe('transactions service', () => {
 
       expect(mockUpdate).toHaveBeenCalledWith(existing.id, formData)
       expect(result.amount).toBe(8000)
+    })
+
+    it('validates FormData amount on update and rejects invalid', async () => {
+      const existing = buildTransaction({
+        platformId: PLATFORM_ID as any,
+      })
+      const formData = new FormData()
+      formData.set('amount', '0')
+
+      mockGetFirstListItem.mockResolvedValueOnce(existing)
+
+      await expect(update(existing.id, formData)).rejects.toThrow('Amount must be positive')
+      expect(mockUpdate).not.toHaveBeenCalled()
+    })
+
+    it('allows FormData update without amount field', async () => {
+      const existing = buildTransaction({
+        platformId: PLATFORM_ID as any,
+      })
+      const formData = new FormData()
+      formData.set('note', 'updated note')
+
+      mockGetFirstListItem.mockResolvedValueOnce(existing)
+      mockUpdate.mockResolvedValueOnce({ ...existing, note: 'updated note' })
+
+      const result = await update(existing.id, formData)
+
+      expect(mockUpdate).toHaveBeenCalledWith(existing.id, formData)
+      expect(result.note).toBe('updated note')
     })
 
     it('allows update without amount field', async () => {

@@ -216,32 +216,44 @@ describe('platformSchema', () => {
 })
 
 describe('platformCreateSchema', () => {
-  it('accepts valid create payload', () => {
+  it('accepts valid create payload (no id, created, ownerId, status, closedDate, closureNote)', () => {
     const payload = {
       portfolioId: 'port_001',
       name: 'Nordnet',
       icon: 'icon.png',
       type: 'investment' as const,
       currency: 'DKK',
-      status: 'active' as const,
     }
     const result = platformCreateSchema.parse(payload)
     expect(result.name).toBe('Nordnet')
   })
 
-  it('omits id, created, ownerId, closedDate, closureNote', () => {
+  it('omits id, created, ownerId, status, closedDate, closureNote', () => {
     const payload = {
       portfolioId: 'port_001',
       name: 'Test',
       icon: 'icon.png',
       type: 'cash' as const,
       currency: 'EUR',
-      status: 'active' as const,
     }
     const result = platformCreateSchema.parse(payload)
     expect((result as Record<string, unknown>).id).toBeUndefined()
     expect((result as Record<string, unknown>).created).toBeUndefined()
     expect((result as Record<string, unknown>).ownerId).toBeUndefined()
+    expect((result as Record<string, unknown>).status).toBeUndefined()
+  })
+
+  it('strips status if provided (status is set by service)', () => {
+    const payload = {
+      portfolioId: 'port_001',
+      name: 'Test',
+      icon: 'icon.png',
+      type: 'investment' as const,
+      currency: 'DKK',
+      status: 'active',
+    }
+    const result = platformCreateSchema.parse(payload)
+    expect((result as Record<string, unknown>).status).toBeUndefined()
   })
 })
 
@@ -494,6 +506,52 @@ describe('exchangeRateCreateSchema', () => {
     const result = exchangeRateCreateSchema.parse(payload)
     expect((result as Record<string, unknown>).id).toBeUndefined()
     expect((result as Record<string, unknown>).ownerId).toBeUndefined()
+  })
+})
+
+// --- Schema constraint validation ---
+
+describe('schema constraints', () => {
+  it('portfolioSchema rejects empty name', () => {
+    expect(() =>
+      portfolioSchema.parse({ ...validPortfolio, name: '' }),
+    ).toThrow()
+  })
+
+  it('portfolioSchema rejects empty ownerName', () => {
+    expect(() =>
+      portfolioSchema.parse({ ...validPortfolio, ownerName: '' }),
+    ).toThrow()
+  })
+
+  it('platformSchema rejects empty name', () => {
+    expect(() =>
+      platformSchema.parse({ ...validPlatform, name: '' }),
+    ).toThrow()
+  })
+
+  it('transactionSchema rejects zero amount', () => {
+    expect(() =>
+      transactionSchema.parse({ ...validTransaction, amount: 0 }),
+    ).toThrow()
+  })
+
+  it('transactionSchema rejects negative amount', () => {
+    expect(() =>
+      transactionSchema.parse({ ...validTransaction, amount: -100 }),
+    ).toThrow()
+  })
+
+  it('exchangeRateSchema rejects zero rate', () => {
+    expect(() =>
+      exchangeRateSchema.parse({ ...validExchangeRate, rate: 0 }),
+    ).toThrow()
+  })
+
+  it('exchangeRateSchema rejects negative rate', () => {
+    expect(() =>
+      exchangeRateSchema.parse({ ...validExchangeRate, rate: -1.5 }),
+    ).toThrow()
   })
 })
 

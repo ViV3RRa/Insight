@@ -50,6 +50,10 @@ export async function create(
   const userId = getUserId()
 
   if (data instanceof FormData) {
+    const amount = Number(data.get('amount'))
+    if (!amount || amount <= 0) {
+      throw new Error('Amount must be positive')
+    }
     data.set('ownerId', userId)
     const record = await pb.collection(COLLECTION).create(data)
     return transactionSchema.parse(record)
@@ -77,6 +81,10 @@ export async function update(
   )
 
   if (data instanceof FormData) {
+    const amount = Number(data.get('amount'))
+    if (data.has('amount') && (!amount || amount <= 0)) {
+      throw new Error('Amount must be positive')
+    }
     const record = await pb.collection(COLLECTION).update(id, data)
     return transactionSchema.parse(record)
   }

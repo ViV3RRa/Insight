@@ -154,6 +154,48 @@ describe('Settings', () => {
     expect(useSettingsStore.getState().demoMode).toBe(true)
   })
 
+  it('reverts to server state on mutation error', async () => {
+    // Server returns dark theme settings
+    const serverSettings = buildSettings({
+      dateFormat: 'dd/MM/yyyy',
+      theme: 'dark',
+      demoMode: true,
+    })
+
+    // Initial load succeeds with default settings
+    mockGetOrCreateSettings.mockResolvedValueOnce(defaultSettings)
+
+    // Make the mutation fail
+    mockUpdateSettings.mockRejectedValueOnce(new Error('Server error'))
+
+    // On error refetch, return server settings
+    mockGetOrCreateSettings.mockResolvedValueOnce(serverSettings)
+
+    renderWithProviders(<Settings />)
+    const user = userEvent.setup()
+
+    await waitFor(() => {
+      expect(screen.getByText('Demo mode')).toBeInTheDocument()
+    })
+
+    // Click demo mode toggle — triggers optimistic update then mutation error
+    const toggle = screen.getByRole('switch', { name: 'Demo mode' })
+    await user.click(toggle)
+
+    // After the error handler refetches, store should be hydrated with server state
+    await waitFor(() => {
+      expect(mockGetOrCreateSettings).toHaveBeenCalledTimes(2)
+    })
+
+    // Verify the store was rehydrated from server state
+    await waitFor(() => {
+      const state = useSettingsStore.getState()
+      expect(state.dateFormat).toBe('dd/MM/yyyy')
+      expect(state.theme).toBe('dark')
+      expect(state.demoMode).toBe(true)
+    })
+  })
+
   it('active date format segment has correct styling', async () => {
     renderWithProviders(<Settings />)
 

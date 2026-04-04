@@ -172,8 +172,15 @@ describe('exchangeRates service', () => {
   })
 
   describe('getRate', () => {
-    it('returns 1.0 for DKK-to-DKK without lookup', async () => {
+    it('returns 1.0 for same-currency without lookup', async () => {
       const result = await getRate('DKK', 'DKK', '2026-01-15')
+
+      expect(result).toBe(1.0)
+      expect(mockGetFirstListItem).not.toHaveBeenCalled()
+    })
+
+    it('returns 1.0 for any same-currency pair without lookup', async () => {
+      const result = await getRate('EUR', 'EUR', '2026-01-15')
 
       expect(result).toBe(1.0)
       expect(mockGetFirstListItem).not.toHaveBeenCalled()
@@ -190,8 +197,8 @@ describe('exchangeRates service', () => {
 
     it('falls back to closest previous date', async () => {
       const priorRate = buildExchangeRate({ rate: 7.44, date: '2026-01-10' })
-      // First call (exact match) fails
-      mockGetFirstListItem.mockRejectedValueOnce(new Error('Not found'))
+      // First call (exact match) fails with 404
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 404 })
       // Second call (nearest prior) succeeds
       mockGetFirstListItem.mockResolvedValueOnce(priorRate)
 
@@ -201,9 +208,9 @@ describe('exchangeRates service', () => {
     })
 
     it('auto-fetches from API when no stored rate', async () => {
-      // Both exact and prior lookups fail
-      mockGetFirstListItem.mockRejectedValueOnce(new Error('Not found'))
-      mockGetFirstListItem.mockRejectedValueOnce(new Error('Not found'))
+      // Both exact and prior lookups fail with 404
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 404 })
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 404 })
 
       // Mock fetch
       const mockFetch = vi.fn().mockResolvedValueOnce({
@@ -227,8 +234,8 @@ describe('exchangeRates service', () => {
     })
 
     it('returns null when all lookups fail', async () => {
-      mockGetFirstListItem.mockRejectedValueOnce(new Error('Not found'))
-      mockGetFirstListItem.mockRejectedValueOnce(new Error('Not found'))
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 404 })
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 404 })
 
       const mockFetch = vi.fn().mockRejectedValueOnce(new Error('Network error'))
       vi.stubGlobal('fetch', mockFetch)
@@ -238,6 +245,34 @@ describe('exchangeRates service', () => {
 
       expect(result).toBeNull()
       warnSpy.mockRestore()
+    })
+
+    it('re-throws non-404 error from exact date match lookup', async () => {
+      // Exact match fails with 500 (server error)
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 500, message: 'Server error' })
+
+      await expect(getRate('EUR', 'DKK', '2026-01-15')).rejects.toEqual({
+        status: 500,
+        message: 'Server error',
+      })
+
+      // Should not attempt nearest prior or auto-fetch
+      expect(mockGetFirstListItem).toHaveBeenCalledTimes(1)
+    })
+
+    it('re-throws non-404 error from nearest prior lookup', async () => {
+      // Exact match fails with 404
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 404 })
+      // Nearest prior fails with 500
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 500, message: 'Server error' })
+
+      await expect(getRate('EUR', 'DKK', '2026-01-15')).rejects.toEqual({
+        status: 500,
+        message: 'Server error',
+      })
+
+      // Should not attempt auto-fetch
+      expect(mockGetFirstListItem).toHaveBeenCalledTimes(2)
     })
   })
 
@@ -325,8 +360,8 @@ describe('exchangeRates service', () => {
       expect(mockGetFirstListItem).toHaveBeenCalledTimes(1)
     })
 
-    it('fetches rate if not stored', async () => {
-      mockGetFirstListItem.mockRejectedValueOnce(new Error('Not found'))
+    it('fetches rate if not stored (404)', async () => {
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 404 })
 
       const mockFetch = vi.fn().mockResolvedValueOnce({
         ok: true,
@@ -343,6 +378,15 @@ describe('exchangeRates service', () => {
       await fetchMonthlyRates('EUR')
 
       expect(mockFetch).toHaveBeenCalled()
+    })
+
+    it('re-throws non-404 error when checking existing rate', async () => {
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 500, message: 'Server error' })
+
+      await expect(fetchMonthlyRates('EUR')).rejects.toEqual({
+        status: 500,
+        message: 'Server error',
+      })
     })
   })
 
@@ -362,8 +406,8 @@ describe('exchangeRates service', () => {
       expect(mockGetFirstListItem).toHaveBeenCalledTimes(1)
     })
 
-    it('fetches rate if not stored', async () => {
-      mockGetFirstListItem.mockRejectedValueOnce(new Error('Not found'))
+    it('fetches rate if not stored (404)', async () => {
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 404 })
 
       const mockFetch = vi.fn().mockResolvedValueOnce({
         ok: true,
@@ -380,6 +424,15 @@ describe('exchangeRates service', () => {
       await fetchTransactionDayRate('EUR', '2026-01-15')
 
       expect(mockFetch).toHaveBeenCalled()
+    })
+
+    it('re-throws non-404 error when checking existing rate', async () => {
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 500, message: 'Server error' })
+
+      await expect(fetchTransactionDayRate('EUR', '2026-01-15')).rejects.toEqual({
+        status: 500,
+        message: 'Server error',
+      })
     })
   })
 })

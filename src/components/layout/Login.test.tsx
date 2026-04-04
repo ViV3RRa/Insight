@@ -71,8 +71,8 @@ describe('Login', () => {
     expect(mockNavigate).toHaveBeenCalledWith('/home', { replace: true })
   })
 
-  it('shows error on failed login', async () => {
-    mockLogin.mockRejectedValueOnce(new Error('Invalid credentials'))
+  it('shows error on failed login with auth error', async () => {
+    mockLogin.mockRejectedValueOnce({ status: 401, message: 'Invalid credentials' })
     const user = userEvent.setup()
     renderWithProviders(<Login />, { initialEntries: ['/login'] })
 
@@ -81,6 +81,32 @@ describe('Login', () => {
     await user.click(screen.getByRole('button', { name: 'Sign In' }))
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Invalid email or password.')
+    expect(mockNavigate).not.toHaveBeenCalled()
+  })
+
+  it('shows server error message for 500 errors', async () => {
+    mockLogin.mockRejectedValueOnce({ status: 500, message: 'Internal server error' })
+    const user = userEvent.setup()
+    renderWithProviders(<Login />, { initialEntries: ['/login'] })
+
+    await user.type(screen.getByLabelText('Email'), 'test@example.com')
+    await user.type(screen.getByLabelText('Password'), 'password')
+    await user.click(screen.getByRole('button', { name: 'Sign In' }))
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Server error. Please try again later.')
+    expect(mockNavigate).not.toHaveBeenCalled()
+  })
+
+  it('shows connection error for network failures', async () => {
+    mockLogin.mockRejectedValueOnce(new Error('Network error'))
+    const user = userEvent.setup()
+    renderWithProviders(<Login />, { initialEntries: ['/login'] })
+
+    await user.type(screen.getByLabelText('Email'), 'test@example.com')
+    await user.type(screen.getByLabelText('Password'), 'password')
+    await user.click(screen.getByRole('button', { name: 'Sign In' }))
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Unable to connect to the server.')
     expect(mockNavigate).not.toHaveBeenCalled()
   })
 

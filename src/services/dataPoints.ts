@@ -5,6 +5,7 @@ import {
   type DataPoint,
   type DataPointCreate,
 } from '@/types/investment'
+import { isNotFoundError } from './errors'
 
 const COLLECTION = 'data_points'
 
@@ -88,47 +89,69 @@ export async function remove(id: string): Promise<void> {
   // TODO: Wire interpolation orchestration (US-051, Sprint 7)
 }
 
-export async function getLatest(platformId: string): Promise<DataPoint> {
+export async function getLatest(platformId: string): Promise<DataPoint | null> {
   const userId = getUserId()
-  const record = await pb.collection(COLLECTION).getFirstListItem(
-    `ownerId = "${userId}" && platformId = "${platformId}"`,
-    { sort: '-timestamp' },
-  )
-  return dataPointSchema.parse(record)
+  try {
+    const record = await pb.collection(COLLECTION).getFirstListItem(
+      `ownerId = "${userId}" && platformId = "${platformId}"`,
+      { sort: '-timestamp' },
+    )
+    return dataPointSchema.parse(record)
+  } catch (error: unknown) {
+    if (isNotFoundError(error)) {
+      return null
+    }
+    throw error
+  }
 }
 
 export async function getLatestBefore(
   platformId: string,
   date: string,
-): Promise<DataPoint> {
+): Promise<DataPoint | null> {
   const userId = getUserId()
-  const record = await pb.collection(COLLECTION).getFirstListItem(
-    `ownerId = "${userId}" && platformId = "${platformId}" && timestamp <= "${date}"`,
-    { sort: '-timestamp' },
-  )
-  return dataPointSchema.parse(record)
+  try {
+    const record = await pb.collection(COLLECTION).getFirstListItem(
+      `ownerId = "${userId}" && platformId = "${platformId}" && timestamp <= "${date}"`,
+      { sort: '-timestamp' },
+    )
+    return dataPointSchema.parse(record)
+  } catch (error: unknown) {
+    if (isNotFoundError(error)) {
+      return null
+    }
+    throw error
+  }
 }
 
 export async function getEarliestAfter(
   platformId: string,
   date: string,
-): Promise<DataPoint> {
+): Promise<DataPoint | null> {
   const userId = getUserId()
-  const record = await pb.collection(COLLECTION).getFirstListItem(
-    `ownerId = "${userId}" && platformId = "${platformId}" && timestamp > "${date}"`,
-    { sort: 'timestamp' },
-  )
-  return dataPointSchema.parse(record)
+  try {
+    const record = await pb.collection(COLLECTION).getFirstListItem(
+      `ownerId = "${userId}" && platformId = "${platformId}" && timestamp > "${date}"`,
+      { sort: 'timestamp' },
+    )
+    return dataPointSchema.parse(record)
+  } catch (error: unknown) {
+    if (isNotFoundError(error)) {
+      return null
+    }
+    throw error
+  }
 }
 
 export async function getMonthEndValue(
   platformId: string,
   year: number,
   month: number,
-): Promise<DataPoint> {
-  // new Date(year, month, 0) gives last day of the given month
-  // (month is 1-indexed here: month=1 → Jan 31, month=2 → Feb 28/29, etc.)
+): Promise<DataPoint | null> {
+  // month is 1-based (1=Jan, 2=Feb, ...).
+  // new Date(year, month, 0) uses JS 0-based month: month=1 → Feb, day=0 → last day of Jan.
   const lastDay = new Date(year, month, 0)
+  lastDay.setHours(23, 59, 59, 999)
   const date = lastDay.toISOString()
   return getLatestBefore(platformId, date)
 }

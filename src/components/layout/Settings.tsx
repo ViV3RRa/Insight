@@ -52,6 +52,19 @@ export default function Settings() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['settings'] })
     },
+    onError: async () => {
+      // Revert optimistic update by refetching server state
+      const serverSettings = await queryClient.fetchQuery({
+        queryKey: ['settings'],
+        queryFn: getOrCreateSettings,
+      })
+      settingsStore.hydrate({
+        dateFormat: serverSettings.dateFormat,
+        theme: serverSettings.theme,
+        demoMode: serverSettings.demoMode,
+      })
+      themeStore.setTheme(serverSettings.theme)
+    },
   })
 
   // Hydrate settings store when data arrives

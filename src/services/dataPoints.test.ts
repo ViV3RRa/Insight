@@ -270,6 +270,23 @@ describe('dataPoints service', () => {
       )
       expect(result).toEqual(dp)
     })
+
+    it('returns null when no data points found (404)', async () => {
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 404 })
+
+      const result = await getLatest(PLATFORM_ID)
+
+      expect(result).toBeNull()
+    })
+
+    it('re-throws non-404 errors', async () => {
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 500, message: 'Server error' })
+
+      await expect(getLatest(PLATFORM_ID)).rejects.toEqual({
+        status: 500,
+        message: 'Server error',
+      })
+    })
   })
 
   describe('getLatestBefore', () => {
@@ -287,6 +304,23 @@ describe('dataPoints service', () => {
         { sort: '-timestamp' },
       )
       expect(result).toEqual(dp)
+    })
+
+    it('returns null when no data points found (404)', async () => {
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 404 })
+
+      const result = await getLatestBefore(PLATFORM_ID, '2026-01-31T23:59:59.999Z')
+
+      expect(result).toBeNull()
+    })
+
+    it('re-throws non-404 errors', async () => {
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 500, message: 'Server error' })
+
+      await expect(getLatestBefore(PLATFORM_ID, '2026-01-31T23:59:59.999Z')).rejects.toEqual({
+        status: 500,
+        message: 'Server error',
+      })
     })
   })
 
@@ -306,10 +340,27 @@ describe('dataPoints service', () => {
       )
       expect(result).toEqual(dp)
     })
+
+    it('returns null when no data points found (404)', async () => {
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 404 })
+
+      const result = await getEarliestAfter(PLATFORM_ID, '2026-01-31T23:59:59.999Z')
+
+      expect(result).toBeNull()
+    })
+
+    it('re-throws non-404 errors', async () => {
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 500, message: 'Server error' })
+
+      await expect(getEarliestAfter(PLATFORM_ID, '2026-01-31T23:59:59.999Z')).rejects.toEqual({
+        status: 500,
+        message: 'Server error',
+      })
+    })
   })
 
   describe('getMonthEndValue', () => {
-    it('delegates to getLatestBefore with last day of month', async () => {
+    it('delegates to getLatestBefore with end-of-day on last day of month', async () => {
       const dp = buildDataPoint({
         platformId: PLATFORM_ID as any,
         timestamp: '2026-01-31T00:00:00.000Z',
@@ -318,10 +369,12 @@ describe('dataPoints service', () => {
 
       const result = await getMonthEndValue(PLATFORM_ID, 2026, 1)
 
-      // new Date(2026, 1, 0) = Jan 31, 2026
-      const lastDay = new Date(2026, 1, 0).toISOString()
+      // new Date(2026, 1, 0) = Jan 31, 2026; setHours(23, 59, 59, 999) = end of day
+      const lastDay = new Date(2026, 1, 0)
+      lastDay.setHours(23, 59, 59, 999)
+      const expectedDate = lastDay.toISOString()
       expect(mockGetFirstListItem).toHaveBeenCalledWith(
-        `ownerId = "user_001" && platformId = "${PLATFORM_ID}" && timestamp <= "${lastDay}"`,
+        `ownerId = "user_001" && platformId = "${PLATFORM_ID}" && timestamp <= "${expectedDate}"`,
         { sort: '-timestamp' },
       )
       expect(result).toEqual(dp)
@@ -336,12 +389,42 @@ describe('dataPoints service', () => {
 
       await getMonthEndValue(PLATFORM_ID, 2026, 2)
 
-      // new Date(2026, 2, 0) = Feb 28, 2026
-      const lastDay = new Date(2026, 2, 0).toISOString()
+      // new Date(2026, 2, 0) = Feb 28, 2026; setHours(23, 59, 59, 999) = end of day
+      const lastDay = new Date(2026, 2, 0)
+      lastDay.setHours(23, 59, 59, 999)
+      const expectedDate = lastDay.toISOString()
       expect(mockGetFirstListItem).toHaveBeenCalledWith(
-        expect.stringContaining(`timestamp <= "${lastDay}"`),
+        expect.stringContaining(`timestamp <= "${expectedDate}"`),
         { sort: '-timestamp' },
       )
+    })
+
+    it('returns null when no data points found', async () => {
+      mockGetFirstListItem.mockRejectedValueOnce({ status: 404 })
+
+      const result = await getMonthEndValue(PLATFORM_ID, 2026, 1)
+
+      expect(result).toBeNull()
+    })
+
+    it('uses end-of-day time to not miss same-day data points', async () => {
+      const dp = buildDataPoint({
+        platformId: PLATFORM_ID as any,
+        timestamp: '2026-01-31T15:30:00.000Z', // data point later in the day
+      })
+      mockGetFirstListItem.mockResolvedValueOnce(dp)
+
+      const result = await getMonthEndValue(PLATFORM_ID, 2026, 1)
+
+      // The filter date should include time 23:59:59.999 so it catches this data point
+      const lastDay = new Date(2026, 1, 0)
+      lastDay.setHours(23, 59, 59, 999)
+      const expectedDate = lastDay.toISOString()
+      expect(mockGetFirstListItem).toHaveBeenCalledWith(
+        `ownerId = "user_001" && platformId = "${PLATFORM_ID}" && timestamp <= "${expectedDate}"`,
+        { sort: '-timestamp' },
+      )
+      expect(result).toEqual(dp)
     })
   })
 
