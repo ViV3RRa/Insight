@@ -132,10 +132,9 @@ describe('utilitySchema', () => {
     ).toThrow()
   })
 
-  it('rejects invalid datetime for created', () => {
-    expect(() =>
-      utilitySchema.parse({ ...validUtility, created: 'not-a-date' }),
-    ).toThrow()
+  it('accepts PocketBase datetime format for created', () => {
+    const result = utilitySchema.parse({ ...validUtility, created: '2026-04-04 19:10:52.889Z' })
+    expect(result.created).toBe('2026-04-04 19:10:52.889Z')
   })
 })
 
@@ -236,10 +235,9 @@ describe('meterReadingSchema', () => {
     expect(() => meterReadingSchema.parse({ id: 'mr_001' })).toThrow()
   })
 
-  it('rejects invalid datetime for timestamp', () => {
-    expect(() =>
-      meterReadingSchema.parse({ ...validMeterReading, timestamp: 'not-a-date' }),
-    ).toThrow()
+  it('accepts PocketBase datetime format for timestamp', () => {
+    const result = meterReadingSchema.parse({ ...validMeterReading, timestamp: '2026-04-04 19:10:52.889Z' })
+    expect(result.timestamp).toBe('2026-04-04 19:10:52.889Z')
   })
 })
 
@@ -305,10 +303,9 @@ describe('utilityBillSchema', () => {
     expect(result.timestamp).toBe('2026-01-15T12:00:00.000Z')
   })
 
-  it('rejects invalid datetime for timestamp', () => {
-    expect(() =>
-      utilityBillSchema.parse({ ...validUtilityBill, timestamp: 'not-a-date' }),
-    ).toThrow()
+  it('accepts PocketBase datetime format for timestamp', () => {
+    const result = utilityBillSchema.parse({ ...validUtilityBill, timestamp: '2026-04-04 19:10:52.889Z' })
+    expect(result.timestamp).toBe('2026-04-04 19:10:52.889Z')
   })
 
   it('accepts null note', () => {

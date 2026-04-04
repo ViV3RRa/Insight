@@ -21,8 +21,8 @@ export const portfolioSchema = z.object({
   ownerName: z.string().min(1),
   isDefault: z.boolean(),
   ownerId: UserId,
-  created: z.string().datetime(),
-  updated: z.string().datetime(),
+  created: z.string(),
+  updated: z.string(),
 })
 
 export const portfolioCreateSchema = portfolioSchema.omit({
@@ -51,8 +51,8 @@ export const platformSchema = z.object({
   closedDate: z.string().nullable(),
   closureNote: z.string().nullable(),
   ownerId: UserId,
-  created: z.string().datetime(),
-  updated: z.string().datetime(),
+  created: z.string(),
+  updated: z.string(),
 })
 
 export const platformCreateSchema = platformSchema.omit({
@@ -76,12 +76,12 @@ export const dataPointSchema = z.object({
   id: DataPointId,
   platformId: PlatformId,
   value: z.number(),
-  timestamp: z.string().datetime(),
+  timestamp: z.string(),
   isInterpolated: z.boolean(),
   note: z.string().nullable(),
   ownerId: UserId,
-  created: z.string().datetime(),
-  updated: z.string().datetime(),
+  created: z.string(),
+  updated: z.string(),
 })
 
 export const dataPointCreateSchema = dataPointSchema.omit({
@@ -104,12 +104,12 @@ export const transactionSchema = z.object({
   type: transactionTypeSchema,
   amount: z.number().positive(),
   exchangeRate: z.number().nullable(),
-  timestamp: z.string().datetime(),
+  timestamp: z.string(),
   note: z.string().nullable(),
   attachment: z.string().nullable(),
   ownerId: UserId,
-  created: z.string().datetime(),
-  updated: z.string().datetime(),
+  created: z.string(),
+  updated: z.string(),
 })
 
 export const transactionCreateSchema = transactionSchema.omit({
@@ -135,8 +135,8 @@ export const exchangeRateSchema = z.object({
   date: z.string(),
   source: exchangeRateSourceSchema,
   ownerId: UserId,
-  created: z.string().datetime(),
-  updated: z.string().datetime(),
+  created: z.string(),
+  updated: z.string(),
 })
 
 export const exchangeRateCreateSchema = exchangeRateSchema.omit({
