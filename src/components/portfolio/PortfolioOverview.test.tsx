@@ -1,7 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderWithProviders, screen } from '@/test/utils'
 import userEvent from '@testing-library/user-event'
-import { PortfolioOverview, type PortfolioOverviewProps } from './PortfolioOverview'
+import { PortfolioOverview } from './PortfolioOverview'
+import { useInvestmentUIStore } from '@/stores/investmentUIStore'
+
+// Mock services
+vi.mock('@/services/platforms', () => ({
+  getByPortfolio: vi.fn().mockResolvedValue([]),
+  getPlatformIconUrl: vi.fn().mockReturnValue('/icons/test.png'),
+}))
 
 // Mock all child components to keep tests focused on page assembly
 vi.mock('./PortfolioSwitcher', () => ({
@@ -99,62 +106,16 @@ vi.mock('react-router-dom', async () => {
   }
 })
 
-function buildDefaultProps(overrides: Partial<PortfolioOverviewProps> = {}): PortfolioOverviewProps {
-  return {
-    summaryData: {
-      totalValue: 750000,
-      latestDataPointDate: '2026-03-15',
-      allTimeGain: 125000,
-      allTimeGainPercent: 20,
-      allTimeXirr: 12.5,
-      ytdGain: 30000,
-      ytdGainPercent: 4.2,
-      ytdXirr: 8.1,
-      monthEarnings: 5000,
-      currentMonth: new Date(2026, 2, 1),
-    },
-    yoyData: {
-      ytdEarnings: 30000,
-      prevYtdEarnings: 25000,
-      ytdXirr: 8.1,
-      prevYtdXirr: 7.5,
-      monthEarnings: 5000,
-      prevMonthEarnings: 4200,
-    },
-    chartsData: {
-      compositeData: [],
-      platforms: [],
-      monthlyPerformance: [],
-    },
-    yearlyData: {
-      yearlyData: [],
-      totals: {
-        startingValue: 600000,
-        endingValue: 750000,
-        netDeposits: 25000,
-        earnings: 125000,
-        earningsPercent: 20,
-        xirr: 12.5,
-      },
-    },
-    monthlyTableData: [],
-    investmentPlatforms: [],
-    cashPlatforms: [],
-    closedPlatforms: [],
-    allocationSegments: [],
-    platformCountSummary: '5 platforms across 3 currencies',
-    ...overrides,
-  }
-}
-
 describe('PortfolioOverview', () => {
   beforeEach(() => {
     mockNavigate.mockClear()
+    // Set a selected portfolio so the query runs
+    useInvestmentUIStore.setState({ selectedPortfolioId: 'port_1' as never })
   })
 
   describe('section rendering', () => {
     it('renders all sections with correct data-testid attributes', () => {
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+      renderWithProviders(<PortfolioOverview />)
 
       expect(screen.getByTestId('section-header')).toBeInTheDocument()
       expect(screen.getByTestId('section-mobile-actions')).toBeInTheDocument()
@@ -169,14 +130,11 @@ describe('PortfolioOverview', () => {
     })
 
     it('renders sections in the correct DOM order', () => {
-      const { container } = renderWithProviders(
-        <PortfolioOverview {...buildDefaultProps()} />,
-      )
+      const { container } = renderWithProviders(<PortfolioOverview />)
 
       const sections = container.querySelectorAll('[data-testid]')
       const testIds = Array.from(sections).map((el) => el.getAttribute('data-testid'))
 
-      // Verify relative order of key section wrappers
       const keySections = [
         'section-summary-cards',
         'section-yoy',
@@ -195,7 +153,7 @@ describe('PortfolioOverview', () => {
     })
 
     it('renders child components inside their section wrappers', () => {
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+      renderWithProviders(<PortfolioOverview />)
 
       const summarySection = screen.getByTestId('section-summary-cards')
       expect(summarySection.querySelector('[data-testid="mock-summary"]')).toBeInTheDocument()
@@ -225,64 +183,37 @@ describe('PortfolioOverview', () => {
 
   describe('desktop header', () => {
     it('shows "Investment Portfolio" heading', () => {
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+      renderWithProviders(<PortfolioOverview />)
 
       expect(screen.getByRole('heading', { level: 1, name: 'Investment Portfolio' })).toBeInTheDocument()
     })
 
     it('renders PortfolioSwitcher in the header', () => {
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+      renderWithProviders(<PortfolioOverview />)
 
       const header = screen.getByTestId('section-header')
       expect(header.querySelector('[data-testid="mock-portfolio-switcher"]')).toBeInTheDocument()
     })
-
-    it('shows platform count summary', () => {
-      renderWithProviders(
-        <PortfolioOverview
-          {...buildDefaultProps({ platformCountSummary: '5 platforms across 3 currencies' })}
-        />,
-      )
-
-      expect(screen.getByText('5 platforms across 3 currencies')).toBeInTheDocument()
-    })
-
-    it('does not render platform count summary when not provided', () => {
-      renderWithProviders(
-        <PortfolioOverview {...buildDefaultProps({ platformCountSummary: undefined })} />,
-      )
-
-      const header = screen.getByTestId('section-header')
-      expect(header.querySelector('p')).not.toBeInTheDocument()
-    })
   })
 
   describe('mobile action buttons', () => {
-    it('renders "+ Add Data Point" button', () => {
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+    it('renders action buttons', () => {
+      renderWithProviders(<PortfolioOverview />)
 
       expect(screen.getByText('+ Add Data Point')).toBeInTheDocument()
-    })
-
-    it('renders "+ Add Transaction" button', () => {
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
-
       expect(screen.getByText('+ Add Transaction')).toBeInTheDocument()
     })
 
     it('mobile action buttons use fullWidth', () => {
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+      renderWithProviders(<PortfolioOverview />)
 
-      const addDpButton = screen.getByText('+ Add Data Point')
-      expect(addDpButton).toHaveAttribute('data-fullwidth', 'true')
-
-      const addTxButton = screen.getByText('+ Add Transaction')
-      expect(addTxButton).toHaveAttribute('data-fullwidth', 'true')
+      expect(screen.getByText('+ Add Data Point')).toHaveAttribute('data-fullwidth', 'true')
+      expect(screen.getByText('+ Add Transaction')).toHaveAttribute('data-fullwidth', 'true')
     })
 
     it('clicking "+ Add Data Point" opens data point dialog', async () => {
       const user = userEvent.setup()
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+      renderWithProviders(<PortfolioOverview />)
 
       await user.click(screen.getByText('+ Add Data Point'))
 
@@ -291,7 +222,7 @@ describe('PortfolioOverview', () => {
 
     it('clicking "+ Add Transaction" opens transaction dialog', async () => {
       const user = userEvent.setup()
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+      renderWithProviders(<PortfolioOverview />)
 
       await user.click(screen.getByText('+ Add Transaction'))
 
@@ -301,7 +232,7 @@ describe('PortfolioOverview', () => {
 
   describe('add platform button', () => {
     it('renders at the bottom of the page', () => {
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+      renderWithProviders(<PortfolioOverview />)
 
       const button = screen.getByTestId('add-platform-button')
       expect(button).toBeInTheDocument()
@@ -310,7 +241,7 @@ describe('PortfolioOverview', () => {
 
     it('clicking opens platform dialog', async () => {
       const user = userEvent.setup()
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+      renderWithProviders(<PortfolioOverview />)
 
       await user.click(screen.getByTestId('add-platform-button'))
 
@@ -318,37 +249,10 @@ describe('PortfolioOverview', () => {
     })
   })
 
-  describe('loading state', () => {
-    it('propagates isLoading to all child components', () => {
-      renderWithProviders(
-        <PortfolioOverview {...buildDefaultProps({ isLoading: true })} />,
-      )
-
-      expect(screen.getByTestId('mock-summary')).toHaveAttribute('data-loading', 'true')
-      expect(screen.getByTestId('mock-yoy')).toHaveAttribute('data-loading', 'true')
-      expect(screen.getByTestId('mock-value-charts')).toHaveAttribute('data-loading', 'true')
-      expect(screen.getByTestId('mock-perf-yearly')).toHaveAttribute('data-loading', 'true')
-      expect(screen.getByTestId('mock-perf-monthly')).toHaveAttribute('data-loading', 'true')
-      expect(screen.getByTestId('mock-platforms-table')).toHaveAttribute('data-loading', 'true')
-      expect(screen.getByTestId('mock-cash-table')).toHaveAttribute('data-loading', 'true')
-      expect(screen.getByTestId('mock-closed')).toHaveAttribute('data-loading', 'true')
-      expect(screen.getByTestId('mock-allocation')).toHaveAttribute('data-loading', 'true')
-    })
-
-    it('does not set loading on children when isLoading is false', () => {
-      renderWithProviders(
-        <PortfolioOverview {...buildDefaultProps({ isLoading: false })} />,
-      )
-
-      expect(screen.getByTestId('mock-summary')).toHaveAttribute('data-loading', 'false')
-      expect(screen.getByTestId('mock-platforms-table')).toHaveAttribute('data-loading', 'false')
-    })
-  })
-
   describe('navigation', () => {
     it('navigates to platform detail on platform row click', async () => {
       const user = userEvent.setup()
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+      renderWithProviders(<PortfolioOverview />)
 
       await user.click(screen.getByTestId('platform-row-click'))
 
@@ -357,7 +261,7 @@ describe('PortfolioOverview', () => {
 
     it('navigates to cash detail on cash row click', async () => {
       const user = userEvent.setup()
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+      renderWithProviders(<PortfolioOverview />)
 
       await user.click(screen.getByTestId('cash-row-click'))
 
@@ -368,7 +272,7 @@ describe('PortfolioOverview', () => {
   describe('platforms table action buttons', () => {
     it('opens data point dialog via platforms table header button', async () => {
       const user = userEvent.setup()
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+      renderWithProviders(<PortfolioOverview />)
 
       await user.click(screen.getByTestId('platform-add-dp'))
 
@@ -377,7 +281,7 @@ describe('PortfolioOverview', () => {
 
     it('opens transaction dialog via platforms table header button', async () => {
       const user = userEvent.setup()
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+      renderWithProviders(<PortfolioOverview />)
 
       await user.click(screen.getByTestId('platform-add-tx'))
 
@@ -387,9 +291,7 @@ describe('PortfolioOverview', () => {
 
   describe('page layout', () => {
     it('has correct container classes', () => {
-      const { container } = renderWithProviders(
-        <PortfolioOverview {...buildDefaultProps()} />,
-      )
+      const { container } = renderWithProviders(<PortfolioOverview />)
 
       const wrapper = container.firstElementChild as HTMLElement
       expect(wrapper.className).toContain('max-w-[1440px]')
@@ -403,7 +305,7 @@ describe('PortfolioOverview', () => {
     })
 
     it('section wrappers have correct spacing classes', () => {
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+      renderWithProviders(<PortfolioOverview />)
 
       expect(screen.getByTestId('section-yoy').className).toContain('mt-6')
       expect(screen.getByTestId('section-yoy').className).toContain('lg:mt-8')
@@ -415,7 +317,7 @@ describe('PortfolioOverview', () => {
     })
 
     it('desktop header is hidden on mobile (has hidden lg:flex)', () => {
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+      renderWithProviders(<PortfolioOverview />)
 
       const header = screen.getByTestId('section-header')
       expect(header.className).toContain('hidden')
@@ -423,7 +325,7 @@ describe('PortfolioOverview', () => {
     })
 
     it('mobile actions are hidden on desktop (has lg:hidden)', () => {
-      renderWithProviders(<PortfolioOverview {...buildDefaultProps()} />)
+      renderWithProviders(<PortfolioOverview />)
 
       const mobileActions = screen.getByTestId('section-mobile-actions')
       expect(mobileActions.className).toContain('lg:hidden')

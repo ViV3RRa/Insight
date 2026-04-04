@@ -71,7 +71,7 @@ describe('App Router', () => {
 
     it('renders Investment page at /investment', () => {
       renderWithProviders(<App />, { initialEntries: ['/investment'] })
-      expect(screen.getByTestId('page-investment')).toBeInTheDocument()
+      expect(screen.getByRole('heading', { level: 1, name: 'Investment Portfolio' })).toBeInTheDocument()
     })
 
     it('renders Vehicles page at /vehicles', () => {

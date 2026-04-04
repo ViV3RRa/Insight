@@ -4,6 +4,7 @@ import Login from '@/components/layout/Login'
 import ProtectedRoute from '@/components/layout/ProtectedRoute'
 import AppShell from '@/components/layout/AppShell'
 import Settings from '@/components/layout/Settings'
+import { PortfolioOverview } from '@/components/portfolio/PortfolioOverview'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,7 +33,7 @@ function App() {
             <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<PlaceholderPage title="Home" />} />
             <Route path="/home/:utilityId" element={<PlaceholderPage title="Utility Detail" />} />
-            <Route path="/investment" element={<PlaceholderPage title="Investment" />} />
+            <Route path="/investment" element={<PortfolioOverview />} />
             <Route path="/investment/platform/:platformId" element={<PlaceholderPage title="Platform Detail" />} />
             <Route path="/vehicles" element={<PlaceholderPage title="Vehicles" />} />
             <Route path="/vehicles/:vehicleId" element={<PlaceholderPage title="Vehicle Detail" />} />

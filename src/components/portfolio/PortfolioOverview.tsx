@@ -1,23 +1,16 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import { useInvestmentUIStore } from '@/stores/investmentUIStore'
+import * as platformService from '@/services/platforms'
 import { PortfolioSwitcher } from './PortfolioSwitcher'
 import { PortfolioOverviewSummary } from './PortfolioOverviewSummary'
-import type { PortfolioOverviewSummaryProps } from './PortfolioOverviewSummary'
 import { PortfolioOverviewYoY } from './PortfolioOverviewYoY'
-import type { PortfolioOverviewYoYProps } from './PortfolioOverviewYoY'
 import { PortfolioOverviewPerformanceAccordion } from './PortfolioOverviewPerformanceAccordion'
 import { PortfolioOverviewValueCharts } from './PortfolioOverviewValueCharts'
-import type {
-  CompositeDataPoint,
-  PlatformSeries,
-  MonthlyPerformancePoint,
-} from './PortfolioOverviewValueCharts'
 import { PortfolioOverviewPerfYearly } from './PortfolioOverviewPerfYearly'
-import type { YearlyData } from './PortfolioOverviewPerfYearly'
 import { PortfolioOverviewPerfMonthly } from './PortfolioOverviewPerfMonthly'
-import type { MonthlyData } from './PortfolioOverviewPerfMonthly'
 import { PortfolioOverviewPlatformsTable } from './PortfolioOverviewPlatformsTable'
 import type { PlatformRow } from './PortfolioOverviewPlatformsTable'
 import { PortfolioOverviewCashTable } from './PortfolioOverviewCashTable'
@@ -25,53 +18,57 @@ import type { CashPlatformRow } from './PortfolioOverviewCashTable'
 import { PortfolioOverviewClosed } from './PortfolioOverviewClosed'
 import type { ClosedPlatformRow } from './PortfolioOverviewClosed'
 import { PortfolioOverviewAllocation } from './PortfolioOverviewAllocation'
-import type { AllocationSegment } from './PortfolioOverviewAllocation'
 import { Button } from '@/components/shared/Button'
+import type { Platform } from '@/types/investment'
 
-interface PortfolioOverviewProps {
-  summaryData: Omit<PortfolioOverviewSummaryProps, 'isLoading'>
-  yoyData: Omit<PortfolioOverviewYoYProps, 'isLoading'>
-  chartsData: {
-    compositeData: CompositeDataPoint[]
-    platforms: PlatformSeries[]
-    monthlyPerformance: MonthlyPerformancePoint[]
-    yoyMonthlyPerformance?: MonthlyPerformancePoint[]
-  }
-  yearlyData: {
-    yearlyData: YearlyData[]
-    totals: {
-      startingValue: number
-      endingValue: number
-      netDeposits: number
-      earnings: number
-      earningsPercent: number
-      xirr: number | null
-    }
-  }
-  monthlyTableData: MonthlyData[]
-  investmentPlatforms: PlatformRow[]
-  cashPlatforms: CashPlatformRow[]
-  closedPlatforms: ClosedPlatformRow[]
-  allocationSegments: AllocationSegment[]
-  isLoading?: boolean
-  platformCountSummary?: string
+function mapInvestmentPlatforms(platforms: Platform[]): PlatformRow[] {
+  return platforms
+    .filter((p) => p.type === 'investment' && p.status === 'active')
+    .map((p) => ({
+      id: p.id as string,
+      name: p.name,
+      iconUrl: platformService.getPlatformIconUrl(p),
+      currency: p.currency,
+      currentValue: 0,
+      monthEarnings: 0,
+      allTimeGainLoss: 0,
+      allTimeGainLossPercent: 0,
+      allTimeXirr: null,
+      lastUpdated: p.created,
+    }))
 }
 
-function PortfolioOverview({
-  summaryData,
-  yoyData,
-  chartsData,
-  yearlyData,
-  monthlyTableData,
-  investmentPlatforms,
-  cashPlatforms,
-  closedPlatforms,
-  allocationSegments,
-  isLoading = false,
-  platformCountSummary,
-}: PortfolioOverviewProps) {
+function mapCashPlatforms(platforms: Platform[]): CashPlatformRow[] {
+  return platforms
+    .filter((p) => p.type === 'cash' && p.status === 'active')
+    .map((p) => ({
+      id: p.id as string,
+      name: p.name,
+      iconUrl: platformService.getPlatformIconUrl(p),
+      currency: p.currency,
+      currentBalance: 0,
+      lastUpdated: p.created,
+    }))
+}
+
+function mapClosedPlatforms(platforms: Platform[]): ClosedPlatformRow[] {
+  return platforms
+    .filter((p) => p.status === 'closed')
+    .map((p) => ({
+      id: p.id as string,
+      name: p.name,
+      iconUrl: platformService.getPlatformIconUrl(p),
+      finalValue: 0,
+      allTimeGainLoss: 0,
+      allTimeGainLossPercent: 0,
+      closedDate: p.closedDate ?? '',
+    }))
+}
+
+function PortfolioOverview() {
   const navigate = useNavigate()
 
+  const selectedPortfolioId = useInvestmentUIStore((s) => s.selectedPortfolioId)
   const timeSpan = useInvestmentUIStore((s) => s.timeSpan)
   const setTimeSpan = useInvestmentUIStore((s) => s.setTimeSpan)
   const yoyActive = useInvestmentUIStore((s) => s.yoyActive)
@@ -81,6 +78,21 @@ function PortfolioOverview({
   const [dataPointDialogOpen, setDataPointDialogOpen] = useState(false)
   const [transactionDialogOpen, setTransactionDialogOpen] = useState(false)
   const [platformDialogOpen, setPlatformDialogOpen] = useState(false)
+
+  const { data: platforms, isLoading } = useQuery({
+    queryKey: ['platforms', selectedPortfolioId],
+    queryFn: () => platformService.getByPortfolio(selectedPortfolioId!),
+    enabled: !!selectedPortfolioId,
+  })
+
+  const investmentPlatforms = platforms ? mapInvestmentPlatforms(platforms) : []
+  const cashPlatforms = platforms ? mapCashPlatforms(platforms) : []
+  const closedPlatforms = platforms ? mapClosedPlatforms(platforms) : []
+
+  const activePlatformCount = investmentPlatforms.length + cashPlatforms.length
+  const platformCountSummary = activePlatformCount > 0
+    ? `${activePlatformCount} active platform${activePlatformCount !== 1 ? 's' : ''}`
+    : undefined
 
   const handlePlatformRowClick = (platformId: string) => {
     navigate(`/investment/platform/${platformId}`)
@@ -133,19 +145,41 @@ function PortfolioOverview({
 
       {/* Summary Cards */}
       <div data-testid="section-summary-cards">
-        <PortfolioOverviewSummary {...summaryData} isLoading={isLoading} />
+        <PortfolioOverviewSummary
+          totalValue={0}
+          latestDataPointDate={null}
+          allTimeGain={0}
+          allTimeGainPercent={0}
+          allTimeXirr={null}
+          ytdGain={0}
+          ytdGainPercent={0}
+          ytdXirr={null}
+          monthEarnings={0}
+          currentMonth={new Date()}
+          isLoading={isLoading}
+        />
       </div>
 
       {/* YoY Comparison */}
       <div data-testid="section-yoy" className="mt-6 lg:mt-8">
-        <PortfolioOverviewYoY {...yoyData} isLoading={isLoading} />
+        <PortfolioOverviewYoY
+          ytdEarnings={0}
+          prevYtdEarnings={0}
+          ytdXirr={null}
+          prevYtdXirr={null}
+          monthEarnings={0}
+          prevMonthEarnings={0}
+          isLoading={isLoading}
+        />
       </div>
 
       {/* Performance Charts Accordion */}
       <div data-testid="section-performance" className="mt-6 lg:mt-8">
         <PortfolioOverviewPerformanceAccordion>
           <PortfolioOverviewValueCharts
-            {...chartsData}
+            compositeData={[]}
+            platforms={[]}
+            monthlyPerformance={[]}
             timeSpan={timeSpan}
             onTimeSpanChange={setTimeSpan}
             yoyActive={yoyActive}
@@ -153,12 +187,19 @@ function PortfolioOverview({
             isLoading={isLoading}
           />
           <PortfolioOverviewPerfYearly
-            yearlyData={yearlyData.yearlyData}
-            totals={yearlyData.totals}
+            yearlyData={[]}
+            totals={{
+              startingValue: 0,
+              endingValue: 0,
+              netDeposits: 0,
+              earnings: 0,
+              earningsPercent: 0,
+              xirr: null,
+            }}
             isLoading={isLoading}
           />
           <PortfolioOverviewPerfMonthly
-            monthlyData={monthlyTableData}
+            monthlyData={[]}
             chartMode={chartMode}
             isLoading={isLoading}
           />
@@ -197,7 +238,7 @@ function PortfolioOverview({
       {/* Portfolio Allocation */}
       <div data-testid="section-allocation" className="mt-6 lg:mt-8">
         <PortfolioOverviewAllocation
-          segments={allocationSegments}
+          segments={[]}
           isLoading={isLoading}
         />
       </div>
@@ -212,7 +253,7 @@ function PortfolioOverview({
         Add Platform
       </button>
 
-      {/* Dialog placeholders — actual dialogs (US-078, US-079) will be wired during integration */}
+      {/* Dialog placeholders — actual dialogs wired during integration */}
       {dataPointDialogOpen && (
         <div data-testid="data-point-dialog" hidden />
       )}
@@ -227,15 +268,3 @@ function PortfolioOverview({
 }
 
 export { PortfolioOverview }
-export type {
-  PortfolioOverviewProps,
-  CompositeDataPoint,
-  PlatformSeries,
-  MonthlyPerformancePoint,
-  YearlyData,
-  MonthlyData,
-  PlatformRow,
-  CashPlatformRow,
-  ClosedPlatformRow,
-  AllocationSegment,
-}
