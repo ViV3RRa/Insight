@@ -35,12 +35,12 @@ function SourceCell({ isInterpolated }: { isInterpolated: boolean }) {
       </span>
     )
   }
-  return <span className="text-sm text-base-500">Manual</span>
+  return <span className="text-sm text-base-500 dark:text-base-400">Manual</span>
 }
 
 function NoteCell({ note }: { note?: string }) {
   if (!note) return null
-  return <span className="text-xs italic text-base-300">{note}</span>
+  return <span className="text-xs italic text-base-300 dark:text-base-500">{note}</span>
 }
 
 const columns: Array<ColumnDef<DataPointRow>> = [

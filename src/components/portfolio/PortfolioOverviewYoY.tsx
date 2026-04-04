@@ -44,7 +44,7 @@ function PortfolioOverviewYoY({
     return (
       <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark p-4 sm:p-5">
         <Skeleton className="mb-4" width="w-48" height="h-3" />
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6">
           {[1, 2, 3].map((i) => (
             <div key={i}>
               <Skeleton className="mb-2" width="w-20" height="h-3" />

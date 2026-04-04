@@ -52,7 +52,7 @@ function PlatformDetailHeader({
     return (
       <div>
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 rounded-xl bg-base-50 dark:bg-base-700 flex items-center justify-center">
+          <div className="w-11 h-11 sm:w-8 sm:h-8 rounded-xl bg-base-50 dark:bg-base-700 flex items-center justify-center">
             <Skeleton width="w-4" height="h-4" />
           </div>
           <Skeleton width="w-7" height="h-7" className="rounded-full" />
@@ -78,7 +78,7 @@ function PlatformDetailHeader({
           type="button"
           onClick={onBack}
           aria-label="Back to portfolio overview"
-          className="w-8 h-8 rounded-xl bg-base-50 dark:bg-base-700 flex items-center justify-center text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors"
+          className="w-11 h-11 sm:w-8 sm:h-8 rounded-xl bg-base-50 dark:bg-base-700 flex items-center justify-center text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
         </button>

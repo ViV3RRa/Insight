@@ -202,7 +202,7 @@ export function PortfolioSwitcher({ onEditPortfolio, onAddPortfolio }: Portfolio
               return isActive ? (
                 <div
                   key={portfolio.id}
-                  className="flex items-center gap-3 px-4 py-2.5 bg-accent-50/50 dark:bg-accent-900/15 border-l-2 border-accent-600"
+                  className="flex items-center gap-3 px-4 py-2.5 bg-accent-50/50 dark:bg-accent-900/15 border-l-2 border-accent-600 dark:border-accent-400"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium">

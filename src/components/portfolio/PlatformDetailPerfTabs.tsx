@@ -101,7 +101,7 @@ function buildYearlyColumns(currency: string): ColumnDef<YearlyPerfRow>[] {
       align: 'right',
       hideOnMobile: true,
       format: (v) => {
-        if (v == null) return <span className="text-base-300">–</span>
+        if (v == null) return <span className="text-base-300 dark:text-base-500">–</span>
         return <span className="font-semibold">{formatPercent(v as number)}</span>
       },
     },
@@ -151,7 +151,7 @@ function buildMonthlyColumns(currency: string): ColumnDef<MonthlyPerfRow>[] {
       align: 'right',
       hideOnMobile: true,
       format: (v) => {
-        if (v == null) return <span className="text-base-300">–</span>
+        if (v == null) return <span className="text-base-300 dark:text-base-500">–</span>
         const num = v as number
         const color =
           num >= 0
@@ -228,7 +228,7 @@ function PlatformDetailPerfTabs({
         yearlyTotals.xirr != null ? (
           <span className="font-semibold">{formatPercent(yearlyTotals.xirr)}</span>
         ) : (
-          <span className="text-base-300">–</span>
+          <span className="text-base-300 dark:text-base-500">–</span>
         ),
     }
   }, [yearlyTotals, currency])
@@ -263,7 +263,7 @@ function PlatformDetailPerfTabs({
             {formatPercent(monthlyTotals.monthlyXirr)}
           </span>
         ) : (
-          <span className="text-base-300">–</span>
+          <span className="text-base-300 dark:text-base-500">–</span>
         ),
     }
   }, [monthlyTotals, currency])
@@ -320,9 +320,17 @@ function PlatformDetailPerfTabs({
                   strokeDasharray="3 3"
                   className="stroke-base-200 dark:stroke-base-700"
                 />
-                <XAxis dataKey="period" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip />
+                <XAxis dataKey="period" tick={{ fontSize: 11 }} className="text-base-400" />
+                <YAxis tick={{ fontSize: 11 }} className="text-base-400" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'var(--color-base-800, #1f2937)',
+                    border: 'none',
+                    borderRadius: '0.5rem',
+                    color: '#fff',
+                    fontSize: '0.75rem',
+                  }}
+                />
                 <Bar dataKey="value" radius={[4, 4, 0, 0]}>
                   <LabelList dataKey="value" position="top" fontSize={10} />
                   {barData.map((entry, i) => (

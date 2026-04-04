@@ -97,7 +97,7 @@ const yearlyColumns: ColumnDef<YearlyRow>[] = [
     align: 'right',
     hideOnMobile: true,
     format: (v) => {
-      if (v == null) return <span className="text-base-300">–</span>
+      if (v == null) return <span className="text-base-300 dark:text-base-500">–</span>
       return <span className="font-semibold">{formatPercent(v as number)}</span>
     },
   },
@@ -163,7 +163,7 @@ function PortfolioOverviewPerfYearly({
         totals.xirr != null ? (
           <span className="font-semibold">{formatPercent(totals.xirr)}</span>
         ) : (
-          <span className="text-base-300">–</span>
+          <span className="text-base-300 dark:text-base-500">–</span>
         ),
     }),
     [totals],
@@ -211,9 +211,17 @@ function PortfolioOverviewPerfYearly({
                   strokeDasharray="3 3"
                   className="stroke-base-200 dark:stroke-base-700"
                 />
-                <XAxis dataKey="year" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip />
+                <XAxis dataKey="year" tick={{ fontSize: 11 }} className="text-base-400" />
+                <YAxis tick={{ fontSize: 11 }} className="text-base-400" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'var(--color-base-800, #1f2937)',
+                    border: 'none',
+                    borderRadius: '0.5rem',
+                    color: '#fff',
+                    fontSize: '0.75rem',
+                  }}
+                />
                 <Bar dataKey="value" radius={[4, 4, 0, 0]}>
                   <LabelList dataKey="value" position="top" fontSize={10} />
                   {barData.map((entry, i) => (

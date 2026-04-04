@@ -112,7 +112,7 @@ function PortfolioOverview({
 
       {/* Mobile action buttons */}
       <div
-        className="flex gap-2 mb-4 lg:hidden"
+        className="flex flex-col sm:flex-row gap-2 mb-4 lg:hidden"
         data-testid="section-mobile-actions"
       >
         <Button

@@ -89,7 +89,7 @@ function PlatformDetailTransactions(props: PlatformDetailTransactionsProps) {
             return <span className="text-base-200 dark:text-base-600">—</span>
           }
           return (
-            <span className="font-mono-data text-sm text-base-500">
+            <span className="font-mono-data text-sm text-base-500 dark:text-base-400">
               {formatNumber(value as number, 4)}
             </span>
           )
