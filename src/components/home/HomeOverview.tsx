@@ -13,13 +13,16 @@ import {
   HomeQuickActionsDesktop,
   HomeQuickActionsMobile,
 } from '@/components/home/HomeQuickActions'
+import { MeterReadingDialog } from '@/components/home/dialogs/MeterReadingDialog'
+import { BillDialog } from '@/components/home/dialogs/BillDialog'
+import { UtilityDialog } from '@/components/home/dialogs/UtilityDialog'
 import type { UtilityMetrics, HomeYoYComparison } from '@/types/home'
 
 function HomeOverview() {
-  // Dialog states — dialogs to be implemented in future sprints
-  const [, setShowAddReading] = useState(false)
-  const [, setShowAddBill] = useState(false)
-  const [, setShowAddUtility] = useState(false)
+  // Dialog states
+  const [showAddReading, setShowAddReading] = useState(false)
+  const [showAddBill, setShowAddBill] = useState(false)
+  const [showAddUtility, setShowAddUtility] = useState(false)
 
   // Step 1: Fetch all utilities
   const { data: utilities = [], isLoading: utilitiesLoading } = useQuery({
@@ -94,7 +97,7 @@ function HomeOverview() {
 
   if (isLoading) {
     return (
-      <div className="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10">
+      <div className="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
         <div className="animate-pulse space-y-6">
           <div className="h-8 w-32 bg-base-200 dark:bg-base-700 rounded" />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -156,10 +159,21 @@ function HomeOverview() {
         <AddUtilityLink onAdd={() => setShowAddUtility(true)} />
       </div>
 
-      {/* Dialogs — to be implemented in future sprints */}
-      {/* {showAddReading && <MeterReadingDialog onClose={() => setShowAddReading(false)} />} */}
-      {/* {showAddBill && <BillDialog onClose={() => setShowAddBill(false)} />} */}
-      {/* {showAddUtility && <UtilityDialog onClose={() => setShowAddUtility(false)} />} */}
+      {/* Dialogs */}
+      <MeterReadingDialog
+        isOpen={showAddReading}
+        onClose={() => setShowAddReading(false)}
+        utilities={utilities}
+      />
+      <BillDialog
+        isOpen={showAddBill}
+        onClose={() => setShowAddBill(false)}
+        utilities={utilities}
+      />
+      <UtilityDialog
+        isOpen={showAddUtility}
+        onClose={() => setShowAddUtility(false)}
+      />
     </div>
   )
 }

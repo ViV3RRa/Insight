@@ -131,7 +131,7 @@ function HomeOverviewChart({
           Monthly Overview
         </h3>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <YoYToggle active={yoyActive} onChange={setYoyActive} />
           <ChartModeToggle
             options={layoutModes}
@@ -152,7 +152,7 @@ function HomeOverviewChart({
       </div>
 
       {/* Row 3: Chart area */}
-      <div className="h-56 lg:h-64">
+      <div className="h-48 sm:h-56 lg:h-64">
         {chartData.length === 0 ? (
           <div className="flex items-center justify-center h-full text-sm text-base-400">
             No data available

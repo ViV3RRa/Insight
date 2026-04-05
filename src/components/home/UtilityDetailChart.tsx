@@ -128,7 +128,7 @@ function UtilityDetailChart({ utility, metrics, priorYearMetrics }: UtilityDetai
       yoyActive={yoyActive}
       onYoYChange={setYoyActive}
     >
-      <div className="h-56 lg:h-64">
+      <div className="h-48 sm:h-56 lg:h-64">
         {!metrics || chartData.length === 0 ? (
           <div className="h-full flex items-center justify-center text-base-300 dark:text-base-500 text-sm">
             No data available
