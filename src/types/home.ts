@@ -135,3 +135,29 @@ export type UtilityMonthlySummary = {
   costPerUnit: number | null
   costChangePercent: number | null
 }
+
+export type UtilityMetrics = {
+  monthlyConsumption: MonthlyConsumption[]
+  monthlyCost: MonthlyCost[]
+  monthlyCostPerUnit: { month: string; year: number; costPerUnit: number | null }[]
+  ytdConsumption: number
+  ytdCost: number
+  currentMonthConsumption: number | null
+  currentMonthCost: number | null
+  currentMonthCostPerUnit: number | null
+  avgMonthlyCost: number | null
+  costTrend: 'up' | 'down' | 'flat' | null
+}
+
+export type UtilityYoYComparison = {
+  ytdCost: { current: number; previous: number; changePercent: number | null }
+  currentMonthCost: { current: number; previous: number; changePercent: number | null }
+  avgMonthlyCost: { current: number; previous: number; changePercent: number | null }
+}
+
+export type HomeYoYComparison = {
+  ytdTotalCost: { current: number; previous: number; changePercent: number | null }
+  currentMonthCost: { current: number; previous: number; changePercent: number | null }
+  avgMonthlyCost: { current: number; previous: number; changePercent: number | null }
+  periodLabel: string // e.g., "Jan 1 – Feb 17, 2025"
+}
