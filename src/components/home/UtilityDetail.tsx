@@ -1,10 +1,19 @@
 import { useState, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { startOfYear } from 'date-fns'
+import { Zap } from 'lucide-react'
 import * as utilityService from '@/services/utilities'
 import * as meterReadingService from '@/services/meterReadings'
 import * as utilityBillService from '@/services/utilityBills'
+import * as refuelingService from '@/services/refuelings'
 import { calculateUtilityMetrics } from '@/utils/utilityCosts'
+import {
+  getHomeChargingKwh,
+  getMonthlyHomeChargingKwh,
+  adjustConsumptionForEvCharging,
+} from '@/utils/evCrossover'
+import { formatNumber } from '@/utils/formatters'
 import { UtilityDetailHeader } from '@/components/home/UtilityDetailHeader'
 import { UtilityDetailChart } from '@/components/home/UtilityDetailChart'
 import { UtilityYearlyTable } from '@/components/home/UtilityYearlyTable'
@@ -29,6 +38,7 @@ function UtilityDetail() {
   const [editBill, setEditBill] = useState<UtilityBill | null>(null)
   const [deleteReading, setDeleteReading] = useState<MeterReading | null>(null)
   const [deleteBill, setDeleteBill] = useState<UtilityBill | null>(null)
+  const [excludeEvCharging, setExcludeEvCharging] = useState(false)
 
   // Fetch all utilities (for switcher)
   const { data: utilities = [] } = useQuery({
@@ -67,6 +77,44 @@ function UtilityDetail() {
     if (readings.length === 0) return null
     return new Date(readings[0]!.timestamp)
   }, [readings])
+
+  // EV home-charging detection
+  const isElectricity = utility?.icon === 'bolt' || utility?.unit === 'kWh'
+
+  const { data: allRefuelings = [] } = useQuery({
+    queryKey: ['refuelings'],
+    queryFn: refuelingService.getAll,
+    enabled: isElectricity,
+  })
+
+  const evRefuelings = useMemo(
+    () => allRefuelings.filter((r) => r.chargedAtHome),
+    [allRefuelings],
+  )
+
+  const hasEvChargingData = evRefuelings.length > 0
+
+  const monthlyHomeChargingKwh = useMemo(
+    () => (hasEvChargingData ? getMonthlyHomeChargingKwh(evRefuelings) : []),
+    [evRefuelings, hasEvChargingData],
+  )
+
+  const totalHomeChargingKwh = useMemo(() => {
+    if (!hasEvChargingData) return 0
+    const now = new Date()
+    return getHomeChargingKwh(evRefuelings, startOfYear(now), now)
+  }, [evRefuelings, hasEvChargingData])
+
+  const displayMetrics = useMemo(() => {
+    if (!metrics || !excludeEvCharging || !hasEvChargingData) return metrics
+    return {
+      ...metrics,
+      monthlyConsumption: adjustConsumptionForEvCharging(
+        metrics.monthlyConsumption,
+        monthlyHomeChargingKwh,
+      ),
+    }
+  }, [metrics, excludeEvCharging, hasEvChargingData, monthlyHomeChargingKwh])
 
   // Delete mutations
   const deleteReadingMutation = useMutation({
@@ -119,9 +167,30 @@ function UtilityDetail() {
         onAddBill={() => setShowAddBill(true)}
       />
 
+      {/* EV home-charging metric */}
+      {isElectricity && totalHomeChargingKwh > 0 && (
+        <div className="text-xs text-base-400 dark:text-base-500 flex items-center gap-1.5 mb-4" data-testid="ev-charging-metric">
+          <Zap className="w-3.5 h-3.5" />
+          {formatNumber(totalHomeChargingKwh, 1)} kWh used for EV home charging (YTD)
+        </div>
+      )}
+
       {/* Section 2: Chart card */}
       <div className="mb-6 lg:mb-8" data-testid="chart-section">
-        <UtilityDetailChart utility={utility} metrics={metrics} />
+        {isElectricity && hasEvChargingData && (
+          <div className="flex justify-end mb-2">
+            <label className="flex items-center gap-1.5 text-xs text-base-400 cursor-pointer" data-testid="ev-toggle">
+              <input
+                type="checkbox"
+                checked={excludeEvCharging}
+                onChange={(e) => setExcludeEvCharging(e.target.checked)}
+                className="rounded border-base-300 text-accent-600 focus:ring-accent-500/30"
+              />
+              Exclude EV charging
+            </label>
+          </div>
+        )}
+        <UtilityDetailChart utility={utility} metrics={displayMetrics} />
       </div>
 
       {/* Section 3: Yearly Summary */}

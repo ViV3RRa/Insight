@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { Settings } from 'lucide-react'
 import BottomTabBar from './BottomTabBar'
+import { useSettingsStore } from '@/stores/settingsStore'
 
 const NAV_LINKS = [
   { to: '/home', label: 'Home' },
@@ -10,6 +11,7 @@ const NAV_LINKS = [
 
 export default function AppShell() {
   const navigate = useNavigate()
+  const demoMode = useSettingsStore((s) => s.demoMode)
 
   return (
     <div className="min-h-screen bg-base-100 dark:bg-base-900 text-base-900 dark:text-white">
@@ -47,6 +49,15 @@ export default function AppShell() {
           </div>
         </div>
       </nav>
+
+      {/* Demo mode banner */}
+      {demoMode && (
+        <div className="bg-amber-50 dark:bg-amber-900/30 border-b border-amber-200 dark:border-amber-700 px-4 py-2 text-center">
+          <span className="text-xs font-medium text-amber-700 dark:text-amber-400">
+            Demo Mode — Showing sample data
+          </span>
+        </div>
+      )}
 
       {/* Main content */}
       <main className="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">

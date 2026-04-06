@@ -14,6 +14,15 @@ function getUserId(): string {
   return userId
 }
 
+export async function getAll(): Promise<Refueling[]> {
+  const userId = getUserId()
+  const records = await pb.collection(COLLECTION).getFullList({
+    filter: `ownerId = "${userId}"`,
+    sort: '-date',
+  })
+  return z.array(refuelingSchema).parse(records)
+}
+
 export async function getByVehicle(vehicleId: string): Promise<Refueling[]> {
   const userId = getUserId()
   const records = await pb.collection(COLLECTION).getFullList({
