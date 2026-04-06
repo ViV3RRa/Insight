@@ -12,6 +12,11 @@ export {
   buildMeterReading,
   buildUtilityBill,
 } from './homeFactory'
+export {
+  buildVehicle,
+  buildRefueling,
+  buildMaintenanceEvent,
+} from './vehicleFactory'
 export type { Settings } from '@/types/settings'
 export type {
   Portfolio,
@@ -25,3 +30,8 @@ export type {
   MeterReading,
   UtilityBill,
 } from '@/types/home'
+export type {
+  Vehicle,
+  Refueling,
+  MaintenanceEvent,
+} from '@/types/vehicles'

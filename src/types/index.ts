@@ -9,6 +9,9 @@ export {
   UtilityId,
   MeterReadingId,
   UtilityBillId,
+  VehicleId,
+  RefuelingId,
+  MaintenanceEventId,
 } from './brands'
 
 export {
@@ -82,3 +85,27 @@ export type {
   UtilityYearlySummary,
   UtilityMonthlySummary,
 } from './home'
+
+export {
+  fuelTypeSchema,
+  vehicleStatusSchema,
+  vehicleSchema,
+  vehicleCreateSchema,
+  refuelingSchema,
+  refuelingCreateSchema,
+  maintenanceEventSchema,
+  maintenanceEventCreateSchema,
+} from './vehicles'
+
+export type {
+  Vehicle,
+  VehicleCreate,
+  FuelType,
+  VehicleStatus,
+  Refueling,
+  RefuelingCreate,
+  MaintenanceEvent,
+  MaintenanceEventCreate,
+  TotalCostOfOwnership,
+  VehicleMetrics,
+} from './vehicles'
