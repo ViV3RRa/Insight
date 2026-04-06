@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, memo } from 'react'
 import {
   ResponsiveContainer,
   LineChart,
@@ -66,7 +66,7 @@ function toChartPoints(data: EfficiencyDataPoint[]): ChartPoint[] {
   }))
 }
 
-function VehicleEfficiencyChart({ data, priorYearData, unit }: VehicleEfficiencyChartProps) {
+const VehicleEfficiencyChart = memo(function VehicleEfficiencyChart({ data, priorYearData, unit }: VehicleEfficiencyChartProps) {
   const [timeSpan, setTimeSpan] = useState<TimeSpan>(DEFAULT_TIME_SPAN)
   const [yoyActive, setYoyActive] = useState(false)
 
@@ -148,7 +148,7 @@ function VehicleEfficiencyChart({ data, priorYearData, unit }: VehicleEfficiency
       </div>
     </ChartCard>
   )
-}
+})
 
 export { VehicleEfficiencyChart }
 export type { EfficiencyDataPoint, VehicleEfficiencyChartProps }

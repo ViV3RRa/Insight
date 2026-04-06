@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo, memo } from 'react'
 import {
   AreaChart,
   Area,
@@ -64,7 +64,7 @@ const PERFORMANCE_MODES = [
 const POSITIVE_COLOR = '#22c55e' // emerald-500
 const NEGATIVE_COLOR = '#ef4444' // rose-500
 
-function PortfolioOverviewValueCharts({
+const PortfolioOverviewValueCharts = memo(function PortfolioOverviewValueCharts({
   compositeData,
   platforms,
   monthlyPerformance,
@@ -87,30 +87,33 @@ function PortfolioOverviewValueCharts({
   }
 
   // Transform composite data for the stacked area chart
-  const areaChartData = compositeData.map((dp) => ({
-    month: formatMonthPeriod(dp.timestamp),
-    ...dp.platformValues,
-  }))
+  const areaChartData = useMemo(
+    () => compositeData.map((dp) => ({
+      month: formatMonthPeriod(dp.timestamp),
+      ...dp.platformValues,
+    })),
+    [compositeData],
+  )
 
   // Transform monthly performance for the bar chart
-  const barData = monthlyPerformance.map((dp) => ({
-    month: dp.month,
-    value: activeMode === 'earnings' ? dp.earnings : (dp.xirr ?? 0),
-  }))
+  const mergedBarData = useMemo(() => {
+    const barData = monthlyPerformance.map((dp) => ({
+      month: dp.month,
+      value: activeMode === 'earnings' ? dp.earnings : (dp.xirr ?? 0),
+    }))
 
-  // YoY bar data when active
-  const yoyBarData = yoyActive && yoyMonthlyPerformance
-    ? yoyMonthlyPerformance.map((dp) => ({
-        month: dp.month,
-        yoyValue: activeMode === 'earnings' ? dp.earnings : (dp.xirr ?? 0),
-      }))
-    : null
+    const yoyBarData = yoyActive && yoyMonthlyPerformance
+      ? yoyMonthlyPerformance.map((dp) => ({
+          month: dp.month,
+          yoyValue: activeMode === 'earnings' ? dp.earnings : (dp.xirr ?? 0),
+        }))
+      : null
 
-  // Merge current and YoY data for the bar chart
-  const mergedBarData = barData.map((item, i) => ({
-    ...item,
-    yoyValue: yoyBarData?.[i]?.yoyValue ?? 0,
-  }))
+    return barData.map((item, i) => ({
+      ...item,
+      yoyValue: yoyBarData?.[i]?.yoyValue ?? 0,
+    }))
+  }, [monthlyPerformance, yoyMonthlyPerformance, activeMode, yoyActive])
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
@@ -201,7 +204,7 @@ function PortfolioOverviewValueCharts({
                   fontSize: '0.75rem',
                 }}
               />
-              {yoyActive && yoyBarData && (
+              {yoyActive && yoyMonthlyPerformance && (
                 <Bar dataKey="yoyValue" opacity={0.3}>
                   {mergedBarData.map((entry, i) => (
                     <Cell
@@ -225,7 +228,7 @@ function PortfolioOverviewValueCharts({
       </ChartCard>
     </div>
   )
-}
+})
 
 export { PortfolioOverviewValueCharts, PLATFORM_COLORS }
 export type {

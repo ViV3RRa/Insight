@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, memo } from 'react'
 import {
   ResponsiveContainer,
   BarChart,
@@ -53,7 +53,7 @@ function toChartData(data: MonthlyMaintenanceCostPoint[]): ChartPoint[] {
   }))
 }
 
-function VehicleMaintenanceChart({ data }: VehicleMaintenanceChartProps) {
+const VehicleMaintenanceChart = memo(function VehicleMaintenanceChart({ data }: VehicleMaintenanceChartProps) {
   const chartData = useMemo(() => toChartData(data), [data])
 
   return (
@@ -102,7 +102,7 @@ function VehicleMaintenanceChart({ data }: VehicleMaintenanceChartProps) {
       </div>
     </ChartCard>
   )
-}
+})
 
 export { VehicleMaintenanceChart }
 export type { MonthlyMaintenanceCostPoint, VehicleMaintenanceChartProps }

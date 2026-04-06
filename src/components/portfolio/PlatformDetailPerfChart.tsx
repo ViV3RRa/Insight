@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo, memo } from 'react'
 import {
   BarChart,
   Bar,
@@ -49,7 +49,7 @@ const POSITIVE_COLOR = '#22c55e'
 const NEGATIVE_COLOR = '#ef4444'
 const XIRR_COLOR = '#3b82f6'
 
-function PlatformDetailPerfChart({
+const PlatformDetailPerfChart = memo(function PlatformDetailPerfChart({
   earningsData,
   xirrData,
   yoyEarningsData,
@@ -72,18 +72,24 @@ function PlatformDetailPerfChart({
   const isEmpty = data.length === 0
 
   // Merge earnings data with YoY
-  const mergedEarningsData = earningsData.map((item, i) => ({
-    month: item.month,
-    earnings: item.earnings,
-    yoyEarnings: yoyEarningsData?.[i]?.earnings ?? 0,
-  }))
+  const mergedEarningsData = useMemo(
+    () => earningsData.map((item, i) => ({
+      month: item.month,
+      earnings: item.earnings,
+      yoyEarnings: yoyEarningsData?.[i]?.earnings ?? 0,
+    })),
+    [earningsData, yoyEarningsData],
+  )
 
   // Merge XIRR data with YoY
-  const mergedXirrData = xirrData.map((item, i) => ({
-    month: item.month,
-    xirr: item.xirr,
-    yoyXirr: yoyXirrData?.[i]?.xirr ?? 0,
-  }))
+  const mergedXirrData = useMemo(
+    () => xirrData.map((item, i) => ({
+      month: item.month,
+      xirr: item.xirr,
+      yoyXirr: yoyXirrData?.[i]?.xirr ?? 0,
+    })),
+    [xirrData, yoyXirrData],
+  )
 
   return (
     <ChartCard
@@ -189,7 +195,7 @@ function PlatformDetailPerfChart({
       )}
     </ChartCard>
   )
-}
+})
 
 export { PlatformDetailPerfChart }
 export type {

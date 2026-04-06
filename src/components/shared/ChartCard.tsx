@@ -92,7 +92,7 @@ function ChartCard({
       )}
 
       {/* Row 3: Chart content area */}
-      <div className="w-full">
+      <div className="w-full" role="img" aria-label={`${title} chart`}>
         {children}
       </div>
     </div>

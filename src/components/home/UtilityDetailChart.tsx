@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, memo } from 'react'
 import {
   BarChart,
   Bar,
@@ -105,7 +105,7 @@ interface UtilityDetailChartProps {
   priorYearMetrics?: UtilityMetrics | null
 }
 
-function UtilityDetailChart({ utility, metrics, priorYearMetrics }: UtilityDetailChartProps) {
+const UtilityDetailChart = memo(function UtilityDetailChart({ utility, metrics, priorYearMetrics }: UtilityDetailChartProps) {
   const [mode, setMode] = useState<string>('consumption')
   const [timeSpan, setTimeSpan] = useState<TimeSpan>(DEFAULT_TIME_SPAN)
   const [yoyActive, setYoyActive] = useState(false)
@@ -237,6 +237,6 @@ function UtilityDetailChart({ utility, metrics, priorYearMetrics }: UtilityDetai
       </div>
     </ChartCard>
   )
-}
+})
 
 export { UtilityDetailChart }

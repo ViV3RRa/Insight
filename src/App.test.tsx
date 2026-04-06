@@ -69,9 +69,9 @@ describe('App Router', () => {
       expect(screen.getByTestId('page-home')).toBeInTheDocument()
     })
 
-    it('renders Investment page at /investment', () => {
+    it('renders Investment page at /investment', async () => {
       renderWithProviders(<App />, { initialEntries: ['/investment'] })
-      expect(screen.getByRole('heading', { level: 1, name: 'Investment Portfolio' })).toBeInTheDocument()
+      expect(await screen.findByRole('heading', { level: 1, name: 'Investment Portfolio' })).toBeInTheDocument()
     })
 
     it('renders Vehicles page at /vehicles', () => {

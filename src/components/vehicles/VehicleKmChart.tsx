@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, memo } from 'react'
 import {
   ResponsiveContainer,
   BarChart,
@@ -57,7 +57,7 @@ function toChartData(data: MonthlyKmPoint[]): { label: string; km: number }[] {
   }))
 }
 
-function VehicleKmChart({ data, priorYearData }: VehicleKmChartProps) {
+const VehicleKmChart = memo(function VehicleKmChart({ data, priorYearData }: VehicleKmChartProps) {
   const [timeSpan, setTimeSpan] = useState<TimeSpan>(DEFAULT_TIME_SPAN)
   const [yoyActive, setYoyActive] = useState(false)
 
@@ -144,7 +144,7 @@ function VehicleKmChart({ data, priorYearData }: VehicleKmChartProps) {
       </div>
     </ChartCard>
   )
-}
+})
 
 export { VehicleKmChart }
 export type { MonthlyKmPoint, VehicleKmChartProps }

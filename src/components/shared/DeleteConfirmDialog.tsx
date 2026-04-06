@@ -37,7 +37,7 @@ function DeleteConfirmDialog({
   if (!isOpen) return null
 
   return createPortal(
-    <div className="fixed inset-0 z-[60]">
+    <div className="fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-labelledby="delete-dialog-title">
       {/* Backdrop */}
       <div
         className="fixed inset-0 z-[60] bg-black/40 sm:backdrop-blur-sm"
@@ -58,7 +58,7 @@ function DeleteConfirmDialog({
           </div>
 
           {/* Title */}
-          <h2 className="text-base font-semibold text-base-900 dark:text-white mb-1">
+          <h2 id="delete-dialog-title" className="text-base font-semibold text-base-900 dark:text-white mb-1">
             {title}
           </h2>
 

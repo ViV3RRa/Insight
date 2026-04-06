@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, memo } from 'react'
 import {
   ResponsiveContainer,
   BarChart,
@@ -72,7 +72,7 @@ function CustomTooltip({
   )
 }
 
-function VehicleFuelCostChart({ data, priorYearData }: VehicleFuelCostChartProps) {
+const VehicleFuelCostChart = memo(function VehicleFuelCostChart({ data, priorYearData }: VehicleFuelCostChartProps) {
   const [timeSpan, setTimeSpan] = useState<TimeSpan>(DEFAULT_TIME_SPAN)
   const [yoyActive, setYoyActive] = useState(false)
 
@@ -154,7 +154,7 @@ function VehicleFuelCostChart({ data, priorYearData }: VehicleFuelCostChartProps
       </div>
     </ChartCard>
   )
-}
+})
 
 export { VehicleFuelCostChart }
 export type { MonthlyFuelCostPoint, VehicleFuelCostChartProps }

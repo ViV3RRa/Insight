@@ -61,6 +61,9 @@ function MobileDrawer({
         className="fixed inset-x-0 bottom-0 z-50 bg-white dark:bg-base-800 rounded-t-2xl shadow-xl sm:hidden transform transition-transform duration-300 ease-out"
         style={{ transform: isOpen ? 'translateY(0)' : 'translateY(100%)' }}
         data-testid="mobile-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
       >
         {/* Drag handle */}
         <div className="flex justify-center pt-3 pb-2">

@@ -128,6 +128,7 @@ function YearSection({
       <tr
         className="border-b border-base-100 dark:border-base-700/50 hover:bg-base-50/50 dark:hover:bg-base-700/30 cursor-pointer transition-colors duration-100"
         onClick={onToggle}
+        aria-expanded={isExpanded}
         data-testid={`year-row-${yearData.year}`}
       >
         <td className="px-4 py-3">

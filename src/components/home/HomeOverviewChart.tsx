@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, memo } from 'react'
 import {
   BarChart,
   Bar,
@@ -42,7 +42,7 @@ interface HomeOverviewChartProps {
   priorYearMetricsMap?: Map<string, UtilityMetrics>
 }
 
-function HomeOverviewChart({
+const HomeOverviewChart = memo(function HomeOverviewChart({
   utilities,
   metricsMap,
   priorYearMetricsMap,
@@ -152,7 +152,7 @@ function HomeOverviewChart({
       </div>
 
       {/* Row 3: Chart area */}
-      <div className="h-48 sm:h-56 lg:h-64">
+      <div className="h-48 sm:h-56 lg:h-64" role="img" aria-label="Monthly Overview chart">
         {chartData.length === 0 ? (
           <div className="flex items-center justify-center h-full text-sm text-base-400">
             No data available
@@ -238,6 +238,6 @@ function HomeOverviewChart({
       )}
     </div>
   )
-}
+})
 
 export { HomeOverviewChart }
