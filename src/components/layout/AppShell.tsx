@@ -1,6 +1,8 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { Settings } from 'lucide-react'
 import BottomTabBar from './BottomTabBar'
+import { MobileNavProvider } from './MobileNavContext'
+import { MobileDetailNav } from './MobileDetailNav'
 import { useSettingsStore } from '@/stores/settingsStore'
 
 const NAV_LINKS = [
@@ -14,12 +16,14 @@ export default function AppShell() {
   const demoMode = useSettingsStore((s) => s.demoMode)
 
   return (
+    <MobileNavProvider>
     <div className="min-h-screen bg-base-100 dark:bg-base-900 text-base-900 dark:text-white">
       {/* Desktop top navigation */}
       <nav className="bg-white dark:bg-base-800 shadow-card dark:shadow-card-dark sticky top-0 z-30 relative">
         <div className="max-w-[1440px] mx-auto px-3 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-10">
+              {/* Desktop: Brand + section nav */}
               <div className="hidden lg:block text-xl font-bold tracking-tight">Insight</div>
               <div className="hidden lg:flex gap-1">
                 {NAV_LINKS.map((link) => (
@@ -36,6 +40,8 @@ export default function AppShell() {
                   </NavLink>
                 ))}
               </div>
+              {/* Mobile: Detail page header (injected via context) */}
+              <MobileDetailNav />
             </div>
             <div className="hidden lg:flex items-center">
               <button
@@ -67,5 +73,6 @@ export default function AppShell() {
       {/* Mobile bottom tab bar */}
       <BottomTabBar />
     </div>
+    </MobileNavProvider>
   )
 }

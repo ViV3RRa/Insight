@@ -285,7 +285,7 @@
 - **Step 2:** Navigate to utility detail. Take screenshot of header only.
 - **Step 3:** Compare: back button (left), utility icon + name + dropdown, "Stale" badge (right), subtitle below, action buttons full-width row
 
-### VR-HOME-DT-01b-D: Utility detail stat cards (desktop)
+### VR-HOME-DT-01b-D: Utility detail stat cards (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/home/detail-desktop-top.png`
@@ -300,7 +300,7 @@
   - Unit: text-sm, base-300
   - "vs Last Month" card: value in emerald-600 or rose-600, subtext "312 → 285 kWh"
 
-### VR-HOME-DT-01b-M: Utility detail stat cards (mobile)
+### VR-HOME-DT-01b-M: Utility detail stat cards (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/home/detail-mobile-top.png`
@@ -309,7 +309,7 @@
 - **Step 2:** Take screenshot of stat cards only. Extract: grid-cols-2, card padding, value font-size.
 - **Step 3:** Compare: 2-column grid (3 rows of 2), p-4 padding, text-2xl values, same label/unit styling
 
-### VR-HOME-DT-02a-D: Utility detail chart controls (desktop)
+### VR-HOME-DT-02a-D: Utility detail chart controls (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/home/detail-desktop-top.png`
@@ -322,7 +322,7 @@
   - Mode tabs: "Consumption" (active), "Cost", "Cost/Unit" — active has bg-white shadow-sm
   - Time span pills: active = bg-base-800 text-white rounded-lg
 
-### VR-HOME-DT-02a-M: Utility detail chart controls (mobile)
+### VR-HOME-DT-02a-M: Utility detail chart controls (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/home/detail-mobile-top.png`
@@ -331,7 +331,7 @@
 - **Step 2:** Scroll to chart. Take screenshot of controls only.
 - **Step 3:** Compare: title, mode tabs, time span as `<select>` dropdown
 
-### VR-HOME-DT-02b-D: Utility detail chart area (desktop)
+### VR-HOME-DT-02b-D: Utility detail chart area (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/home/detail-desktop-top.png`
@@ -340,7 +340,7 @@
 - **Step 2:** Take screenshot of chart area (below controls). Extract: card container background/radius/shadow, chart dimensions.
 - **Step 3:** Compare: bar chart renders in card, white card rounded-2xl shadow-card, chart fills width
 
-### VR-HOME-DT-02b-M: Utility detail chart area (mobile)
+### VR-HOME-DT-02b-M: Utility detail chart area (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/home/detail-mobile-top.png`

@@ -38,7 +38,7 @@ function StatCard({
     switch (variant) {
       case 'colored':
         return (
-          <p className={`font-mono-data text-xl font-medium ${trendValueClasses[trend]}`}>
+          <p className={`font-mono-data text-2xl lg:text-3xl font-bold ${trendValueClasses[trend]}`}>
             {value}
           </p>
         )
@@ -47,7 +47,7 @@ function StatCard({
         const badgeTrend = trend === 'neutral' ? 'positive' : trend
         return (
           <div className="flex items-baseline gap-2">
-            <p className={`font-mono-data text-xl font-medium ${trendValueClasses[trend]}`}>
+            <p className={`font-mono-data text-2xl lg:text-3xl font-bold ${trendValueClasses[trend]}`}>
               {value}
             </p>
             {badgeValue && (
@@ -64,7 +64,7 @@ function StatCard({
       case 'withUnit':
         return (
           <div className="flex items-baseline gap-1">
-            <p className="font-mono-data text-xl font-medium text-base-900 dark:text-white">
+            <p className="font-mono-data text-2xl lg:text-3xl font-bold text-base-900 dark:text-white">
               {value}
             </p>
             {unitSuffix && <span className="text-sm text-base-400">{unitSuffix}</span>}
@@ -73,7 +73,7 @@ function StatCard({
 
       default:
         return (
-          <p className="font-mono-data text-xl font-medium text-base-900 dark:text-white">
+          <p className="font-mono-data text-2xl lg:text-3xl font-bold text-base-900 dark:text-white">
             {value}
           </p>
         )
@@ -82,7 +82,7 @@ function StatCard({
 
   return (
     <div className="bg-white dark:bg-base-800 rounded-2xl p-5 shadow-card dark:shadow-card-dark">
-      <p className="text-xs text-base-400 dark:text-base-400 mb-1">{label}</p>
+      <p className="text-[10px] uppercase tracking-wider text-base-300 dark:text-base-500 mb-1">{label}</p>
       {renderValue()}
       {sublabel && (
         <p className="text-xs text-base-300 dark:text-base-500 mt-0.5">{sublabel}</p>

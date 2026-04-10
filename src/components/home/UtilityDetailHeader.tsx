@@ -1,10 +1,12 @@
-import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Settings } from 'lucide-react'
+import { useMemo } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { ArrowLeft, Settings, LayoutGrid } from 'lucide-react'
 import { Button } from '@/components/shared/Button'
 import { StatCard } from '@/components/shared/StatCard'
 import { UtilityIcon } from '@/components/shared/UtilityIcon'
 import { DropdownSwitcher } from '@/components/shared/DropdownSwitcher'
 import { StalenessIndicator } from '@/components/shared/StalenessIndicator'
+import { useMobileDetailNav } from '@/components/layout/useMobileDetailNav'
 import { formatNumber, formatRecentUpdate } from '@/utils/formatters'
 import type { Utility, UtilityMetrics } from '@/types/home'
 
@@ -88,41 +90,69 @@ function UtilityDetailHeader({
       ? `${formatNumber(lastTwo[0]!.consumption, 0)} \u2192 ${formatNumber(lastTwo[1]!.consumption, 0)} ${utility.unit}`
       : undefined
 
+  // Mobile dropdown content for nav bar context
+  const mobileDropdownContent = useMemo(() => {
+    const handleSelect = (id: string) => onSelectUtility(id)
+
+    return (
+      <div className="py-1">
+        <Link
+          to="/home"
+          className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-base-500 hover:bg-base-50 dark:hover:bg-base-700 border-b border-base-100 dark:border-base-700"
+        >
+          <LayoutGrid className="w-4 h-4" />
+          <span className="font-medium">Home Overview</span>
+        </Link>
+        <div className="py-1">
+          {allUtilities.map((u) => {
+            const isActive = u.id === utility.id
+            return (
+              <button
+                key={u.id}
+                type="button"
+                onClick={() => handleSelect(u.id)}
+                className={[
+                  'w-full flex items-center gap-3 px-4 py-2.5',
+                  isActive
+                    ? 'bg-accent-50/50 dark:bg-accent-900/20 border-l-2 border-accent-600'
+                    : 'hover:bg-base-50 dark:hover:bg-base-700 border-l-2 border-transparent',
+                ].join(' ')}
+              >
+                <UtilityIcon icon={u.icon} color={u.color} size="xs" />
+                <div className="flex-1 text-left">
+                  <div className="text-sm font-medium">{u.name}</div>
+                  <div className="text-xs text-base-400">{u.unit}</div>
+                </div>
+              </button>
+            )
+          })}
+        </div>
+        <div className="border-t border-base-100 dark:border-base-700 pt-1">
+          <button
+            type="button"
+            onClick={onEdit}
+            className="w-full px-4 py-2.5 flex items-center gap-2 text-sm text-base-400 hover:text-base-600 hover:bg-base-50"
+          >
+            <Settings className="w-3.5 h-3.5" />
+            Edit Utility
+          </button>
+        </div>
+      </div>
+    )
+  }, [allUtilities, utility.id, onSelectUtility, onEdit])
+
+  // Register mobile nav content (renders in AppShell's nav bar)
+  useMobileDetailNav({
+    backTo: '/home',
+    icon: <UtilityIcon icon={utility.icon} color={utility.color} size="sm" />,
+    name: utility.name,
+    subtitle: `${utility.unit} · Updated ${updatedText}`,
+    dropdown: mobileDropdownContent,
+    badge: staleness ? <StalenessIndicator severity={staleness} size="lg" /> : undefined,
+  })
+
   return (
     <>
-      {/* Mobile header */}
-      <div className="flex lg:hidden items-center justify-between mb-4">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <button
-            onClick={() => navigate('/home')}
-            className="w-9 h-9 rounded-xl bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 flex items-center justify-center text-base-400 hover:text-base-600 dark:hover:text-base-300 shrink-0"
-          >
-            <ArrowLeft className="w-4 h-4" />
-          </button>
-          <UtilityIcon icon={utility.icon} color={utility.color} size="sm" />
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <DropdownSwitcher
-                currentId={utility.id}
-                items={dropdownItems}
-                onSelect={onSelectUtility}
-                overviewHref="/home"
-                overviewLabel="Home Overview"
-                footerAction={{
-                  label: 'Edit Utility',
-                  icon: <Settings className="w-3.5 h-3.5" />,
-                  onClick: onEdit,
-                }}
-              />
-            </div>
-            <div className="text-[11px] text-base-400 mt-0.5">
-              {utility.unit} &middot; Updated {updatedText}
-            </div>
-          </div>
-        </div>
-        {staleness && <StalenessIndicator severity={staleness} />}
-      </div>
-
       {/* Switcher bar + action buttons */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 lg:mb-8">
         {/* Desktop switcher bar */}
