@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useMobileDetailNav } from '@/components/layout/useMobileDetailNav'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { startOfYear, format } from 'date-fns'
@@ -11,6 +12,8 @@ import {
   computeMonthlyXIRRForPlatform,
 } from '@/utils/calculations'
 import { formatRecentUpdate, formatHumanDate } from '@/utils/formatters'
+import { PlatformIcon } from '@/components/shared/PlatformIcon'
+import { StalenessIndicator } from '@/components/shared/StalenessIndicator'
 import { PlatformDetailHeader } from './PlatformDetailHeader'
 import { PlatformDetailPerfChart } from './PlatformDetailPerfChart'
 import { PlatformDetailPerfTabs } from './PlatformDetailPerfTabs'
@@ -109,6 +112,23 @@ function PlatformDetail() {
     if (daysDiff > 2) return 'warning' as const
     return undefined
   }, [latestDpDate])
+
+  // Mobile nav header
+  const updatedText = latestDpDate ? formatRecentUpdate(new Date(latestDpDate)) : undefined
+  const mobileSubtitle = platform
+    ? `${platform.type === 'investment' ? 'Investment' : 'Cash'} · ${platform.currency}${updatedText ? ` · Updated ${updatedText}` : ''}`
+    : ''
+  useMobileDetailNav(
+    platform
+      ? {
+          backTo: '/investment',
+          icon: <PlatformIcon imageUrl={platformService.getPlatformIconUrl(platform)} name={platform.name} size="sm" />,
+          name: platform.name,
+          subtitle: mobileSubtitle,
+          badge: staleness ? <StalenessIndicator severity={staleness} size="lg" /> : undefined,
+        }
+      : null,
+  )
 
   // Switcher items
   const switcherItems: PlatformSwitcherItem[] = useMemo(

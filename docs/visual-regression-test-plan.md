@@ -539,7 +539,7 @@
 
 ## VR-INV-OV — Investment Overview
 
-### VR-INV-OV-01a-D: Investment overview page header (desktop)
+### VR-INV-OV-01a-D: Investment overview page header (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/overview-desktop-top.png`
@@ -552,7 +552,7 @@
   - Subtitle: platform/account counts — text-sm, base-400
   - Action buttons (desktop hidden, mobile full-width): "+ Add Data Point" (secondary) + "+ Add Transaction" (primary)
 
-### VR-INV-OV-01a-M: Investment overview page header (mobile)
+### VR-INV-OV-01a-M: Investment overview page header (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/overview-mobile-top.png`
@@ -561,7 +561,7 @@
 - **Step 2:** Navigate to `/investment`. Take screenshot of header.
 - **Step 3:** Compare: title + switcher on same line, subtitle below, full-width grid-cols-2 action buttons
 
-### VR-INV-OV-01b-D: Investment overview stat cards (desktop)
+### VR-INV-OV-01b-D: Investment overview stat cards (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/overview-desktop-top.png`
@@ -576,7 +576,7 @@
   - Same pattern for YTD and Month Earnings cards
   - Cards: bg-white (#fafcfa), rounded-2xl, p-5, shadow-card
 
-### VR-INV-OV-01b-M: Investment overview stat cards (mobile)
+### VR-INV-OV-01b-M: Investment overview stat cards (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/overview-mobile-top.png`
@@ -585,7 +585,7 @@
 - **Step 2:** Take screenshot of stat cards.
 - **Step 3:** Compare: 2-column grid, same card styling, label/value/unit hierarchy preserved
 
-### VR-INV-OV-02-D: Investment overview YoY row (desktop)
+### VR-INV-OV-02-D: Investment overview YoY row (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/overview-desktop-top.png`
@@ -594,7 +594,7 @@
 - **Step 2:** Take screenshot of YoY row.
 - **Step 3:** Compare: icon + period label, three metrics (YTD Earnings, YTD XIRR, Month Earnings) with current vs previous and change %
 
-### VR-INV-OV-02-M: Investment overview YoY row (mobile)
+### VR-INV-OV-02-M: Investment overview YoY row (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/overview-mobile-top.png`
@@ -603,7 +603,7 @@
 - **Step 2:** Scroll to YoY. Take screenshot.
 - **Step 3:** Compare: stacked layout, each metric on its own row
 
-### VR-INV-OV-03-D: Investment overview platforms table (desktop)
+### VR-INV-OV-03-D: Investment overview platforms table (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/overview-desktop-tables.png`
@@ -617,7 +617,7 @@
   - Positive = emerald-600, negative = rose-600
   - "Show all N" link: text-accent-600
 
-### VR-INV-OV-03-M: Investment overview platforms table (mobile)
+### VR-INV-OV-03-M: Investment overview platforms table (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/overview-mobile-tables.png`
@@ -626,7 +626,7 @@
 - **Step 2:** Scroll to table. Take screenshot.
 - **Step 3:** Compare: Platform + Current Value visible, cycling third column with dot indicators
 
-### VR-INV-OV-04a-D: Cash accounts table (desktop)
+### VR-INV-OV-04a-D: Cash accounts table (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/overview-desktop-tables.png`
@@ -638,7 +638,7 @@
   - Table: Account (icon + name), Current Balance (font-mono-data, right-aligned, DKK equivalent as text-sm base-400), Updated (base-400)
   - Same table chrome as Investment Platforms table
 
-### VR-INV-OV-04a-M: Cash accounts table (mobile)
+### VR-INV-OV-04a-M: Cash accounts table (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/overview-mobile-tables.png`
@@ -647,7 +647,7 @@
 - **Step 2:** Scroll to "Cash Accounts". Take screenshot of this section only. Extract: header styling, table column layout.
 - **Step 3:** Compare: mobile table layout, same section header, account names with icons
 
-### VR-INV-OV-04b-D: Closed platforms table (desktop)
+### VR-INV-OV-04b-D: Closed platforms table (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/overview-desktop-tables.png`
@@ -659,7 +659,7 @@
   - Table: Platform (icon + name), Final Value, All-Time Gain/Loss (value + % — emerald or rose), Closed date
   - Same table chrome
 
-### VR-INV-OV-04b-M: Closed platforms table (mobile)
+### VR-INV-OV-04b-M: Closed platforms table (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/overview-mobile-tables.png`
@@ -668,7 +668,7 @@
 - **Step 2:** Scroll to "Closed Platforms". Take screenshot of this section only. Extract: header, table layout.
 - **Step 3:** Compare: mobile layout, section header, gain/loss colors
 
-### VR-INV-OV-05-D: Portfolio allocation chart (desktop)
+### VR-INV-OV-05-D: Portfolio allocation chart (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/overview-desktop-tables.png`
@@ -677,7 +677,7 @@
 - **Step 2:** Scroll to "Portfolio Allocation". Take screenshot.
 - **Step 3:** Compare: horizontal stacked bar, legend (colored square + name + value + %), consistent typography
 
-### VR-INV-OV-06-D: Portfolio switcher dropdown (desktop)
+### VR-INV-OV-06-D: Portfolio switcher dropdown (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/overview-desktop-portfolio-switcher.png`
@@ -686,7 +686,7 @@
 - **Step 2:** Click portfolio switcher. Take screenshot.
 - **Step 3:** Compare: dropdown panel, portfolio names with checkmark, "Add Portfolio" footer
 
-### VR-INV-OV-07-D: Add Platform dialog (desktop)
+### VR-INV-OV-07-D: Add Platform dialog (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/overview-desktop-add-platform.png`
@@ -695,7 +695,7 @@
 - **Step 2:** Click "Add Platform". Take screenshot.
 - **Step 3:** Compare: centered modal, circular icon upload area, Name/Type/Currency fields, "Cancel" + "Add Platform" footer
 
-### VR-INV-OV-07-M: Add Platform dialog (mobile)
+### VR-INV-OV-07-M: Add Platform dialog (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/overview-mobile-add-platform.png`
@@ -704,7 +704,7 @@
 - **Step 2:** Tap "Add Platform". Take screenshot. Extract: panel position (bottom), field layout, icon upload area.
 - **Step 3:** Compare: bottom sheet, same fields (icon upload, Name, Type, Currency), Cancel + Add Platform buttons
 
-### VR-INV-OV-08a-D: Performance Charts accordion trigger (desktop)
+### VR-INV-OV-08a-D: Performance Charts accordion trigger (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/overview-desktop-performance-expanded.png`
@@ -713,7 +713,7 @@
 - **Step 2:** Take screenshot of accordion trigger (collapsed state first, then expanded). Extract: trigger button styling, icon, text, chevron direction.
 - **Step 3:** Compare: "Performance Charts & Analysis" label, chart icon, chevron rotates on expand, trigger has consistent styling with rest of page
 
-### VR-INV-OV-08a-M: Performance Charts accordion trigger (mobile)
+### VR-INV-OV-08a-M: Performance Charts accordion trigger (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/overview-mobile-performance-expanded.png`
@@ -722,7 +722,7 @@
 - **Step 2:** Take screenshot of accordion trigger. Extract: trigger button styling, icon, text.
 - **Step 3:** Compare: same trigger styling adapted for mobile width
 
-### VR-INV-OV-08b-D: Performance Charts expanded content (desktop)
+### VR-INV-OV-08b-D: Performance Charts expanded content (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/overview-desktop-performance-expanded.png`
@@ -731,7 +731,7 @@
 - **Step 2:** Expand accordion. Take screenshot of expanded content. Extract: chart controls styling, tab states, table header/row styling.
 - **Step 3:** Compare: chart controls (YoY, tabs, time span pills), chart area, performance tabs + table below
 
-### VR-INV-OV-08b-M: Performance Charts expanded content (mobile)
+### VR-INV-OV-08b-M: Performance Charts expanded content (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/overview-mobile-performance-expanded.png`
@@ -744,7 +744,7 @@
 
 ## VR-INV-DT — Investment Platform Detail
 
-### VR-INV-DT-01a-D: Platform detail header bar (desktop)
+### VR-INV-DT-01a-D: Platform detail header bar (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/detail-desktop-top.png`
@@ -758,7 +758,7 @@
   - Action buttons right: "+ Add Data Point" (secondary) + "+ Add Transaction" (primary)
   - Subtitle: "Investment · DKK · Updated ..." — text-sm, base-400
 
-### VR-INV-DT-01a-M: Platform detail header bar (mobile)
+### VR-INV-DT-01a-M: Platform detail header bar (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/detail-mobile-top.png`
@@ -767,7 +767,7 @@
 - **Step 2:** Navigate to platform detail. Take screenshot of header only.
 - **Step 3:** Compare: back arrow, icon + name + dropdown, "Stale" badge, subtitle, full-width action buttons
 
-### VR-INV-DT-01b-D: Platform detail stat cards (desktop)
+### VR-INV-DT-01b-D: Platform detail stat cards (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/detail-desktop-top.png`
@@ -781,7 +781,7 @@
   - Percentage pills: bg-emerald-50, text-emerald-700
   - XIRR: subscript "%" character, "Annualized return" subtext in base-400
 
-### VR-INV-DT-01b-M: Platform detail stat cards (mobile)
+### VR-INV-DT-01b-M: Platform detail stat cards (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/detail-mobile-top.png`
@@ -790,7 +790,7 @@
 - **Step 2:** Take screenshot of stat cards only. Extract: grid columns, card padding, value font-size/color.
 - **Step 3:** Compare: 2-column grid, same card styling, emerald values for gains
 
-### VR-INV-DT-02a-D: Performance chart controls (desktop)
+### VR-INV-DT-02a-D: Performance chart controls (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/detail-desktop-top.png`
@@ -803,7 +803,7 @@
   - "YoY" button: outlined, rounded-lg
   - Time span pills: active = bg-base-800 text-white rounded-lg
 
-### VR-INV-DT-02b-D: Performance chart area (desktop)
+### VR-INV-DT-02b-D: Performance chart area (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/detail-desktop-top.png`
@@ -812,7 +812,7 @@
 - **Step 2:** Take screenshot of chart area (below controls).
 - **Step 3:** Compare: chart renders within white card, fills width, consistent card styling
 
-### VR-INV-DT-03a-D: Performance tabs and mode switcher (desktop)
+### VR-INV-DT-03a-D: Performance tabs and mode switcher (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/detail-desktop-yearly.png`
@@ -825,7 +825,7 @@
   - Bar chart below tabs
   - Active tab has accent/bold indicator
 
-### VR-INV-DT-03b-D: Performance data table (desktop)
+### VR-INV-DT-03b-D: Performance data table (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/detail-desktop-yearly.png`
@@ -840,7 +840,7 @@
   - "All Time" summary row: bold or highlighted background
   - "Show all N" link if truncated
 
-### VR-INV-DT-04a-D: Data points table (desktop)
+### VR-INV-DT-04a-D: Data points table (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/detail-desktop-transactions.png`
@@ -853,7 +853,7 @@
   - Headers: text-xs, base-400, uppercase
   - "Show all N" link: text-accent-600
 
-### VR-INV-DT-04a-M: Data points table (mobile)
+### VR-INV-DT-04a-M: Data points table (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/detail-mobile-tables.png`
@@ -862,7 +862,7 @@
 - **Step 2:** Scroll to "Data Points". Take screenshot of this section only. Extract: visible columns, section header.
 - **Step 3:** Compare: simplified columns, row-tap cursor, section header with count badge
 
-### VR-INV-DT-04b-D: Transactions table (desktop)
+### VR-INV-DT-04b-D: Transactions table (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/detail-desktop-transactions.png`
@@ -874,7 +874,7 @@
   - Table columns: Date, Type (badge — Deposit: bg-emerald-50 text-emerald-700, Withdrawal: bg-rose-50 text-rose-700), Amount (font-mono-data), Note, Attachment (paperclip icon link), Actions
   - "Show all N" link: text-accent-600
 
-### VR-INV-DT-04b-M: Transactions table (mobile)
+### VR-INV-DT-04b-M: Transactions table (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/detail-mobile-tables.png`
@@ -883,7 +883,7 @@
 - **Step 2:** Scroll to "Transactions". Take screenshot of this section only. Extract: visible columns, type badge rendering.
 - **Step 3:** Compare: simplified columns, type badge visible, row-tap cursor
 
-### VR-INV-DT-05-D: Platform switcher dropdown (desktop)
+### VR-INV-DT-05-D: Platform switcher dropdown (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/detail-desktop-switcher.png`
@@ -892,7 +892,7 @@
 - **Step 2:** Click platform name dropdown. Take screenshot.
 - **Step 3:** Compare: dropdown panel, platform list, active highlight, footer action
 
-### VR-INV-DT-05-M: Platform switcher dropdown (mobile)
+### VR-INV-DT-05-M: Platform switcher dropdown (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/detail-mobile-switcher.png`
@@ -901,7 +901,7 @@
 - **Step 2:** Tap platform name. Take screenshot. Extract: overlay positioning, panel width, item layout.
 - **Step 3:** Compare: full-screen overlay (NOT small dropdown), same content full-width
 
-### VR-INV-DT-06-D: Edit platform dialog (desktop)
+### VR-INV-DT-06-D: Edit platform dialog (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/detail-desktop-edit-platform.png`
@@ -910,7 +910,7 @@
 - **Step 2:** Open Edit Platform. Take screenshot.
 - **Step 3:** Compare: centered modal, icon preview, Name/Type/Currency pre-populated, "Close Platform" danger action at bottom
 
-### VR-INV-DT-06-M: Edit platform dialog (mobile)
+### VR-INV-DT-06-M: Edit platform dialog (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/detail-mobile-edit-platform.png`
@@ -919,7 +919,7 @@
 - **Step 2:** Open Edit Platform on mobile. Take screenshot. Extract: panel position, field pre-population, close platform action.
 - **Step 3:** Compare: bottom sheet, icon preview, pre-populated fields, "Close Platform" danger action at bottom
 
-### VR-INV-DT-07-M: Mobile data point drawer (mobile only)
+### VR-INV-DT-07-M: Mobile data point drawer (mobile only) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/detail-mobile-dp-drawer.png`
@@ -928,7 +928,7 @@
 - **Step 2:** Tap a data point row. Take screenshot.
 - **Step 3:** Compare: bottom drawer, drag handle, date header with prev/next, field details, Edit/Delete footer
 
-### VR-INV-DT-08-M: Mobile transaction drawer (mobile only)
+### VR-INV-DT-08-M: Mobile transaction drawer (mobile only) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/detail-mobile-tx-drawer.png`
@@ -937,7 +937,7 @@
 - **Step 2:** Tap a transaction row. Take screenshot.
 - **Step 3:** Compare: drawer with type badge, amount, note, attachment, Edit/Delete footer
 
-### VR-INV-DT-09-M: Mobile performance drawer (mobile only)
+### VR-INV-DT-09-M: Mobile performance drawer (mobile only) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/detail-mobile-perf-drawer.png`
@@ -946,7 +946,7 @@
 - **Step 2:** Tap a performance table row. Take screenshot. Extract: drawer layout, field styling.
 - **Step 3:** Compare: drawer with drag handle, period details, field label/value pairs
 
-### VR-INV-DT-10-M: Mobile transactions table (mobile only)
+### VR-INV-DT-10-M: Mobile transactions table (mobile only) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/investment/detail-mobile-transactions.png`
@@ -959,7 +959,7 @@
 
 ## VR-DARK — Dark Mode
 
-### VR-DARK-01-D: Home overview dark mode (desktop)
+### VR-DARK-01-D: Home overview dark mode (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/home/overview-desktop-dark.png`
@@ -976,7 +976,7 @@
   - Borders: base-700
   - Shadow: shadow-card-dark
 
-### VR-DARK-02-D: Investment detail dark mode (desktop)
+### VR-DARK-02-D: Investment detail dark mode (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/investment/detail-desktop-dark.png`
@@ -989,7 +989,7 @@
 
 ## VR-SHARED — Shared Component Visual Consistency
 
-### VR-SHARED-01-D: Stat card consistency across sections (desktop)
+### VR-SHARED-01-D: Stat card consistency across sections (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** Compare `screenshots/home/detail-desktop-top.png` with `screenshots/investment/detail-desktop-top.png`
@@ -998,7 +998,7 @@
 - **Step 2:** Take screenshots of stat cards on Home detail and Investment detail. Extract computed styles from both: card background-color, border-radius, box-shadow, padding, label font-size/color/text-transform, value font-size/font-family/font-weight.
 - **Step 3:** Compare: all extracted values must be identical between sections. Same card shell, same typography hierarchy, same spacing.
 
-### VR-SHARED-01-M: Stat card consistency across sections (mobile)
+### VR-SHARED-01-M: Stat card consistency across sections (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** Compare `screenshots/home/detail-mobile-top.png` with `screenshots/investment/detail-mobile-top.png`
@@ -1007,7 +1007,7 @@
 - **Step 2:** Extract mobile card styles from both sections: grid-cols, padding, value font-size.
 - **Step 3:** Compare: same 2-column grid, same card styling between sections
 
-### VR-SHARED-02-D: Table styling consistency across sections (desktop)
+### VR-SHARED-02-D: Table styling consistency across sections (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** Compare `screenshots/home/detail-desktop-bills.png` with `screenshots/investment/detail-desktop-transactions.png`
@@ -1016,7 +1016,7 @@
 - **Step 2:** Extract table styles from both: header font-size/color/text-transform, row padding, cell font-family, action button styling, "Show all" link styling.
 - **Step 3:** Compare: all table chrome must be identical — headers, row borders, action icons, show-all links
 
-### VR-SHARED-02-M: Table styling consistency across sections (mobile)
+### VR-SHARED-02-M: Table styling consistency across sections (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** Compare `screenshots/home/detail-mobile-tables.png` with `screenshots/investment/detail-mobile-tables.png`
@@ -1025,7 +1025,7 @@
 - **Step 2:** Extract mobile table styles from both sections: row height, visible columns, text alignment.
 - **Step 3:** Compare: row height, text alignment, simplified column styling must be identical
 
-### VR-SHARED-03-D: Dialog styling consistency (desktop)
+### VR-SHARED-03-D: Dialog styling consistency (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** Compare `screenshots/home/overview-desktop-add-reading.png` with `screenshots/investment/overview-desktop-add-platform.png`
@@ -1034,7 +1034,7 @@
 - **Step 2:** Open Add Reading (Home) and Add Platform (Investment). Extract dialog styles: panel max-width, border-radius, background, title font, input styling, button layout.
 - **Step 3:** Compare: same modal shell — border-radius, padding, backdrop blur, title styling, input styling, button placement, close X button
 
-### VR-SHARED-03-M: Dialog styling consistency (mobile)
+### VR-SHARED-03-M: Dialog styling consistency (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** Compare `screenshots/home/overview-mobile-add-reading.png` with `screenshots/investment/overview-mobile-add-platform.png`
@@ -1043,7 +1043,7 @@
 - **Step 2:** Open dialogs on both sections. Extract: panel positioning, width, border-radius, field styling.
 - **Step 3:** Compare: same bottom sheet behavior, same form field styling
 
-### VR-SHARED-04-D: Switcher dropdown consistency (desktop)
+### VR-SHARED-04-D: Switcher dropdown consistency (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** Compare `screenshots/home/detail-desktop-switcher.png` with `screenshots/investment/detail-desktop-switcher.png`
@@ -1052,7 +1052,7 @@
 - **Step 2:** Open switchers on both sections. Extract: dropdown width, border-radius, shadow, item row padding, footer action styling.
 - **Step 3:** Compare: same dropdown shell, item layout, footer action styling
 
-### VR-SHARED-04-M: Switcher dropdown consistency (mobile)
+### VR-SHARED-04-M: Switcher dropdown consistency (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** Compare `screenshots/home/detail-mobile-switcher.png` with `screenshots/investment/detail-mobile-switcher.png`
@@ -1061,7 +1061,7 @@
 - **Step 2:** Open switchers on both sections. Extract: overlay positioning, panel width, item layout.
 - **Step 3:** Compare: same full-screen overlay behavior and styling
 
-### VR-SHARED-05-D: Delete confirmation consistency (desktop)
+### VR-SHARED-05-D: Delete confirmation consistency (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/home/detail-desktop-delete-confirm.png`
@@ -1070,7 +1070,7 @@
 - **Step 2:** Trigger delete on Home (reading) and Investment (data point). Take screenshots of both. Extract: dialog max-width, icon circle color, title alignment, button colors.
 - **Step 3:** Compare: same centered modal, same rose trash icon, same button styling (Cancel secondary + Delete rose-600)
 
-### VR-SHARED-05-M: Delete confirmation consistency (mobile)
+### VR-SHARED-05-M: Delete confirmation consistency (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/home/detail-desktop-delete-confirm.png` (same centered modal on all viewports)

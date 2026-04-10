@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useMobileDetailNav } from '@/components/layout/useMobileDetailNav'
 import { useQuery, useQueries } from '@tanstack/react-query'
 import * as vehicleService from '@/services/vehicles'
 import * as refuelingService from '@/services/refuelings'
@@ -103,6 +104,9 @@ function VehiclesOverview() {
   }
 
   const subtitle = `${activeVehicles.length} active · ${soldVehicles.length} sold${lastRefueledDate != null ? ` · Last refueled ${formatRecentUpdate(lastRefueledDate)}` : ''}`
+
+  // Mobile nav header
+  useMobileDetailNav({ name: 'Vehicles', subtitle })
 
   return (
     <div className="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">

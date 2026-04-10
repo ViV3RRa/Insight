@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useMobileDetailNav } from '@/components/layout/useMobileDetailNav'
 import { useNavigate } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
@@ -444,6 +445,9 @@ function PortfolioOverview() {
   const platformCountSummary = activePlatformCount > 0
     ? `${activePlatformCount} active platform${activePlatformCount !== 1 ? 's' : ''}`
     : undefined
+
+  // Mobile nav header
+  useMobileDetailNav({ name: 'Investment Portfolio', subtitle: platformCountSummary ?? '' })
 
   const handlePlatformRowClick = (platformId: string) => {
     navigate(`/investment/platform/${platformId}`)

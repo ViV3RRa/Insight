@@ -142,6 +142,7 @@ function PlatformDialog({
       onClose={onClose}
       title={isEdit ? 'Edit Platform' : 'Add Platform'}
       onSave={handleSave}
+      saveLabel={isEdit ? 'Save' : 'Add Platform'}
       loading={loading}
     >
       {/* Icon upload area */}
