@@ -27,14 +27,20 @@ export function YoYComparisonRow({ periodLabel, metrics }: YoYComparisonRowProps
       <div className="hidden sm:grid sm:grid-cols-3 gap-6">
         {metrics.map((metric) => (
           <div key={metric.label}>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-base-400 mb-1">
+            <p className="text-[10px] font-medium uppercase tracking-wider text-base-300 dark:text-base-500 mb-1">
               {metric.label}
             </p>
             <div className="flex items-baseline gap-2">
-              <span className="font-mono-data text-lg font-medium text-base-900 dark:text-white">
+              <span className={`font-mono-data text-sm font-medium ${
+                metric.changePercent > 0
+                  ? metric.invertColor ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'
+                  : metric.changePercent < 0
+                    ? metric.invertColor ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
+                    : 'text-base-900 dark:text-white'
+              }`}>
                 {metric.currentValue}
               </span>
-              <span className="font-mono-data text-xs text-base-300">
+              <span className="font-mono-data text-xs text-base-300 dark:text-base-500">
                 vs {metric.previousValue}
               </span>
             </div>
@@ -58,15 +64,21 @@ export function YoYComparisonRow({ periodLabel, metrics }: YoYComparisonRowProps
             }`}
           >
             <div>
-              <p className="text-[10px] font-medium uppercase tracking-wider text-base-400 mb-1">
+              <p className="text-[10px] font-medium uppercase tracking-wider text-base-300 dark:text-base-500 mb-1">
                 {metric.label}
               </p>
-              <span className="font-mono-data text-lg font-medium text-base-900 dark:text-white">
+              <span className={`font-mono-data text-sm font-medium ${
+                metric.changePercent > 0
+                  ? metric.invertColor ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'
+                  : metric.changePercent < 0
+                    ? metric.invertColor ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
+                    : 'text-base-900 dark:text-white'
+              }`}>
                 {metric.currentValue}
               </span>
             </div>
             <div className="text-right">
-              <span className="font-mono-data text-xs text-base-300">
+              <span className="font-mono-data text-xs text-base-300 dark:text-base-500">
                 vs {metric.previousValue}
               </span>
               <div className="mt-0.5">

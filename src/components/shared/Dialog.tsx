@@ -128,7 +128,7 @@ function Dialog({
           <div className="flex items-center justify-between px-6 pt-6 pb-0">
             <h2
               id={titleId}
-              className="text-lg font-semibold text-base-900 dark:text-white"
+              className="text-base font-semibold text-base-900 dark:text-white"
             >
               {title}
             </h2>
@@ -147,7 +147,7 @@ function Dialog({
 
           {/* Footer Desktop */}
           <div className="flex items-center justify-end gap-2 px-6 pb-6 pt-0">
-            <Button variant="secondary" onClick={onClose} disabled={loading}>
+            <Button variant="ghost" onClick={onClose} disabled={loading}>
               Cancel
             </Button>
             {showSaveAndAddAnother && onSaveAndAddAnother && (
@@ -181,7 +181,7 @@ function Dialog({
 
           {/* Header */}
           <div className="flex items-center justify-between px-5 pb-0">
-            <h2 className="text-lg font-semibold text-base-900 dark:text-white">
+            <h2 className="text-base font-semibold text-base-900 dark:text-white">
               {title}
             </h2>
             <button

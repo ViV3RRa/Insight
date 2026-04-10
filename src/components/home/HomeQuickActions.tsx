@@ -8,10 +8,10 @@ interface HomeQuickActionsProps {
 function HomeQuickActionsDesktop({ onAddReading, onAddBill }: HomeQuickActionsProps) {
   return (
     <div className="hidden lg:flex items-center gap-2" data-testid="quick-actions-desktop">
-      <Button variant="secondary" size="sm" onClick={onAddReading}>
+      <Button variant="secondary" onClick={onAddReading}>
         + Add Reading
       </Button>
-      <Button variant="primary" size="sm" onClick={onAddBill}>
+      <Button variant="primary" onClick={onAddBill}>
         + Add Bill
       </Button>
     </div>

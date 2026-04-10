@@ -90,6 +90,39 @@ function UtilityDetailHeader({
 
   return (
     <>
+      {/* Mobile header */}
+      <div className="flex lg:hidden items-center justify-between mb-4">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <button
+            onClick={() => navigate('/home')}
+            className="w-9 h-9 rounded-xl bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 flex items-center justify-center text-base-400 hover:text-base-600 dark:hover:text-base-300 shrink-0"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </button>
+          <UtilityIcon icon={utility.icon} color={utility.color} size="sm" />
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <DropdownSwitcher
+                currentId={utility.id}
+                items={dropdownItems}
+                onSelect={onSelectUtility}
+                overviewHref="/home"
+                overviewLabel="Home Overview"
+                footerAction={{
+                  label: 'Edit Utility',
+                  icon: <Settings className="w-3.5 h-3.5" />,
+                  onClick: onEdit,
+                }}
+              />
+            </div>
+            <div className="text-[11px] text-base-400 mt-0.5">
+              {utility.unit} &middot; Updated {updatedText}
+            </div>
+          </div>
+        </div>
+        {staleness && <StalenessIndicator severity={staleness} />}
+      </div>
+
       {/* Switcher bar + action buttons */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 lg:mb-8">
         {/* Desktop switcher bar */}
@@ -131,7 +164,6 @@ function UtilityDetailHeader({
         <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
           <Button
             variant="secondary"
-            size="sm"
             onClick={onAddReading}
             className="flex-1 sm:flex-none"
           >
@@ -139,7 +171,6 @@ function UtilityDetailHeader({
           </Button>
           <Button
             variant="primary"
-            size="sm"
             onClick={onAddBill}
             className="flex-1 sm:flex-none"
           >

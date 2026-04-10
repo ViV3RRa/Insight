@@ -18,15 +18,15 @@ const variantClasses: Record<ButtonVariant, string> = {
     'dark:bg-accent-600 dark:hover:bg-accent-700 dark:active:bg-accent-800',
   ].join(' '),
   secondary: [
-    'bg-white text-base-700 border border-base-200',
+    'bg-white text-base-600 border border-base-200',
     'hover:bg-base-50 active:bg-base-100',
     'dark:bg-base-800 dark:text-base-200 dark:border-base-600',
     'dark:hover:bg-base-700 dark:active:bg-base-600',
   ].join(' '),
   ghost: [
-    'text-base-500',
-    'hover:text-base-700 hover:bg-base-100',
-    'dark:text-base-400 dark:hover:text-base-200 dark:hover:bg-base-700',
+    'text-base-600',
+    'hover:text-base-800 hover:bg-base-100',
+    'dark:text-base-300 dark:hover:text-base-100 dark:hover:bg-base-700',
   ].join(' '),
   destructive: [
     'bg-rose-500 text-white',
