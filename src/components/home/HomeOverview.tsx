@@ -145,7 +145,7 @@ function HomeOverview() {
 
   if (isLoading) {
     return (
-      <div className="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+      <div>
         <div className="animate-pulse space-y-6">
           <div className="h-8 w-32 bg-base-200 dark:bg-base-700 rounded" />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -162,7 +162,7 @@ function HomeOverview() {
   }
 
   return (
-    <div className="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+    <div>
       {/* Page header — desktop only */}
       <div className="hidden lg:flex items-center justify-between mb-8">
         <div>

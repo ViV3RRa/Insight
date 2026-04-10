@@ -257,7 +257,7 @@ function PlatformDetail() {
   // Loading state
   if (platformLoading || !platform) {
     return (
-      <div className="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+      <div>
         <div className="animate-pulse space-y-6">
           <div className="h-8 w-48 bg-base-200 dark:bg-base-700 rounded" />
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -285,7 +285,7 @@ function PlatformDetail() {
   }))
 
   return (
-    <div className="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+    <div>
       {/* Header with switcher */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 lg:mb-8">
         <PlatformDetailSwitcher

@@ -464,7 +464,7 @@ function PortfolioOverview() {
   }
 
   return (
-    <div className="relative z-0 max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+    <div className="relative z-0">
       {/* Desktop page header */}
       <div
         className="hidden lg:flex items-center justify-between mb-8"

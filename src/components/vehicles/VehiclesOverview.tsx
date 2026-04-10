@@ -78,7 +78,7 @@ function VehiclesOverview() {
 
   if (isLoading) {
     return (
-      <div className="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+      <div>
         <div className="animate-pulse space-y-6">
           <div className="h-8 w-32 bg-base-200 dark:bg-base-700 rounded" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -93,7 +93,7 @@ function VehiclesOverview() {
 
   if (vehicles.length === 0) {
     return (
-      <div className="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+      <div>
         <div className="text-center py-16" data-testid="empty-state">
           <p className="text-base-400 mb-4">No vehicles added yet</p>
           <Button variant="primary" onClick={() => setShowAddVehicle(true)}>+ Add Vehicle</Button>
@@ -109,7 +109,7 @@ function VehiclesOverview() {
   useMobileDetailNav({ name: 'Vehicles', subtitle })
 
   return (
-    <div className="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+    <div>
       {/* Desktop header */}
       <div className="hidden lg:flex items-center justify-between mb-8">
         <div>

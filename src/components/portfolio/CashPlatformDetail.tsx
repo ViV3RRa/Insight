@@ -292,7 +292,7 @@ function CashPlatformDetail() {
   // Loading state
   if (platformLoading || !platform) {
     return (
-      <div className="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+      <div>
         <div className="animate-pulse space-y-6">
           <div className="h-8 w-48 bg-base-200 dark:bg-base-700 rounded" />
           <div className="h-64 bg-base-200 dark:bg-base-700 rounded-2xl" />
@@ -302,7 +302,7 @@ function CashPlatformDetail() {
   }
 
   return (
-    <div className="max-w-[1440px] mx-auto px-3 lg:px-8 py-6 lg:py-10 pb-24 lg:pb-10">
+    <div>
       {/* Header */}
       <div className="flex items-center gap-3 mb-2">
         <button
