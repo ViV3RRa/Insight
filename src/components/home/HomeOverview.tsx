@@ -18,6 +18,7 @@ import {
 import { MeterReadingDialog } from '@/components/home/dialogs/MeterReadingDialog'
 import { BillDialog } from '@/components/home/dialogs/BillDialog'
 import { UtilityDialog } from '@/components/home/dialogs/UtilityDialog'
+import { useMobileDetailNav } from '@/components/layout/useMobileDetailNav'
 import type { UtilityMetrics, HomeYoYComparison } from '@/types/home'
 
 function HomeOverview() {
@@ -132,6 +133,9 @@ function HomeOverview() {
   }, [latestReadingDates])
 
   const subtitle = `${utilities.length} utilities tracked${lastUpdate ? ` · Updated ${formatRecentUpdate(lastUpdate)}` : ''}`
+
+  // Mobile nav header
+  useMobileDetailNav({ name: 'Home', subtitle })
 
   // Loading state
   const isLoading =

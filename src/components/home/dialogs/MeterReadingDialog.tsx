@@ -154,6 +154,7 @@ function MeterReadingDialog({
       onClose={onClose}
       title={isEditMode ? 'Edit Reading' : 'Add Reading'}
       onSave={handleSave}
+      saveLabel={isEditMode ? 'Save' : 'Save Reading'}
       onSaveAndAddAnother={!isEditMode ? handleSaveAndAddAnother : undefined}
       showSaveAndAddAnother={!isEditMode}
       loading={mutation.isPending}

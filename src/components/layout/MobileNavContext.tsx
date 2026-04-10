@@ -1,16 +1,16 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
 
 interface MobileNavContent {
-  /** Back navigation URL */
-  backTo: string
-  /** Icon element to display */
-  icon: ReactNode
+  /** Back navigation URL (omit for overview pages) */
+  backTo?: string
+  /** Icon element to display (omit for overview pages) */
+  icon?: ReactNode
   /** Primary name text */
   name: string
   /** Subtitle text (e.g., "kWh · Updated Dec 15") */
   subtitle: string
-  /** Dropdown content to render when name is clicked */
-  dropdown: ReactNode
+  /** Dropdown content to render when name is clicked (omit for overview pages) */
+  dropdown?: ReactNode
   /** Optional badge element (e.g., StalenessIndicator) */
   badge?: ReactNode
 }

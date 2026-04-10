@@ -1,5 +1,7 @@
 # Insight Platform — Visual Regression Test Plan
 
+> **NEVER choose the easy solution. ALWAYS choose the CORRECT solution. If fixing a deviation requires a major architectural change, that means the error is significant and must not be skipped or patched with a suboptimal workaround. Implement the fix properly, even if it touches many files.**
+>
 > Each test is executed via Playwright MCP: open browser, navigate to `http://localhost:5173`, log in with `test1@test.dk` / `Test123456`, then perform the test as a real user.
 >
 > **IMPORTANT: Tests are strictly sequential and gated. Each test is a gate to every following test. A test CANNOT be started if even one previous test has not passed. If a test fails, STOP — do not proceed to the next test.**
@@ -349,7 +351,7 @@
 - **Step 2:** Take screenshot of chart area. Extract: card container background/radius, chart dimensions.
 - **Step 3:** Compare: chart fills full width within card
 
-### VR-HOME-DT-03-D: Utility detail yearly summary table (desktop)
+### VR-HOME-DT-03-D: Utility detail yearly summary table (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/home/detail-desktop-yearly.png`
@@ -365,7 +367,7 @@
   - Trend percentages: emerald or rose with arrow icons
   - "Show all N" link at bottom (text-accent-600, text-sm)
 
-### VR-HOME-DT-03-M: Utility detail yearly summary table (mobile)
+### VR-HOME-DT-03-M: Utility detail yearly summary table (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/home/detail-mobile-tables.png`
@@ -374,7 +376,7 @@
 - **Step 2:** Scroll to yearly summary. Take screenshot.
 - **Step 3:** Compare: column cycling header with dots, expandable rows, adapted column layout
 
-### VR-HOME-DT-04a-D: Utility detail meter readings table (desktop)
+### VR-HOME-DT-04a-D: Utility detail meter readings table (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/home/detail-desktop-bills.png`
@@ -388,7 +390,7 @@
   - Data: font-mono-data for values, base-900 text
   - "Show all N" link: text-accent-600, text-sm
 
-### VR-HOME-DT-04a-M: Utility detail meter readings table (mobile)
+### VR-HOME-DT-04a-M: Utility detail meter readings table (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/home/detail-mobile-tables.png`
@@ -397,7 +399,7 @@
 - **Step 2:** Scroll to "Meter Readings". Take screenshot of this section only.
 - **Step 3:** Compare: simplified columns (Date + Meter value), row-tap cursor pointer, section header adapted
 
-### VR-HOME-DT-04b-D: Utility detail bills table (desktop)
+### VR-HOME-DT-04b-D: Utility detail bills table (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/home/detail-desktop-bills.png`
@@ -410,7 +412,7 @@
   - Same table styling as readings (headers, row borders, action icons)
   - "Show all N" link: text-accent-600
 
-### VR-HOME-DT-04b-M: Utility detail bills table (mobile)
+### VR-HOME-DT-04b-M: Utility detail bills table (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/home/detail-mobile-tables.png`
@@ -419,7 +421,7 @@
 - **Step 2:** Scroll to "Bills". Take screenshot of this section only.
 - **Step 3:** Compare: simplified columns, row-tap cursor pointer
 
-### VR-HOME-DT-05-D: Utility switcher dropdown (desktop)
+### VR-HOME-DT-05-D: Utility switcher dropdown (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/home/detail-desktop-switcher.png`
@@ -432,7 +434,7 @@
   - Utility list: icon + name per row, current utility highlighted (bg-accent-50 or similar), optional badges
   - Footer: "Edit Utility" with settings/cog icon — border-top separator, text-base-500
 
-### VR-HOME-DT-05-M: Utility switcher dropdown (mobile)
+### VR-HOME-DT-05-M: Utility switcher dropdown (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/home/detail-mobile-switcher.png`
@@ -441,7 +443,7 @@
 - **Step 2:** Tap utility name. Take screenshot.
 - **Step 3:** Compare: full-screen overlay (NOT small positioned dropdown), same content full-width
 
-### VR-HOME-DT-06-D: Delete confirmation dialog (desktop)
+### VR-HOME-DT-06-D: Delete confirmation dialog (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/home/detail-desktop-delete-confirm.png`
@@ -456,7 +458,7 @@
   - Two buttons: "Cancel" (secondary) and "Delete" (bg-rose-600 text-white)
   - Backdrop blur
 
-### VR-HOME-DT-06-M: Delete confirmation dialog (mobile)
+### VR-HOME-DT-06-M: Delete confirmation dialog (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/home/detail-desktop-delete-confirm.png` (same centered modal on all viewports)
@@ -465,7 +467,7 @@
 - **Step 2:** Trigger delete on a reading. Take screenshot. Extract: dialog positioning (should be centered, not bottom-anchored), max-width, icon color, button colors.
 - **Step 3:** Compare: same centered modal as desktop (NOT bottom sheet), same icon, title, buttons
 
-### VR-HOME-DT-07-D: Edit reading dialog (desktop)
+### VR-HOME-DT-07-D: Edit reading dialog (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/home/detail-desktop-edit-reading.png`
@@ -474,7 +476,7 @@
 - **Step 2:** Click Edit on a reading. Take screenshot.
 - **Step 3:** Compare: same dialog shell, title "Edit Reading", pre-populated, footer has only Cancel + Save
 
-### VR-HOME-DT-07-M: Edit reading dialog (mobile)
+### VR-HOME-DT-07-M: Edit reading dialog (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/home/detail-mobile-reading-drawer.png` (drawer leads to edit)
@@ -483,7 +485,7 @@
 - **Step 2:** Click Edit on a reading (via drawer). Take screenshot. Extract: panel position (bottom), field pre-population, button layout.
 - **Step 3:** Compare: bottom sheet, pre-populated fields, title "Edit Reading", Cancel + Save buttons
 
-### VR-HOME-DT-08-D: Edit bill dialog (desktop)
+### VR-HOME-DT-08-D: Edit bill dialog (desktop) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 1400x900
 - **Reference screenshot:** `screenshots/home/detail-desktop-edit-bill.png`
@@ -492,7 +494,7 @@
 - **Step 2:** Click Edit on a bill. Take screenshot.
 - **Step 3:** Compare: same as Add Bill but title "Edit Bill", pre-populated, no "Save & Add Another"
 
-### VR-HOME-DT-08-M: Edit bill dialog (mobile)
+### VR-HOME-DT-08-M: Edit bill dialog (mobile) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/home/detail-mobile-bill-drawer.png` (drawer leads to edit)
@@ -501,7 +503,7 @@
 - **Step 2:** Click Edit on a bill (via drawer). Take screenshot. Extract: panel position, field pre-population.
 - **Step 3:** Compare: bottom sheet, pre-populated fields, title "Edit Bill", Cancel + Save buttons
 
-### VR-HOME-DT-09-M: Mobile reading drawer (mobile only)
+### VR-HOME-DT-09-M: Mobile reading drawer (mobile only) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/home/detail-mobile-reading-drawer.png`
@@ -515,7 +517,7 @@
   - "Meter Value", "Note" (or "—"), "Attachment" (linked filename in accent color)
   - Footer: "Edit" (secondary full-width) and "Delete" (rose-600 border, rose text) — side by side
 
-### VR-HOME-DT-10-M: Mobile bill drawer (mobile only)
+### VR-HOME-DT-10-M: Mobile bill drawer (mobile only) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/home/detail-mobile-bill-drawer.png`
@@ -524,7 +526,7 @@
 - **Step 2:** Tap a bill row. Take screenshot.
 - **Step 3:** Compare: same drawer pattern, fields (Period, Amount, Date Received, Note, Attachment)
 
-### VR-HOME-DT-11-M: Mobile month drawer in yearly table (mobile only)
+### VR-HOME-DT-11-M: Mobile month drawer in yearly table (mobile only) ✅ PASSED
 - **⚠️ MANDATORY FIRST STEP: Re-read the FULL instructions block at the top of this file before doing ANYTHING else. This step may under NO circumstances be skipped! ⚠️**
 - **Viewport:** 375x812
 - **Reference screenshot:** `screenshots/home/detail-mobile-month-drawer.png`

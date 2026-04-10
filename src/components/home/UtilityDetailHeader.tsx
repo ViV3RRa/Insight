@@ -118,7 +118,7 @@ function UtilityDetailHeader({
                     : 'hover:bg-base-50 dark:hover:bg-base-700 border-l-2 border-transparent',
                 ].join(' ')}
               >
-                <UtilityIcon icon={u.icon} color={u.color} size="xs" />
+                <UtilityIcon icon={u.icon} color={u.color} size="sm" />
                 <div className="flex-1 text-left">
                   <div className="text-sm font-medium">{u.name}</div>
                   <div className="text-xs text-base-400">{u.unit}</div>

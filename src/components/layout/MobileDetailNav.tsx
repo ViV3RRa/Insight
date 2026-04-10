@@ -15,21 +15,39 @@ export function MobileDetailNav() {
 
   if (!content) return null
 
+  // Overview mode: simple title + subtitle (no back button, icon, or dropdown)
+  const isOverview = !content.backTo && !content.dropdown
+
+  if (isOverview) {
+    return (
+      <div className="flex lg:hidden items-center gap-2.5">
+        <div className="min-w-0">
+          <div className="text-sm font-bold tracking-tight">{content.name}</div>
+          <div className="text-[11px] text-base-400 mt-0.5">{content.subtitle}</div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="flex lg:hidden items-center justify-between gap-2">
       {/* Left: back + icon + name */}
       <div className="flex items-center gap-2.5 min-w-0">
-        <button
-          onClick={() => navigate(content.backTo)}
-          className="w-9 h-9 rounded-xl bg-base-50 dark:bg-base-700 flex items-center justify-center text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors shrink-0"
-          aria-label="Back"
-        >
-          <ArrowLeft className="w-4 h-4" />
-        </button>
+        {content.backTo && (
+          <button
+            onClick={() => navigate(content.backTo!)}
+            className="w-9 h-9 rounded-xl bg-base-50 dark:bg-base-700 flex items-center justify-center text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors shrink-0"
+            aria-label="Back"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </button>
+        )}
 
-        <div className="flex items-center gap-2 min-w-0 shrink-0">
-          {content.icon}
-        </div>
+        {content.icon && (
+          <div className="flex items-center gap-2 min-w-0 shrink-0">
+            {content.icon}
+          </div>
+        )}
 
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -56,7 +74,7 @@ export function MobileDetailNav() {
           {/* Dropdown header with close */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-base-100 dark:border-base-700">
             <button
-              onClick={() => { setDropdownOpen(false); navigate(content.backTo); }}
+              onClick={() => { setDropdownOpen(false); navigate(content.backTo!); }}
               className="flex items-center gap-2.5 min-w-0"
             >
               <div className="flex items-center gap-2 shrink-0">

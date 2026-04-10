@@ -149,6 +149,7 @@ function BillDialog({ isOpen, onClose, bill, utilityId, utilities }: BillDialogP
       onClose={onClose}
       title={isEdit ? 'Edit Bill' : 'Add Bill'}
       onSave={handleSave}
+      saveLabel={isEdit ? 'Save' : 'Save Bill'}
       onSaveAndAddAnother={handleSaveAndAddAnother}
       showSaveAndAddAnother={!isEdit}
       loading={mutation.isPending}
