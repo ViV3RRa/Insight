@@ -23,6 +23,7 @@ import {
   type PlatformWithData,
 } from '@/utils/portfolioAggregation'
 import { buildCashFlows, calculateXIRR } from '@/utils/xirr'
+import { getStalenessLevel } from '@/utils/staleness'
 import { formatCurrency } from '@/utils/formatters'
 import { PortfolioSwitcher } from './PortfolioSwitcher'
 import { PortfolioOverviewSummary } from './PortfolioOverviewSummary'
@@ -42,6 +43,7 @@ import { PortfolioDialog } from './dialogs/PortfolioDialog'
 import { PlatformDialog } from './dialogs/PlatformDialog'
 import { DataPointDialog } from './dialogs/DataPointDialog'
 import { TransactionDialog } from './dialogs/TransactionDialog'
+import { DeleteConfirmDialog } from '@/components/shared/DeleteConfirmDialog'
 import { Button } from '@/components/shared/Button'
 import type { Platform, Portfolio } from '@/types/investment'
 
@@ -93,6 +95,8 @@ function mapInvestmentPlatforms(
       )
       const xirr = calculateXIRR(cashFlows)
 
+      const stalenessLevel = getStalenessLevel(latest?.timestamp ?? null)
+
       return {
         id: p.id as string,
         name: p.name,
@@ -104,6 +108,7 @@ function mapInvestmentPlatforms(
         allTimeGainLossPercent: gainLoss?.gainPercent ?? 0,
         allTimeXirr: xirr,
         lastUpdated,
+        staleness: stalenessLevel === 'none' ? undefined : stalenessLevel,
       }
     })
 }
@@ -174,6 +179,7 @@ function PortfolioOverview() {
   const [platformDialogOpen, setPlatformDialogOpen] = useState(false)
   const [portfolioDialogOpen, setPortfolioDialogOpen] = useState(false)
   const [editingPortfolio, setEditingPortfolio] = useState<Portfolio | null>(null)
+  const [deletingPortfolio, setDeletingPortfolio] = useState<Portfolio | null>(null)
 
   const { data: portfolios } = useQuery({
     queryKey: ['portfolios'],
@@ -640,6 +646,24 @@ function PortfolioOverview() {
           setEditingPortfolio(null)
         }}
         portfolio={editingPortfolio ?? undefined}
+        onDelete={() => {
+          setPortfolioDialogOpen(false)
+          setDeletingPortfolio(editingPortfolio)
+          setEditingPortfolio(null)
+        }}
+      />
+      <DeleteConfirmDialog
+        isOpen={deletingPortfolio !== null}
+        onCancel={() => setDeletingPortfolio(null)}
+        onConfirm={async () => {
+          if (deletingPortfolio) {
+            await portfolioService.remove(deletingPortfolio.id)
+            queryClient.invalidateQueries({ queryKey: ['portfolios'] })
+            setDeletingPortfolio(null)
+          }
+        }}
+        title="Delete Portfolio"
+        description={`"${deletingPortfolio?.name}" and all its platforms and data will be permanently deleted. This action cannot be undone.`}
       />
 
       <PlatformDialog

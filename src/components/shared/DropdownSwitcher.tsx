@@ -14,6 +14,12 @@ interface DropdownSection {
   label: string
 }
 
+interface DropdownFooterAction {
+  label: string
+  icon?: ReactNode
+  onClick: () => void
+}
+
 interface DropdownSwitcherProps {
   currentId: string
   items: DropdownItem[]
@@ -21,6 +27,7 @@ interface DropdownSwitcherProps {
   onSelect: (id: string) => void
   overviewHref: string
   overviewLabel: string
+  footerAction?: DropdownFooterAction
 }
 
 function DropdownSwitcher({
@@ -30,6 +37,7 @@ function DropdownSwitcher({
   onSelect,
   overviewHref,
   overviewLabel,
+  footerAction,
 }: DropdownSwitcherProps) {
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -144,6 +152,23 @@ function DropdownSwitcher({
       <div className="border-t border-base-100 dark:border-base-700 my-1" />
 
       {renderItems()}
+
+      {footerAction && (
+        <>
+          <div className="border-t border-base-100 dark:border-base-700 mt-1 pt-1" />
+          <button
+            type="button"
+            onClick={() => {
+              footerAction.onClick()
+              close()
+            }}
+            className="w-full px-3 py-2 flex items-center gap-2 text-sm text-base-400 hover:text-base-600 dark:hover:text-base-300 hover:bg-base-50 dark:hover:bg-base-700/50 transition-colors"
+          >
+            {footerAction.icon}
+            {footerAction.label}
+          </button>
+        </>
+      )}
     </>
   )
 
@@ -186,4 +211,4 @@ function DropdownSwitcher({
 }
 
 export { DropdownSwitcher }
-export type { DropdownSwitcherProps, DropdownItem, DropdownSection }
+export type { DropdownSwitcherProps, DropdownItem, DropdownSection, DropdownFooterAction }

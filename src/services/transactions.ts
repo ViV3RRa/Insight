@@ -65,6 +65,7 @@ export async function create(
 
   const record = await pb.collection(COLLECTION).create({
     ...data,
+    timestamp: data.timestamp ? new Date(data.timestamp).toISOString() : new Date().toISOString(),
     ownerId: userId,
   })
   return transactionSchema.parse(record)
@@ -93,7 +94,12 @@ export async function update(
     throw new Error('Amount must be positive')
   }
 
-  const record = await pb.collection(COLLECTION).update(id, data)
+  // Ensure timestamp is ISO format for PocketBase
+  const normalized = data.timestamp
+    ? { ...data, timestamp: new Date(data.timestamp).toISOString() }
+    : data
+
+  const record = await pb.collection(COLLECTION).update(id, normalized)
   return transactionSchema.parse(record)
 }
 
@@ -164,5 +170,5 @@ export async function getByPortfolioInRange(
 
 export function getAttachmentUrl(transaction: Transaction): string | null {
   if (!transaction.attachment) return null
-  return pb.files.getUrl(transaction, transaction.attachment)
+  return `${pb.baseUrl}/api/files/transactions/${transaction.id}/${transaction.attachment}`
 }

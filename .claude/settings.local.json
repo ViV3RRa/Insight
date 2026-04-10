@@ -19,7 +19,23 @@
       "Bash(file /Users/sKrogh/Projects/privat/Insight/design-artifacts/prototypes/screenshots/home/*.png)",
       "Bash(find /Users/sKrogh/Projects/privat/Insight -type f -name *.json ! -path */.git/* ! -path */.playwright*)",
       "Bash(ls:*)",
-      "Bash(grep -l \"Testing Requirements\" /Users/sKrogh/Projects/privat/Insight/user-stories/*.md)"
+      "Bash(grep -l \"Testing Requirements\" /Users/sKrogh/Projects/privat/Insight/user-stories/*.md)",
+      "Bash(npm install:*)",
+      "Bash(npx vite:*)",
+      "Bash(git add:*)",
+      "Bash(for dir:*)",
+      "Bash(do touch:*)",
+      "Bash(done)",
+      "Bash(git commit:*)",
+      "Bash(npx vitest:*)",
+      "Bash(npx tsc:*)",
+      "Bash(git status:*)",
+      "Bash(curl -s 'https://pocketbase.io/docs/js-migrations/')",
+      "Bash(curl -s 'https://pocketbase.io/docs/changelog/')",
+      "WebFetch(domain:pocketbase.io)",
+      "WebFetch(domain:github.com)",
+      "mcp__playwright__browser_fill_form",
+      "mcp__playwright__browser_console_messages"
     ]
   },
   "teammateMode": "tmux"

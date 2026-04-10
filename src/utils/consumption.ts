@@ -87,15 +87,18 @@ export function calculateMonthlyConsumption(
 ): MonthlyConsumption[] {
   if (readings.length < 2) return []
 
+  // Sort ascending by timestamp so deltas are positive
+  const sorted = [...readings].sort((a, b) => a.timestamp.localeCompare(b.timestamp))
+
   // Accumulator: month key → { consumption, isInterpolated }
   const monthMap = new Map<
     string,
     { year: number; consumption: number; isInterpolated: boolean }
   >()
 
-  for (let i = 0; i < readings.length - 1; i++) {
-    const a = readings[i]!
-    const b = readings[i + 1]!
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const a = sorted[i]!
+    const b = sorted[i + 1]!
     const delta = b.value - a.value
 
     // Skip negative deltas (meter reset)

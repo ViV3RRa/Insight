@@ -50,7 +50,7 @@ export async function create(data: DataPointCreate): Promise<DataPoint> {
   const record = await pb.collection(COLLECTION).create({
     ...data,
     isInterpolated: data.isInterpolated ?? false,
-    timestamp: data.timestamp ?? new Date().toISOString(),
+    timestamp: data.timestamp ? new Date(data.timestamp).toISOString() : new Date().toISOString(),
     ownerId: userId,
   })
   // TODO: Wire interpolation orchestration (US-051, Sprint 7)
@@ -74,7 +74,12 @@ export async function update(
       ? { ...data, isInterpolated: false }
       : data
 
-  const record = await pb.collection(COLLECTION).update(id, updateData)
+  // Ensure timestamp is ISO format for PocketBase
+  const normalized = updateData.timestamp
+    ? { ...updateData, timestamp: new Date(updateData.timestamp).toISOString() }
+    : updateData
+
+  const record = await pb.collection(COLLECTION).update(id, normalized)
   // TODO: Wire interpolation orchestration (US-051, Sprint 7)
   return dataPointSchema.parse(record)
 }

@@ -26,3 +26,6 @@ coverage/
 # PocketBase
 pocketbase/pocketbase
 pocketbase/pb_data/
+
+# Playwright
+.playwright-mcp/*

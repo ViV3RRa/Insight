@@ -10,11 +10,14 @@ import { Button } from '@/components/shared/Button'
 import { CollapsibleSection } from '@/components/shared/CollapsibleSection'
 import { VehicleCard } from '@/components/vehicles/VehicleCard'
 import { SoldVehicleCard } from '@/components/vehicles/SoldVehicleCard'
+import { VehicleDialog } from '@/components/vehicles/dialogs/VehicleDialog'
+import { RefuelingDialog } from '@/components/vehicles/dialogs/RefuelingDialog'
+import { MaintenanceDialog } from '@/components/vehicles/dialogs/MaintenanceDialog'
 
 function VehiclesOverview() {
-  const [_showAddRefueling, setShowAddRefueling] = useState(false)
-  const [_showAddMaintenance, setShowAddMaintenance] = useState(false)
-  const [_showAddVehicle, setShowAddVehicle] = useState(false)
+  const [showAddRefueling, setShowAddRefueling] = useState(false)
+  const [showAddMaintenance, setShowAddMaintenance] = useState(false)
+  const [showAddVehicle, setShowAddVehicle] = useState(false)
 
   // 1. Fetch all vehicles
   const { data: vehicles = [], isLoading: vehiclesLoading } = useQuery({
@@ -94,6 +97,7 @@ function VehiclesOverview() {
           <p className="text-base-400 mb-4">No vehicles added yet</p>
           <Button variant="primary" onClick={() => setShowAddVehicle(true)}>+ Add Vehicle</Button>
         </div>
+        <VehicleDialog isOpen={showAddVehicle} onClose={() => setShowAddVehicle(false)} />
       </div>
     )
   }
@@ -160,6 +164,19 @@ function VehiclesOverview() {
           </CollapsibleSection>
         </div>
       )}
+
+      {/* Dialogs */}
+      <VehicleDialog isOpen={showAddVehicle} onClose={() => setShowAddVehicle(false)} />
+      <RefuelingDialog
+        isOpen={showAddRefueling}
+        onClose={() => setShowAddRefueling(false)}
+        vehicles={vehicles}
+      />
+      <MaintenanceDialog
+        isOpen={showAddMaintenance}
+        onClose={() => setShowAddMaintenance(false)}
+        vehicles={vehicles}
+      />
     </div>
   )
 }

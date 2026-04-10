@@ -31,7 +31,7 @@ function BillDialog({ isOpen, onClose, bill, utilityId, utilities }: BillDialogP
   const [periodEnd, setPeriodEnd] = useState('')
   const [timestamp, setTimestamp] = useState('')
   const [note, setNote] = useState('')
-  const [attachment, setAttachment] = useState<File | null>(null)
+  const [attachment, setAttachment] = useState<File | string | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const isEdit = !!bill
@@ -46,7 +46,7 @@ function BillDialog({ isOpen, onClose, bill, utilityId, utilities }: BillDialogP
         setPeriodEnd(bill.periodEnd)
         setTimestamp(bill.timestamp ? format(new Date(bill.timestamp), "yyyy-MM-dd'T'HH:mm") : '')
         setNote(bill.note ?? '')
-        setAttachment(null)
+        setAttachment(bill.attachment ?? null)
       } else {
         setSelectedUtilityId('')
         setAmount('')
@@ -103,6 +103,7 @@ function BillDialog({ isOpen, onClose, bill, utilityId, utilities }: BillDialogP
     if (timestamp) formData.set('timestamp', new Date(timestamp).toISOString())
     if (note) formData.set('note', note)
     if (attachment instanceof File) formData.set('attachment', attachment)
+    else if (attachment === null && bill?.attachment) formData.set('attachment', '')
     return formData
   }
 

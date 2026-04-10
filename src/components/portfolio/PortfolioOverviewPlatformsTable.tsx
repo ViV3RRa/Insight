@@ -184,6 +184,7 @@ function PortfolioOverviewPlatformsTable({
           data={platforms}
           keyExtractor={(row) => row.id}
           onRowClick={handleRowClick}
+          mobileColumnCycling
         />
       )}
     </div>

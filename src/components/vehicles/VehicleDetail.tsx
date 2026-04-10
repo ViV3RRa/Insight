@@ -30,7 +30,6 @@ import { VehicleDialog } from '@/components/vehicles/dialogs/VehicleDialog'
 import { RefuelingDialog } from '@/components/vehicles/dialogs/RefuelingDialog'
 import { MaintenanceDialog } from '@/components/vehicles/dialogs/MaintenanceDialog'
 import { DeleteConfirmDialog } from '@/components/shared/DeleteConfirmDialog'
-import { CollapsibleSection } from '@/components/shared/CollapsibleSection'
 import type { Refueling, MaintenanceEvent } from '@/types/vehicles'
 
 function VehicleDetail() {
@@ -228,18 +227,14 @@ function VehicleDetail() {
         <VehicleYoYRow data={yoyData} />
       </div>
 
-      {/* 4. Charts accordion */}
-      <div className="mb-6 lg:mb-8" data-testid="charts-section">
-        <CollapsibleSection title="Performance Charts" defaultExpanded={false}>
-          <div className="p-4 space-y-4">
-            <VehicleEfficiencyChart data={efficiencyData} unit={efficiencyUnit} />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <VehicleFuelCostChart data={monthlyFuelCost} />
-              <VehicleKmChart data={monthlyKm} />
-            </div>
-            <VehicleMaintenanceChart data={monthlyMaintenanceCost} />
-          </div>
-        </CollapsibleSection>
+      {/* 4. Performance charts (always visible) */}
+      <div className="mb-6 lg:mb-8 space-y-4" data-testid="charts-section">
+        <VehicleEfficiencyChart data={efficiencyData} unit={efficiencyUnit} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <VehicleFuelCostChart data={monthlyFuelCost} />
+          <VehicleKmChart data={monthlyKm} />
+        </div>
+        <VehicleMaintenanceChart data={monthlyMaintenanceCost} />
       </div>
 
       {/* 5. Refueling log table */}

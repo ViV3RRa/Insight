@@ -43,6 +43,7 @@ function renderHeader(overrides?: {
   onSelectUtility?: (id: string) => void
   onAddReading?: () => void
   onAddBill?: () => void
+  onEdit?: () => void
 }) {
   const utility = overrides?.utility ?? buildUtility({ name: 'Electricity', unit: 'kWh' })
   const allUtilities = overrides?.allUtilities ?? [
@@ -64,6 +65,7 @@ function renderHeader(overrides?: {
       onSelectUtility={overrides?.onSelectUtility ?? vi.fn()}
       onAddReading={overrides?.onAddReading ?? vi.fn()}
       onAddBill={overrides?.onAddBill ?? vi.fn()}
+      onEdit={overrides?.onEdit ?? vi.fn()}
     />,
   )
 }

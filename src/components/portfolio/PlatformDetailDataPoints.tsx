@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { Database } from 'lucide-react'
-import { CollapsibleSection } from '@/components/shared/CollapsibleSection'
 import { DataTable, type ColumnDef } from '@/components/shared/DataTable'
 import { CurrencyDisplay } from '@/components/shared/CurrencyDisplay'
 import { Button } from '@/components/shared/Button'
@@ -93,40 +92,43 @@ function PlatformDetailDataPoints({
   )
 
   return (
-    <div className="mb-6 lg:mb-8">
-      <CollapsibleSection
-        title="Data Points"
-        icon={Database}
-        count={dataPoints.length}
-        defaultExpanded={false}
-      >
-        {onAdd && (
-          <div className="flex justify-end px-4 pt-3 sm:px-5">
+    <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6 lg:mb-8">
+      <div className="px-3 lg:px-6 py-5 border-b border-base-100 dark:border-base-700">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Database className="w-4 h-4 text-base-400 flex-shrink-0" />
+            <h3 className="text-sm font-semibold text-base-900 dark:text-white">Data Points</h3>
+            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-base-100 dark:bg-base-700 text-base-400">
+              {dataPoints.length}
+            </span>
+          </div>
+          {onAdd && (
             <Button variant="ghost" size="sm" onClick={onAdd}>
               + Add Data Point
             </Button>
-          </div>
-        )}
-        {isLoading ? (
-          <SkeletonTableRows count={3} />
-        ) : sortedDataPoints.length === 0 ? (
-          <EmptyState
-            variant="section"
-            icon={Database}
-            description="No data points yet"
-          />
-        ) : (
-          <DataTable
-            columns={columns}
-            data={sortedDataPoints}
-            showMoreThreshold={5}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onRowClick={onRowClick}
-            keyExtractor={(row) => row.id}
-          />
-        )}
-      </CollapsibleSection>
+          )}
+        </div>
+      </div>
+
+      {isLoading ? (
+        <SkeletonTableRows count={3} />
+      ) : sortedDataPoints.length === 0 ? (
+        <EmptyState
+          variant="section"
+          icon={Database}
+          description="No data points yet"
+        />
+      ) : (
+        <DataTable
+          columns={columns}
+          data={sortedDataPoints}
+          showMoreThreshold={5}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          onRowClick={onRowClick}
+          keyExtractor={(row) => row.id}
+        />
+      )}
     </div>
   )
 }

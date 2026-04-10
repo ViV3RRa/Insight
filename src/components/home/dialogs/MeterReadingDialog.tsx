@@ -48,7 +48,7 @@ function MeterReadingDialog({
   const [value, setValue] = useState('')
   const [timestamp, setTimestamp] = useState('')
   const [note, setNote] = useState('')
-  const [attachment, setAttachment] = useState<File | null>(null)
+  const [attachment, setAttachment] = useState<File | string | null>(null)
   const [errors, setErrors] = useState<FormErrors>({})
 
   const showUtilitySelect = !utilityId
@@ -65,7 +65,7 @@ function MeterReadingDialog({
         setValue(String(reading.value))
         setTimestamp(formatDatetimeLocal(new Date(reading.timestamp)))
         setNote(reading.note ?? '')
-        setAttachment(null)
+        setAttachment(reading.attachment ?? null)
       } else {
         setSelectedUtilityId(utilityId ?? '')
         setValue('')
@@ -104,6 +104,7 @@ function MeterReadingDialog({
     formData.set('timestamp', new Date(timestamp).toISOString())
     if (note) formData.set('note', note)
     if (attachment instanceof File) formData.set('attachment', attachment)
+    else if (attachment === null && reading?.attachment) formData.set('attachment', '')
     return formData
   }
 

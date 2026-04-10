@@ -61,18 +61,18 @@ function VehicleStatCards({ vehicle, metrics, priorYearEfficiency }: VehicleStat
         sublabel="DKK"
       />
 
-      {isSold && metrics.totalCostOfOwnership ? (
+      {isSold ? (
         <>
           <StatCard
             label="Total Cost"
-            value={formatNumber(metrics.totalCostOfOwnership.totalOperatingCost, 0)}
+            value={formatNumber(metrics.totalCostOfOwnership?.totalOperatingCost ?? 0, 0)}
             sublabel="DKK lifetime"
           />
           <StatCard
             label="Purchase→Sale"
-            value={formatNumber(metrics.totalCostOfOwnership.purchaseToSaleOffset, 0)}
+            value={formatNumber(metrics.totalCostOfOwnership?.purchaseToSaleOffset ?? 0, 0)}
             variant="colored"
-            trend={metrics.totalCostOfOwnership.purchaseToSaleOffset < 0 ? 'negative' : 'positive'}
+            trend={(metrics.totalCostOfOwnership?.purchaseToSaleOffset ?? 0) < 0 ? 'negative' : 'positive'}
             sublabel="DKK offset"
           />
         </>

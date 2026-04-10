@@ -1,5 +1,6 @@
 import { type ReactNode, useMemo, useState } from 'react'
 import { ChevronDown, ChevronUp, Pencil, Trash2 } from 'lucide-react'
+import { MobileColumnCyclerHeader, MobileColumnCyclerCell } from '@/components/shared/MobileColumnCycler'
 
 interface ColumnDef<T> {
   key: string
@@ -17,6 +18,7 @@ interface DataTableProps<T> {
   defaultSort?: { key: string; direction: 'asc' | 'desc' }
   totals?: Record<string, ReactNode>
   showMoreThreshold?: number
+  mobileColumnCycling?: boolean
   onEdit?: (row: T) => void
   onDelete?: (row: T) => void
   onRowClick?: (row: T) => void
@@ -34,6 +36,7 @@ function DataTable<T>({
   defaultSort,
   totals,
   showMoreThreshold = 10,
+  mobileColumnCycling = false,
   onEdit,
   onDelete,
   onRowClick,
@@ -43,8 +46,11 @@ function DataTable<T>({
     defaultSort,
   )
   const [showAll, setShowAll] = useState(false)
+  const [mobileColIndex, setMobileColIndex] = useState(0)
 
   const hasActions = onEdit !== undefined || onDelete !== undefined
+  const mobileHiddenCols = mobileColumnCycling ? columns.filter((c) => c.hideOnMobile) : []
+  const hasMobileCycling = mobileHiddenCols.length > 0
 
   const sortedData = useMemo(() => {
     if (!sort) return data
@@ -122,6 +128,13 @@ function DataTable<T>({
                 Actions
               </th>
             )}
+            {hasMobileCycling && (
+              <MobileColumnCyclerHeader
+                columns={mobileHiddenCols.map((c) => ({ label: c.label }))}
+                activeIndex={mobileColIndex}
+                onCycle={() => setMobileColIndex((prev) => (prev + 1) % mobileHiddenCols.length)}
+              />
+            )}
           </tr>
         </thead>
         <tbody>
@@ -182,6 +195,12 @@ function DataTable<T>({
                   </span>
                 </td>
               )}
+              {hasMobileCycling && (
+                <MobileColumnCyclerCell
+                  values={mobileHiddenCols.map((col) => getCellValue(row, col))}
+                  activeIndex={mobileColIndex}
+                />
+              )}
             </tr>
           ))}
         </tbody>
@@ -205,6 +224,12 @@ function DataTable<T>({
                 </td>
               ))}
               {hasActions && <td className="hidden sm:table-cell" />}
+              {hasMobileCycling && (
+                <MobileColumnCyclerCell
+                  values={mobileHiddenCols.map((col) => totals[col.key] ?? '')}
+                  activeIndex={mobileColIndex}
+                />
+              )}
             </tr>
           </tfoot>
         )}

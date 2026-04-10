@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { Wrench } from 'lucide-react'
-import { CollapsibleSection } from '@/components/shared/CollapsibleSection'
 import { DataTable, type ColumnDef } from '@/components/shared/DataTable'
 import { formatHumanDate, formatNumber } from '@/utils/formatters'
 import type { MaintenanceEvent } from '@/types/vehicles'
@@ -52,20 +51,23 @@ function VehicleMaintenanceTable({ events, onEdit, onDelete, onAdd }: VehicleMai
   )
 
   return (
-    <CollapsibleSection
-      title="Maintenance Log"
-      icon={Wrench}
-      count={events.length}
-      defaultExpanded={false}
-    >
-      <div className="px-3 lg:px-6 py-4 flex items-center justify-between border-b border-base-100 dark:border-base-700">
-        <span className="text-xs text-base-400">{events.length} records</span>
-        <button
-          onClick={onAdd}
-          className="px-3 py-1.5 text-xs font-medium text-base-600 dark:text-base-300 bg-base-50 dark:bg-base-700 rounded-lg hover:bg-base-100 dark:hover:bg-base-600 transition-colors"
-        >
-          + Add Maintenance
-        </button>
+    <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden">
+      <div className="px-3 lg:px-6 py-5 border-b border-base-100 dark:border-base-700">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Wrench className="w-4 h-4 text-base-400 flex-shrink-0" />
+            <h3 className="text-sm font-semibold text-base-900 dark:text-white">Maintenance Log</h3>
+            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-base-100 dark:bg-base-700 text-base-400">
+              {events.length}
+            </span>
+          </div>
+          <button
+            onClick={onAdd}
+            className="px-3 py-1.5 text-xs font-medium text-base-600 dark:text-base-300 bg-base-50 dark:bg-base-700 rounded-lg hover:bg-base-100 dark:hover:bg-base-600 transition-colors"
+          >
+            + Add Maintenance
+          </button>
+        </div>
       </div>
       <DataTable<MaintenanceEvent>
         columns={columns}
@@ -75,8 +77,9 @@ function VehicleMaintenanceTable({ events, onEdit, onDelete, onAdd }: VehicleMai
         keyExtractor={(e) => e.id}
         sortable={true}
         defaultSort={{ key: 'date', direction: 'desc' }}
+        showMoreThreshold={5}
       />
-    </CollapsibleSection>
+    </div>
   )
 }
 

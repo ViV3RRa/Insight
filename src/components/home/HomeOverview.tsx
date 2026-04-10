@@ -4,7 +4,9 @@ import * as utilityService from '@/services/utilities'
 import * as meterReadingService from '@/services/meterReadings'
 import * as utilityBillService from '@/services/utilityBills'
 import { calculateUtilityMetrics } from '@/utils/utilityCosts'
+import { amortizeAllBills } from '@/utils/amortization'
 import { formatRecentUpdate } from '@/utils/formatters'
+import { format, startOfYear, subYears } from 'date-fns'
 import { UtilitySummaryCards } from '@/components/home/UtilitySummaryCards'
 import { HomeOverviewYoYRow } from '@/components/home/HomeOverviewYoYRow'
 import { HomeOverviewChart } from '@/components/home/HomeOverviewChart'
@@ -75,8 +77,50 @@ function HomeOverview() {
     return map
   }, [utilities, readingsQueries])
 
-  // Step 5: YoY comparison — null until prior year data fetching is implemented
-  const homeYoY: HomeYoYComparison | null = null
+  // Step 5: YoY comparison — aggregate costs across all utilities
+  const homeYoY = useMemo<HomeYoYComparison | null>(() => {
+    const now = new Date()
+    const currentMonthKey = format(now, 'yyyy-MM')
+    const ytdStartKey = format(startOfYear(now), 'yyyy-MM')
+    const prevYear = subYears(now, 1)
+    const prevYtdStartKey = format(startOfYear(prevYear), 'yyyy-MM')
+    const prevCurrentMonthKey = format(prevYear, 'yyyy-MM')
+
+    // Collect all bills across utilities
+    const allBills = utilities.flatMap((_, i) => billsQueries[i]?.data ?? [])
+    if (allBills.length === 0) return null
+
+    const monthlyCosts = amortizeAllBills(allBills)
+
+    // Current year YTD
+    const currentYtdEntries = monthlyCosts.filter(
+      (c) => c.month >= ytdStartKey && c.month <= currentMonthKey,
+    )
+    const currentYtdTotal = currentYtdEntries.reduce((s, c) => s + c.cost, 0)
+    const currentMonthCost = monthlyCosts.find((c) => c.month === currentMonthKey)?.cost ?? 0
+    const currentAvg = currentYtdEntries.length > 0 ? currentYtdTotal / currentYtdEntries.length : 0
+
+    // Previous year same period
+    const prevYtdEntries = monthlyCosts.filter(
+      (c) => c.month >= prevYtdStartKey && c.month <= prevCurrentMonthKey,
+    )
+    const prevYtdTotal = prevYtdEntries.reduce((s, c) => s + c.cost, 0)
+    const prevMonthCost = monthlyCosts.find((c) => c.month === prevCurrentMonthKey)?.cost ?? 0
+    const prevAvg = prevYtdEntries.length > 0 ? prevYtdTotal / prevYtdEntries.length : 0
+
+    const pct = (cur: number, prev: number) =>
+      prev !== 0 ? ((cur - prev) / prev) * 100 : cur !== 0 ? 100 : null
+
+    const periodEnd = format(now, 'MMM d')
+    const periodLabel = `Jan 1 – ${periodEnd}, ${prevYear.getFullYear()}`
+
+    return {
+      ytdTotalCost: { current: currentYtdTotal, previous: prevYtdTotal, changePercent: pct(currentYtdTotal, prevYtdTotal) },
+      currentMonthCost: { current: currentMonthCost, previous: prevMonthCost, changePercent: pct(currentMonthCost, prevMonthCost) },
+      avgMonthlyCost: { current: currentAvg, previous: prevAvg, changePercent: pct(currentAvg, prevAvg) },
+      periodLabel,
+    }
+  }, [utilities, billsQueries])
 
   // Subtitle
   const lastUpdate = useMemo(() => {

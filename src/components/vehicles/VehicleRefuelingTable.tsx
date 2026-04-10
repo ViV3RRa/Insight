@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { Fuel, Home } from 'lucide-react'
-import { CollapsibleSection } from '@/components/shared/CollapsibleSection'
 import { DataTable, type ColumnDef } from '@/components/shared/DataTable'
 import { formatNumber, formatHumanDate } from '@/utils/formatters'
 import type { Refueling, FuelType } from '@/types/vehicles'
@@ -112,20 +111,23 @@ function VehicleRefuelingTable({
   ]
 
   return (
-    <CollapsibleSection
-      title="Refueling Log"
-      icon={Fuel}
-      count={refuelings.length}
-      defaultExpanded={false}
-    >
-      <div className="px-3 lg:px-6 py-4 flex items-center justify-between border-b border-base-100 dark:border-base-700">
-        <span className="text-xs text-base-400">{refuelings.length} records</span>
-        <button
-          onClick={onAdd}
-          className="px-3 py-1.5 text-xs font-medium text-base-600 dark:text-base-300 bg-base-50 dark:bg-base-700 rounded-lg hover:bg-base-100 dark:hover:bg-base-600 transition-colors"
-        >
-          + Add Refueling
-        </button>
+    <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden">
+      <div className="px-3 lg:px-6 py-5 border-b border-base-100 dark:border-base-700">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Fuel className="w-4 h-4 text-base-400 flex-shrink-0" />
+            <h3 className="text-sm font-semibold text-base-900 dark:text-white">Refueling Log</h3>
+            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-base-100 dark:bg-base-700 text-base-400">
+              {refuelings.length}
+            </span>
+          </div>
+          <button
+            onClick={onAdd}
+            className="px-3 py-1.5 text-xs font-medium text-base-600 dark:text-base-300 bg-base-50 dark:bg-base-700 rounded-lg hover:bg-base-100 dark:hover:bg-base-600 transition-colors"
+          >
+            + Add Refueling
+          </button>
+        </div>
       </div>
       <DataTable<RefuelingWithEfficiency>
         columns={columns}
@@ -135,8 +137,9 @@ function VehicleRefuelingTable({
         keyExtractor={(r) => r.id}
         sortable={true}
         defaultSort={{ key: 'date', direction: 'desc' }}
+        showMoreThreshold={5}
       />
-    </CollapsibleSection>
+    </div>
   )
 }
 

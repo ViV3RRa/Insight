@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Settings } from 'lucide-react'
 import { Button } from '@/components/shared/Button'
 import { StatCard } from '@/components/shared/StatCard'
 import { UtilityIcon } from '@/components/shared/UtilityIcon'
@@ -16,6 +16,7 @@ interface UtilityDetailHeaderProps {
   onSelectUtility: (id: string) => void
   onAddReading: () => void
   onAddBill: () => void
+  onEdit: () => void
 }
 
 function getStaleness(latestReadingDate: Date | null): 'critical' | 'warning' | null {
@@ -36,6 +37,7 @@ function UtilityDetailHeader({
   onSelectUtility,
   onAddReading,
   onAddBill,
+  onEdit,
 }: UtilityDetailHeaderProps) {
   const navigate = useNavigate()
   const staleness = getStaleness(latestReadingDate)
@@ -110,6 +112,11 @@ function UtilityDetailHeader({
                   onSelect={onSelectUtility}
                   overviewHref="/home"
                   overviewLabel="Home Overview"
+                  footerAction={{
+                    label: 'Edit Utility',
+                    icon: <Settings className="w-3.5 h-3.5" />,
+                    onClick: onEdit,
+                  }}
                 />
                 {staleness && <StalenessIndicator severity={staleness} />}
               </div>

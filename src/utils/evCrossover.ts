@@ -68,7 +68,7 @@ export function adjustConsumptionForEvCharging(
   }
 
   return monthlyConsumption.map((mc) => {
-    const key = `${mc.year}-${mc.month}`
+    const key = mc.month
     const kwh = chargingMap.get(key) ?? 0
     return {
       ...mc,

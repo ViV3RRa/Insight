@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { ArrowDownUp, Paperclip } from 'lucide-react'
-import { CollapsibleSection } from '@/components/shared/CollapsibleSection'
 import { DataTable, type ColumnDef } from '@/components/shared/DataTable'
 import { TransactionTypeBadge } from '@/components/shared/TransactionTypeBadge'
 import { CurrencyDisplay } from '@/components/shared/CurrencyDisplay'
@@ -142,40 +141,43 @@ function PlatformDetailTransactions(props: PlatformDetailTransactionsProps) {
   }, [showExchangeRate])
 
   return (
-    <div className="mb-6 lg:mb-8">
-      <CollapsibleSection
-        title="Transactions"
-        icon={ArrowDownUp}
-        count={transactions.length}
-        defaultExpanded={false}
-      >
-        {onAdd && (
-          <div className="px-4 py-3 sm:px-5 border-b border-base-100 dark:border-base-700 flex justify-end">
+    <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6 lg:mb-8">
+      <div className="px-3 lg:px-6 py-5 border-b border-base-100 dark:border-base-700">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <ArrowDownUp className="w-4 h-4 text-base-400 flex-shrink-0" />
+            <h3 className="text-sm font-semibold text-base-900 dark:text-white">Transactions</h3>
+            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-base-100 dark:bg-base-700 text-base-400">
+              {transactions.length}
+            </span>
+          </div>
+          {onAdd && (
             <Button variant="secondary" size="sm" onClick={onAdd}>
               + Add Transaction
             </Button>
-          </div>
-        )}
+          )}
+        </div>
+      </div>
 
-        {isLoading ? (
-          <SkeletonTableRows count={3} />
-        ) : sortedTransactions.length === 0 ? (
-          <EmptyState
-            variant="section"
-            icon={ArrowDownUp}
-            description="No transactions recorded yet."
-          />
-        ) : (
-          <DataTable
-            columns={columns}
-            data={sortedTransactions}
-            keyExtractor={(row) => row.id}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onRowClick={onRowClick}
-          />
-        )}
-      </CollapsibleSection>
+      {isLoading ? (
+        <SkeletonTableRows count={3} />
+      ) : sortedTransactions.length === 0 ? (
+        <EmptyState
+          variant="section"
+          icon={ArrowDownUp}
+          description="No transactions recorded yet."
+        />
+      ) : (
+        <DataTable
+          columns={columns}
+          data={sortedTransactions}
+          keyExtractor={(row) => row.id}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          onRowClick={onRowClick}
+          showMoreThreshold={5}
+        />
+      )}
     </div>
   )
 }

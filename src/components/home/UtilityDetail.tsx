@@ -7,7 +7,7 @@ import * as utilityService from '@/services/utilities'
 import * as meterReadingService from '@/services/meterReadings'
 import * as utilityBillService from '@/services/utilityBills'
 import * as refuelingService from '@/services/refuelings'
-import { calculateUtilityMetrics } from '@/utils/utilityCosts'
+import { calculateUtilityMetrics, calculateMonthlyCostPerUnit } from '@/utils/utilityCosts'
 import {
   getHomeChargingKwh,
   getMonthlyHomeChargingKwh,
@@ -38,6 +38,7 @@ function UtilityDetail() {
   const [editBill, setEditBill] = useState<UtilityBill | null>(null)
   const [deleteReading, setDeleteReading] = useState<MeterReading | null>(null)
   const [deleteBill, setDeleteBill] = useState<UtilityBill | null>(null)
+  const [showDeleteUtility, setShowDeleteUtility] = useState(false)
   const [excludeEvCharging, setExcludeEvCharging] = useState(false)
 
   // Fetch all utilities (for switcher)
@@ -107,12 +108,26 @@ function UtilityDetail() {
 
   const displayMetrics = useMemo(() => {
     if (!metrics || !excludeEvCharging || !hasEvChargingData) return metrics
+    const adjustedConsumption = adjustConsumptionForEvCharging(
+      metrics.monthlyConsumption,
+      monthlyHomeChargingKwh,
+    )
+    const now = new Date()
+    const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+    const ytdStartKey = `${now.getFullYear()}-01`
+    const currentEntry = adjustedConsumption.find((c) => c.month === currentMonthKey)
+    const ytdConsumption = adjustedConsumption
+      .filter((c) => c.month >= ytdStartKey && c.month <= currentMonthKey)
+      .reduce((sum, c) => sum + c.consumption, 0)
+    const adjustedCostPerUnit = calculateMonthlyCostPerUnit(adjustedConsumption, metrics.monthlyCost)
+    const currentCpuEntry = adjustedCostPerUnit.find((c) => c.month === currentMonthKey)
     return {
       ...metrics,
-      monthlyConsumption: adjustConsumptionForEvCharging(
-        metrics.monthlyConsumption,
-        monthlyHomeChargingKwh,
-      ),
+      monthlyConsumption: adjustedConsumption,
+      monthlyCostPerUnit: adjustedCostPerUnit,
+      currentMonthConsumption: currentEntry?.consumption ?? null,
+      currentMonthCostPerUnit: currentCpuEntry?.costPerUnit ?? null,
+      ytdConsumption,
     }
   }, [metrics, excludeEvCharging, hasEvChargingData, monthlyHomeChargingKwh])
 
@@ -130,6 +145,14 @@ function UtilityDetail() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['utilityBills', utilityId] })
       setDeleteBill(null)
+    },
+  })
+
+  const deleteUtilityMutation = useMutation({
+    mutationFn: (id: string) => utilityService.remove(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['utilities'] })
+      navigate('/home')
     },
   })
 
@@ -160,11 +183,12 @@ function UtilityDetail() {
       <UtilityDetailHeader
         utility={utility}
         allUtilities={utilities}
-        metrics={metrics}
+        metrics={displayMetrics}
         latestReadingDate={latestReadingDate}
         onSelectUtility={handleSelectUtility}
         onAddReading={() => setShowAddReading(true)}
         onAddBill={() => setShowAddBill(true)}
+        onEdit={() => setShowEditUtility(true)}
       />
 
       {/* EV home-charging metric */}
@@ -224,6 +248,10 @@ function UtilityDetail() {
         isOpen={showEditUtility}
         onClose={() => setShowEditUtility(false)}
         utility={utility}
+        onDelete={() => {
+          setShowEditUtility(false)
+          setShowDeleteUtility(true)
+        }}
       />
       <MeterReadingDialog
         isOpen={showAddReading || editReading !== null}
@@ -258,6 +286,14 @@ function UtilityDetail() {
         title="Delete Bill"
         description="This bill will be permanently deleted. This action cannot be undone."
         loading={deleteBillMutation.isPending}
+      />
+      <DeleteConfirmDialog
+        isOpen={showDeleteUtility}
+        onCancel={() => setShowDeleteUtility(false)}
+        onConfirm={() => deleteUtilityMutation.mutate(utility.id)}
+        title="Delete Utility"
+        description={`"${utility.name}" and all its readings and bills will be permanently deleted. This action cannot be undone.`}
+        loading={deleteUtilityMutation.isPending}
       />
     </div>
   )

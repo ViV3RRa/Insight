@@ -11,6 +11,7 @@ interface UtilityDialogProps {
   isOpen: boolean
   onClose: () => void
   utility?: Utility
+  onDelete?: () => void
 }
 
 const ICONS: { key: UtilityIconType; Icon: React.FC<{ className?: string }> }[] = [
@@ -44,7 +45,7 @@ interface FormErrors {
   unit?: string
 }
 
-function UtilityDialog({ isOpen, onClose, utility }: UtilityDialogProps) {
+function UtilityDialog({ isOpen, onClose, utility, onDelete }: UtilityDialogProps) {
   const queryClient = useQueryClient()
 
   const [selectedIcon, setSelectedIcon] = useState<UtilityIconType | null>(null)
@@ -179,6 +180,24 @@ function UtilityDialog({ isOpen, onClose, utility }: UtilityDialogProps) {
         <p className="text-sm text-rose-500">
           {mutation.error instanceof Error ? mutation.error.message : 'An error occurred'}
         </p>
+      )}
+
+      {utility && onDelete && (
+        <div className="border-t border-base-150 dark:border-base-700 pt-4 mt-2">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm font-medium text-rose-600 dark:text-rose-400">Delete Utility</div>
+              <div className="text-xs text-base-400 mt-0.5">Permanently remove this utility and all its data</div>
+            </div>
+            <button
+              type="button"
+              onClick={onDelete}
+              className="px-3 py-1.5 text-xs font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/40 transition-colors"
+            >
+              Delete...
+            </button>
+          </div>
+        </div>
       )}
     </Dialog>
   )
