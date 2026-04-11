@@ -149,5 +149,7 @@ export async function getCashPlatforms(portfolioId: string): Promise<Platform[]>
 }
 
 export function getPlatformIconUrl(platform: Platform): string {
-  return pb.files.getUrl(platform, platform.icon)
+  if (!platform.icon) return ''
+  // Construct URL manually because Zod-parsed records lack collectionId
+  return `${pb.baseUrl}/api/files/${COLLECTION}/${platform.id}/${platform.icon}`
 }

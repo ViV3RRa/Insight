@@ -47,16 +47,16 @@ function PortfolioOverviewClosed({
   return (
     <div
       data-testid="closed-platforms-section"
-      className="mb-6 lg:mb-8 opacity-60 hover:opacity-80 transition-opacity"
+      className="mb-6 lg:mb-8 opacity-60 hover:opacity-80 transition-opacity bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden"
     >
-      <div className="flex items-center gap-2 mb-3">
+      <div className="px-3 lg:px-6 py-5 flex items-center gap-2">
         <h2 className="text-sm font-semibold text-base-900 dark:text-white">Closed Platforms</h2>
         <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-base-100 dark:bg-base-700 text-base-400">
           {closedPlatforms.length}
         </span>
       </div>
 
-      <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden">
+      <div>
         {isLoading ? (
           <SkeletonTableRows count={3} />
         ) : (

@@ -112,7 +112,7 @@ function VehicleRefuelingTable({
 
   return (
     <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden">
-      <div className="px-3 lg:px-6 py-5 border-b border-base-100 dark:border-base-700">
+      <div className="px-3 lg:px-6 py-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Fuel className="w-4 h-4 text-base-400 flex-shrink-0" />

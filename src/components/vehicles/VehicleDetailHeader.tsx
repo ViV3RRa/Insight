@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Pencil } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/shared/Button'
 import { FuelTypeBadge } from '@/components/shared/FuelTypeBadge'
 import { DropdownSwitcher } from '@/components/shared/DropdownSwitcher'
 import { formatHumanDate, formatNumber } from '@/utils/formatters'
 import type { Vehicle } from '@/types/vehicles'
-import type { DropdownItem, DropdownSection } from '@/components/shared/DropdownSwitcher'
+import type { DropdownItem } from '@/components/shared/DropdownSwitcher'
 
 interface VehicleDetailHeaderProps {
   vehicle: Vehicle
@@ -13,7 +13,7 @@ interface VehicleDetailHeaderProps {
   onSelectVehicle: (id: string) => void
   onAddRefueling: () => void
   onAddMaintenance: () => void
-  onEditVehicle: () => void
+  onEditVehicle: (vehicleId: string) => void
 }
 
 const vehicleGradients: Record<string, { bg: string; silhouette: string }> = {
@@ -65,15 +65,11 @@ function VehicleDetailHeader({
 }: VehicleDetailHeaderProps) {
   const navigate = useNavigate()
 
-  const switcherSections: DropdownSection[] = [
-    { key: 'active', label: 'Active' },
-    { key: 'sold', label: 'Sold' },
-  ]
+  const activeVehicles = allVehicles.filter((v) => v.status === 'active')
 
-  const switcherItems: DropdownItem[] = allVehicles.map((v) => ({
+  const switcherItems: DropdownItem[] = activeVehicles.map((v) => ({
     id: v.id,
     name: v.name,
-    section: v.status === 'active' ? 'active' : 'sold',
   }))
 
   const gradient = (vehicle.type ? vehicleGradients[vehicle.type] : undefined) ?? defaultGradient!
@@ -94,19 +90,13 @@ function VehicleDetailHeader({
           <DropdownSwitcher
             currentId={vehicle.id}
             items={switcherItems}
-            sections={switcherSections}
             onSelect={onSelectVehicle}
             overviewHref="/vehicles"
             overviewLabel="All Vehicles"
+            onEditItem={(id) => onEditVehicle(id)}
           />
         </div>
         <div className="flex items-center gap-3">
-          <button
-            onClick={onEditVehicle}
-            className="px-3 py-2 text-sm text-base-500 dark:text-base-400 hover:text-base-700 dark:hover:text-base-200 transition-colors flex items-center gap-1.5"
-          >
-            <Pencil className="w-3.5 h-3.5" /> Edit
-          </button>
           <Button variant="secondary" size="sm" onClick={onAddRefueling}>
             + Add Refueling
           </Button>

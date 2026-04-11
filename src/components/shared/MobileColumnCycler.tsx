@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react'
-import { ChevronDown } from 'lucide-react'
 
 interface MobileColumnCyclerHeaderProps {
   columns: Array<{ label: string }>
@@ -17,10 +16,7 @@ function MobileColumnCyclerHeader({ columns, activeIndex, onCycle, hideAbove = '
         className="inline-flex flex-col items-end gap-0.5 text-xs font-medium text-base-300 dark:text-base-400"
         onClick={onCycle}
       >
-        <div className="flex items-center gap-1">
-          <span>{columns[activeIndex]!.label}</span>
-          <ChevronDown className="w-3 h-3 text-base-300" />
-        </div>
+        <span>{columns[activeIndex]!.label}</span>
         <div className="flex items-center gap-1">
           {columns.map((_, i) => (
             <span

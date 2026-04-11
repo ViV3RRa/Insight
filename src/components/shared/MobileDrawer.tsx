@@ -1,6 +1,7 @@
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 import { ChevronLeft, ChevronRight, Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/shared/Button'
+import { useDragToDismiss } from '@/hooks/useDragToDismiss'
 
 interface MobileDrawerField {
   label: string
@@ -12,8 +13,8 @@ interface MobileDrawerProps {
   onClose: () => void
   title: string
   fields: MobileDrawerField[]
-  onEdit: () => void
-  onDelete: () => void
+  onEdit?: () => void
+  onDelete?: () => void
   onPrev?: () => void
   onNext?: () => void
   hasPrev?: boolean
@@ -32,6 +33,9 @@ function MobileDrawer({
   hasPrev = false,
   hasNext = false,
 }: MobileDrawerProps) {
+  const panelRef = useRef<HTMLDivElement>(null)
+  const handleRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     if (!isOpen) return
 
@@ -44,6 +48,14 @@ function MobileDrawer({
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, onClose])
+
+  useDragToDismiss({
+    direction: 'down',
+    onDismiss: onClose,
+    panelRef,
+    handleRef,
+    isOpen,
+  })
 
   return (
     <>
@@ -58,6 +70,7 @@ function MobileDrawer({
 
       {/* Drawer */}
       <div
+        ref={panelRef}
         className="fixed inset-x-0 bottom-0 z-50 bg-white dark:bg-base-800 rounded-t-2xl shadow-xl sm:hidden transform transition-transform duration-300 ease-out"
         style={{ transform: isOpen ? 'translateY(0)' : 'translateY(100%)' }}
         data-testid="mobile-drawer"
@@ -66,11 +79,12 @@ function MobileDrawer({
         aria-label={title}
       >
         {/* Drag handle */}
-        <div className="flex justify-center pt-3 pb-2">
-          <div
-            className="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600"
-            data-testid="drag-handle"
-          />
+        <div
+          ref={handleRef}
+          className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing touch-none"
+          data-testid="drag-handle"
+        >
+          <div className="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600" />
         </div>
 
         {/* Header */}
@@ -114,19 +128,25 @@ function MobileDrawer({
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="px-5 pb-5 pt-3 border-t border-base-100 dark:border-base-700">
-          <div className="flex gap-2">
-            <Button variant="secondary" onClick={onEdit} className="flex-1">
-              <Pencil className="w-4 h-4" />
-              Edit
-            </Button>
-            <Button variant="destructive" onClick={onDelete} className="flex-1">
-              <Trash2 className="w-4 h-4" />
-              Delete
-            </Button>
+        {/* Footer (only shown when edit/delete actions are available) */}
+        {(onEdit || onDelete) && (
+          <div className="px-5 pb-5 pt-3 border-t border-base-100 dark:border-base-700">
+            <div className="flex gap-2">
+              {onEdit && (
+                <Button variant="secondary" onClick={onEdit} className="flex-1">
+                  <Pencil className="w-4 h-4" />
+                  Edit
+                </Button>
+              )}
+              {onDelete && (
+                <Button variant="destructive" onClick={onDelete} className="flex-1">
+                  <Trash2 className="w-4 h-4" />
+                  Delete
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   )

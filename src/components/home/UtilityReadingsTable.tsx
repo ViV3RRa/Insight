@@ -136,7 +136,7 @@ function UtilityReadingsTable({
   if (readings.length === 0) {
     return (
       <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6 lg:mb-8">
-        <div className="px-3 lg:px-6 py-5 border-b border-base-100 dark:border-base-700">
+        <div className="px-3 lg:px-6 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <h3 className="text-sm font-semibold text-base-900 dark:text-white">Meter Readings</h3>
@@ -158,7 +158,7 @@ function UtilityReadingsTable({
 
   return (
     <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6 lg:mb-8">
-      <div className="px-3 lg:px-6 py-5 border-b border-base-100 dark:border-base-700">
+      <div className="px-3 lg:px-6 py-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h3 className="text-sm font-semibold text-base-900 dark:text-white">Meter Readings</h3>

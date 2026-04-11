@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react'
-import { ChevronDown, LayoutGrid } from 'lucide-react'
+import { ChevronDown, LayoutGrid, Pencil } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 interface DropdownItem {
@@ -28,6 +28,8 @@ interface DropdownSwitcherProps {
   overviewHref: string
   overviewLabel: string
   footerAction?: DropdownFooterAction
+  /** Per-item edit callback — renders a pencil icon on each row */
+  onEditItem?: (id: string) => void
 }
 
 function DropdownSwitcher({
@@ -38,6 +40,7 @@ function DropdownSwitcher({
   overviewHref,
   overviewLabel,
   footerAction,
+  onEditItem,
 }: DropdownSwitcherProps) {
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -108,33 +111,47 @@ function DropdownSwitcher({
     const isActive = item.id === currentId
 
     return (
-      <button
+      <div
         key={item.id}
-        type="button"
-        onClick={() => handleSelect(item.id)}
         className={[
-          'w-full flex items-center gap-2.5 px-3 py-2 text-left',
+          'flex items-center gap-2.5 px-3 py-2',
           isActive
             ? 'bg-accent-50/50 dark:bg-accent-900/20 border-l-2 border-accent-600 dark:border-accent-400'
             : 'hover:bg-base-50 dark:hover:bg-base-700 border-l-2 border-transparent',
         ].join(' ')}
       >
-        {item.icon && (
-          <div className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center">
-            {item.icon}
-          </div>
-        )}
-        <span
-          className={[
-            'truncate',
-            isActive
-              ? 'text-sm font-medium text-base-900 dark:text-white'
-              : 'text-sm text-base-700 dark:text-base-300',
-          ].join(' ')}
+        <button
+          type="button"
+          onClick={() => handleSelect(item.id)}
+          className="flex items-center gap-2.5 flex-1 min-w-0 text-left"
         >
-          {item.name}
-        </span>
-      </button>
+          {item.icon && (
+            <div className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center">
+              {item.icon}
+            </div>
+          )}
+          <span
+            className={[
+              'truncate',
+              isActive
+                ? 'text-sm font-medium text-base-900 dark:text-white'
+                : 'text-sm text-base-700 dark:text-base-300',
+            ].join(' ')}
+          >
+            {item.name}
+          </span>
+        </button>
+        {onEditItem && (
+          <button
+            type="button"
+            onClick={() => { onEditItem(item.id); close(); }}
+            className="p-1 text-base-300 hover:text-base-600 dark:hover:text-base-300 shrink-0"
+            title="Edit"
+          >
+            <Pencil className="w-3.5 h-3.5" />
+          </button>
+        )}
+      </div>
     )
   }
 
@@ -190,21 +207,11 @@ function DropdownSwitcher({
         />
       </button>
 
+      {/* Desktop dropdown (mobile handled by MobileDetailNav) */}
       {isOpen && (
-        <>
-          {/* Desktop dropdown */}
-          <div className="absolute top-full left-0 mt-1 z-30 w-64 sm:w-72 bg-white dark:bg-base-800 rounded-xl shadow-lg border border-base-150 dark:border-base-700 py-1 max-h-80 overflow-y-auto hidden sm:block">
-            {dropdownContent}
-          </div>
-
-          {/* Mobile dropdown */}
-          <div
-            className="sm:hidden fixed inset-x-0 top-0 z-30 bg-white dark:bg-base-800 shadow-lg border-b border-base-150 dark:border-base-700 overflow-y-auto"
-            style={{ maxHeight: '70vh' }}
-          >
-            <div className="py-2">{dropdownContent}</div>
-          </div>
-        </>
+        <div className="absolute top-full left-0 mt-1 z-30 w-64 sm:w-72 bg-white dark:bg-base-800 rounded-xl shadow-lg border border-base-150 dark:border-base-700 py-1 max-h-80 overflow-y-auto hidden sm:block">
+          {dropdownContent}
+        </div>
       )}
     </div>
   )

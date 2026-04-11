@@ -90,7 +90,7 @@ function DataTable<T>({
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className={hasMobileCycling ? 'sm:overflow-x-auto overflow-x-hidden' : 'overflow-x-auto'}>
       <table className="w-full">
         <thead>
           <tr className="border-b border-base-200 dark:border-base-700">
@@ -235,12 +235,16 @@ function DataTable<T>({
         )}
       </table>
       {data.length > showMoreThreshold && (
-        <div className="px-4 py-2 border-t border-base-100 dark:border-base-700">
+        <div className="px-4 py-3">
           <button
-            className="text-sm font-medium text-accent-600 dark:text-accent-400 hover:text-accent-700 dark:hover:text-accent-300 transition-colors"
+            className="w-full flex items-center justify-center gap-1 text-sm font-medium text-accent-600 dark:text-accent-400 hover:text-accent-700 dark:hover:text-accent-300 transition-colors"
             onClick={() => setShowAll((prev) => !prev)}
           >
-            {showAll ? 'Show less' : `Show all ${data.length}`}
+            {showAll ? 'Show less' : 'Show all'}
+            <ChevronDown
+              className="w-3.5 h-3.5 transition-transform duration-200"
+              style={{ transform: showAll ? 'rotate(180deg)' : 'rotate(0deg)' }}
+            />
           </button>
         </div>
       )}

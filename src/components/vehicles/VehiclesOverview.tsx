@@ -76,6 +76,13 @@ function VehiclesOverview() {
     return latest
   }, [vehicleData])
 
+  const subtitle = vehicles.length > 0
+    ? `${activeVehicles.length} active · ${soldVehicles.length} sold${lastRefueledDate != null ? ` · Last refueled ${formatRecentUpdate(lastRefueledDate)}` : ''}`
+    : ''
+
+  // Mobile nav header — must be before early returns (Rules of Hooks)
+  useMobileDetailNav({ name: 'Vehicles', subtitle })
+
   if (isLoading) {
     return (
       <div>
@@ -103,11 +110,6 @@ function VehiclesOverview() {
     )
   }
 
-  const subtitle = `${activeVehicles.length} active · ${soldVehicles.length} sold${lastRefueledDate != null ? ` · Last refueled ${formatRecentUpdate(lastRefueledDate)}` : ''}`
-
-  // Mobile nav header
-  useMobileDetailNav({ name: 'Vehicles', subtitle })
-
   return (
     <div>
       {/* Desktop header */}
@@ -121,12 +123,6 @@ function VehiclesOverview() {
           <Button variant="secondary" size="sm" onClick={() => setShowAddMaintenance(true)}>+ Add Maintenance</Button>
           <Button variant="primary" size="sm" onClick={() => setShowAddVehicle(true)}>+ Add Vehicle</Button>
         </div>
-      </div>
-
-      {/* Mobile header */}
-      <div className="lg:hidden mb-4">
-        <h1 className="text-2xl font-bold tracking-tight text-base-900 dark:text-white mb-1">Vehicles</h1>
-        <p className="text-sm text-base-400">{subtitle}</p>
       </div>
 
       {/* Mobile action buttons */}

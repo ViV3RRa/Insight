@@ -1,16 +1,9 @@
-import { ArrowLeft } from 'lucide-react'
 import { StatCard } from '@/components/shared/StatCard'
-import { PlatformIcon } from '@/components/shared/PlatformIcon'
-import { StalenessIndicator } from '@/components/shared/StalenessIndicator'
 import { Skeleton, SkeletonKpiCard } from '@/components/shared/Skeleton'
 import { formatCurrency, formatNumber, formatPercent } from '@/utils/formatters'
 
 interface PlatformDetailHeaderProps {
-  platformName: string
-  platformIconUrl?: string
   currency: string
-  staleness?: 'warning' | 'critical'
-  lastUpdated?: string
   currentValue: number
   currentValueDkk?: number
   monthEarnings: number
@@ -20,7 +13,6 @@ interface PlatformDetailHeaderProps {
   ytdGainLoss: number
   ytdGainLossPercent: number
   ytdXirr: number | null
-  onBack: () => void
   isLoading?: boolean
 }
 
@@ -31,11 +23,7 @@ function trendFor(value: number): 'positive' | 'negative' | 'neutral' {
 }
 
 function PlatformDetailHeader({
-  platformName,
-  platformIconUrl,
   currency,
-  staleness,
-  lastUpdated,
   currentValue,
   currentValueDkk,
   monthEarnings,
@@ -45,7 +33,6 @@ function PlatformDetailHeader({
   ytdGainLoss,
   ytdGainLossPercent,
   ytdXirr,
-  onBack,
   isLoading = false,
 }: PlatformDetailHeaderProps) {
   if (isLoading) {
@@ -73,35 +60,6 @@ function PlatformDetailHeader({
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-2">
-        <button
-          type="button"
-          onClick={onBack}
-          aria-label="Back to portfolio overview"
-          className="w-11 h-11 sm:w-8 sm:h-8 rounded-xl bg-base-50 dark:bg-base-700 flex items-center justify-center text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-        </button>
-
-        <PlatformIcon name={platformName} imageUrl={platformIconUrl} size="md" />
-
-        <div className="flex items-center gap-2 flex-1">
-          <h1 className="text-2xl font-bold tracking-tight text-base-900 dark:text-white">
-            {platformName}
-          </h1>
-          <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-base-100 dark:bg-base-700 text-base-400">
-            {currency}
-          </span>
-          {staleness && <StalenessIndicator severity={staleness} size="md" />}
-        </div>
-      </div>
-
-      {lastUpdated && (
-        <p className="text-xs text-base-400 mb-6 lg:mb-8 ml-11">
-          Investment · {currency} · Updated {lastUpdated}
-        </p>
-      )}
-
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 lg:gap-4 mb-6 lg:mb-8">
         <StatCard
           label="Current Value"

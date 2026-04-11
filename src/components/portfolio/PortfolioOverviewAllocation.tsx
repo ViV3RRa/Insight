@@ -61,13 +61,13 @@ function PortfolioOverviewAllocation({
   isLoading = false,
 }: PortfolioOverviewAllocationProps) {
   return (
-    <div className="mb-6 lg:mb-8">
-      <div className="flex items-center gap-2 mb-3">
+    <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6 lg:mb-8">
+      <div className="px-3 lg:px-6 py-5">
         <h2 className="text-sm font-semibold text-base-900 dark:text-white">
           Portfolio Allocation
         </h2>
       </div>
-      <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark p-4 sm:p-5">
+      <div className="p-4 sm:p-5">
         {isLoading ? (
           <AllocationSkeleton />
         ) : segments.length === 0 ? (

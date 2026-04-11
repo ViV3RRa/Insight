@@ -36,7 +36,7 @@ function PortfolioOverviewCashTable({
         align: 'left' as const,
         format: (_value: unknown, row: CashPlatformRow) => (
           <div className="flex items-center gap-2.5">
-            <PlatformIcon imageUrl={row.iconUrl} name={row.name} size="sm" />
+            <PlatformIcon imageUrl={row.iconUrl} name={row.name} size="md" />
             <span className="font-medium text-base-900 dark:text-white">{row.name}</span>
           </div>
         ),
@@ -74,19 +74,15 @@ function PortfolioOverviewCashTable({
     : undefined
 
   return (
-    <div className="mb-6 lg:mb-8">
-      <div className="flex items-center gap-2 mb-3">
+    <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6 lg:mb-8">
+      <div className="px-3 lg:px-6 py-5 flex items-center gap-2">
         <h2 className="text-sm font-semibold text-base-900 dark:text-white">Cash Accounts</h2>
         <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-base-100 dark:bg-base-700 text-base-400">
           {cashPlatforms.length}
         </span>
       </div>
 
-      {isLoading && (
-        <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden">
-          <SkeletonTableRows count={3} />
-        </div>
-      )}
+      {isLoading && <SkeletonTableRows count={3} />}
 
       {!isLoading && cashPlatforms.length === 0 && (
         <EmptyState
@@ -97,14 +93,12 @@ function PortfolioOverviewCashTable({
       )}
 
       {!isLoading && cashPlatforms.length > 0 && (
-        <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden">
-          <DataTable
-            columns={columns}
-            data={cashPlatforms}
-            keyExtractor={(row) => row.id}
-            onRowClick={handleRowClick}
-          />
-        </div>
+        <DataTable
+          columns={columns}
+          data={cashPlatforms}
+          keyExtractor={(row) => row.id}
+          onRowClick={handleRowClick}
+        />
       )}
     </div>
   )

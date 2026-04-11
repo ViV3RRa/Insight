@@ -347,7 +347,7 @@ function PlatformDetailPerfTabs({
           {activeTab === 'yearly' && (
             <DataTable
               columns={yearlyColumns}
-              data={yearlyData}
+              data={[...yearlyData].sort((a, b) => b.period.localeCompare(a.period))}
               totals={yearlyTotalsRow}
               keyExtractor={(row) => row.period}
             />
@@ -356,7 +356,7 @@ function PlatformDetailPerfTabs({
           {activeTab === 'monthly' && (
             <DataTable
               columns={monthlyColumns}
-              data={monthlyData}
+              data={[...monthlyData].sort((a, b) => b.period.localeCompare(a.period))}
               totals={monthlyTotalsRow}
               showMoreThreshold={12}
               keyExtractor={(row) => row.period}

@@ -33,7 +33,7 @@ function UtilityDetail() {
   // Dialog states
   const [showAddReading, setShowAddReading] = useState(false)
   const [showAddBill, setShowAddBill] = useState(false)
-  const [showEditUtility, setShowEditUtility] = useState(false)
+  const [editUtilityId, setEditUtilityId] = useState<string | null>(null)
   const [editReading, setEditReading] = useState<MeterReading | null>(null)
   const [editBill, setEditBill] = useState<UtilityBill | null>(null)
   const [deleteReading, setDeleteReading] = useState<MeterReading | null>(null)
@@ -188,7 +188,7 @@ function UtilityDetail() {
         onSelectUtility={handleSelectUtility}
         onAddReading={() => setShowAddReading(true)}
         onAddBill={() => setShowAddBill(true)}
-        onEdit={() => setShowEditUtility(true)}
+        onEdit={(id) => setEditUtilityId(id)}
       />
 
       {/* EV home-charging metric */}
@@ -245,12 +245,12 @@ function UtilityDetail() {
 
       {/* Dialogs */}
       <UtilityDialog
-        isOpen={showEditUtility}
-        onClose={() => setShowEditUtility(false)}
-        utility={utility}
+        isOpen={editUtilityId !== null}
+        onClose={() => setEditUtilityId(null)}
+        utility={utilities.find((u) => u.id === editUtilityId) ?? utility}
         onDelete={() => {
-          setShowEditUtility(false)
-          setShowDeleteUtility(true)
+          setEditUtilityId(null)
+          if (editUtilityId === utility.id) setShowDeleteUtility(true)
         }}
       />
       <MeterReadingDialog

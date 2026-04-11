@@ -115,10 +115,12 @@ function PortfolioOverviewPerfYearly({
 
   const tableData: YearlyRow[] = useMemo(
     () =>
-      yearlyData.map((d) => ({
-        ...d,
-        yearLabel: formatYearLabel(d.year, d.year === currentYear),
-      })),
+      [...yearlyData]
+        .sort((a, b) => b.year - a.year)
+        .map((d) => ({
+          ...d,
+          yearLabel: formatYearLabel(d.year, d.year === currentYear),
+        })),
     [yearlyData, currentYear],
   )
 

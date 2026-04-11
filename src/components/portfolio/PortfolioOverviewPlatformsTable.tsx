@@ -53,7 +53,7 @@ function PortfolioOverviewPlatformsTable({
         align: 'left',
         format: (_value, row) => (
           <div className="flex items-center gap-2.5">
-            <PlatformIcon imageUrl={row.iconUrl} name={row.name} size="sm" />
+            <PlatformIcon imageUrl={row.iconUrl} name={row.name} size="md" />
             <div className="flex items-center gap-1.5">
               <span className="font-medium text-base-900 dark:text-white">{row.name}</span>
               {row.staleness && <StalenessIndicator severity={row.staleness} size="sm" />}
@@ -153,7 +153,7 @@ function PortfolioOverviewPlatformsTable({
 
   return (
     <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6 lg:mb-8">
-      <div className="px-3 lg:px-6 py-5 flex items-center justify-between border-b border-base-100 dark:border-base-700">
+      <div className="px-3 lg:px-6 py-5 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h3 className="text-sm font-semibold text-base-900 dark:text-white">Investment Platforms</h3>
           <span className="text-xs text-base-400 bg-base-100 dark:bg-base-700 px-2 py-0.5 rounded-full font-medium">

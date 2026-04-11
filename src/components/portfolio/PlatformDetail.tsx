@@ -14,12 +14,15 @@ import {
 import { formatRecentUpdate, formatHumanDate } from '@/utils/formatters'
 import { PlatformIcon } from '@/components/shared/PlatformIcon'
 import { StalenessIndicator } from '@/components/shared/StalenessIndicator'
+import { Link } from 'react-router-dom'
+import { LayoutGrid, Pencil } from 'lucide-react'
 import { PlatformDetailHeader } from './PlatformDetailHeader'
 import { PlatformDetailPerfChart } from './PlatformDetailPerfChart'
 import { PlatformDetailPerfTabs } from './PlatformDetailPerfTabs'
 import { PlatformDetailDataPoints } from './PlatformDetailDataPoints'
 import { PlatformDetailTransactions } from './PlatformDetailTransactions'
-import { PlatformDetailSwitcher, type PlatformSwitcherItem } from './PlatformDetailSwitcher'
+import { DropdownSwitcher, type DropdownItem, type DropdownSection } from '@/components/shared/DropdownSwitcher'
+import { ArrowLeft } from 'lucide-react'
 import { PlatformDialog } from './dialogs/PlatformDialog'
 import { DataPointDialog } from './dialogs/DataPointDialog'
 import { TransactionDialog } from './dialogs/TransactionDialog'
@@ -39,7 +42,7 @@ function PlatformDetail() {
   const selectedPortfolioId = useInvestmentUIStore((s) => s.selectedPortfolioId)
 
   // Dialog states
-  const [showEditPlatform, setShowEditPlatform] = useState(false)
+  const [editPlatformId, setEditPlatformId] = useState<string | null>(null)
   const [showAddDataPoint, setShowAddDataPoint] = useState(false)
   const [showAddTransaction, setShowAddTransaction] = useState(false)
   const [editDataPoint, setEditDataPoint] = useState<DataPoint | null>(null)
@@ -113,34 +116,115 @@ function PlatformDetail() {
     return undefined
   }, [latestDpDate])
 
-  // Mobile nav header
+  // Mobile nav header + dropdown
   const updatedText = latestDpDate ? formatRecentUpdate(new Date(latestDpDate)) : undefined
   const mobileSubtitle = platform
     ? `${platform.type === 'investment' ? 'Investment' : 'Cash'} · ${platform.currency}${updatedText ? ` · Updated ${updatedText}` : ''}`
     : ''
+
+  const mobileDropdownContent = useMemo(() => {
+    if (!platform) return null
+    const investmentPlatforms = allPlatforms.filter((p) => p.type === 'investment' && p.status === 'active')
+    const cashPlatforms = allPlatforms.filter((p) => p.type === 'cash' && p.status === 'active')
+
+    const renderPlatform = (p: typeof allPlatforms[0]) => {
+      const isActive = p.id === platform.id
+      const href = p.type === 'cash' ? `/investment/cash/${p.id}` : `/investment/platform/${p.id}`
+      return (
+        <div
+          key={p.id}
+          className={[
+            'flex items-center gap-3 px-4 py-2.5',
+            isActive
+              ? 'bg-accent-50/50 dark:bg-accent-900/20 border-l-2 border-accent-600'
+              : 'hover:bg-base-50 dark:hover:bg-base-700 border-l-2 border-transparent',
+          ].join(' ')}
+        >
+          <button
+            type="button"
+            onClick={() => navigate(href)}
+            className="flex items-center gap-3 flex-1 min-w-0 text-left"
+          >
+            <PlatformIcon imageUrl={platformService.getPlatformIconUrl(p)} name={p.name} size="sm" />
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-medium">{p.name}</div>
+              <div className="text-xs text-base-400">{p.currency}</div>
+            </div>
+          </button>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setEditPlatformId(p.id); }}
+            className="p-1.5 text-base-300 hover:text-base-600 dark:hover:text-base-300 shrink-0"
+            title="Edit"
+          >
+            <Pencil className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )
+    }
+
+    const renderSection = (label: string, platforms: typeof allPlatforms) => {
+      if (platforms.length === 0) return null
+      return (
+        <div className="py-1">
+          <div className="px-4 py-1.5">
+            <span className="text-[10px] font-medium uppercase tracking-wider text-base-300 dark:text-base-500">{label}</span>
+          </div>
+          {platforms.map(renderPlatform)}
+        </div>
+      )
+    }
+
+    return (
+      <div className="py-1">
+        <Link
+          to="/investment"
+          className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-base-500 hover:bg-base-50 dark:hover:bg-base-700 border-b border-base-100 dark:border-base-700"
+        >
+          <LayoutGrid className="w-4 h-4" />
+          <span className="font-medium">Portfolio Overview</span>
+        </Link>
+        {renderSection('Active Platforms', investmentPlatforms)}
+        {cashPlatforms.length > 0 && (
+          <>
+            <div className="border-t border-base-100 dark:border-base-700 my-1" />
+            {renderSection('Cash Accounts', cashPlatforms)}
+          </>
+        )}
+      </div>
+    )
+  }, [allPlatforms, platform, navigate])
+
   useMobileDetailNav(
     platform
       ? {
           backTo: '/investment',
-          icon: <PlatformIcon imageUrl={platformService.getPlatformIconUrl(platform)} name={platform.name} size="sm" />,
+          icon: <PlatformIcon imageUrl={platformService.getPlatformIconUrl(platform)} name={platform.name} size="md" />,
           name: platform.name,
           subtitle: mobileSubtitle,
+          dropdown: mobileDropdownContent,
           badge: staleness ? <StalenessIndicator severity={staleness} size="lg" /> : undefined,
         }
       : null,
+    `platforms-${allPlatforms.length}`,
   )
 
-  // Switcher items
-  const switcherItems: PlatformSwitcherItem[] = useMemo(
+  // Desktop dropdown items (active platforms only, no closed)
+  const dropdownSections: DropdownSection[] = [
+    { key: 'investment', label: 'Active Platforms' },
+    { key: 'cash', label: 'Cash Accounts' },
+  ]
+
+  const dropdownItems: DropdownItem[] = useMemo(
     () =>
-      allPlatforms.map((p) => ({
-        id: p.id,
-        name: p.name,
-        iconUrl: platformService.getPlatformIconUrl(p),
-        type: (p.status === 'closed' ? 'closed' : p.type) as 'investment' | 'cash' | 'closed',
-        currency: p.currency,
-        currentValue: 0,
-      })),
+      allPlatforms
+        .filter((p) => p.status === 'active')
+        .map((p) => ({
+          id: p.id,
+          name: p.name,
+          icon: <PlatformIcon imageUrl={platformService.getPlatformIconUrl(p)} name={p.name} size="sm" />,
+          section: p.type === 'cash' ? 'cash' : 'investment',
+        })),
     [allPlatforms],
   )
 
@@ -288,14 +372,37 @@ function PlatformDetail() {
     <div>
       {/* Header with switcher */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 lg:mb-8">
-        <PlatformDetailSwitcher
-          currentPlatformId={platform.id}
-          currentPlatformName={platform.name}
-          platforms={switcherItems}
-          onSelect={handleSelectPlatform}
-          onOverviewClick={() => navigate('/investment')}
-          onEditPlatform={() => setShowEditPlatform(true)}
-        />
+        {/* Desktop switcher bar */}
+        <div className="hidden lg:flex items-center gap-3">
+          <button
+            onClick={() => navigate('/investment')}
+            className="w-9 h-9 rounded-xl bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 flex items-center justify-center text-base-400 hover:text-base-600 dark:hover:text-base-300 hover:border-base-300 dark:hover:border-base-500 transition-colors shadow-sm"
+            title="Back to Portfolio"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </button>
+
+          <div className="flex items-center gap-3">
+            <PlatformIcon imageUrl={platformService.getPlatformIconUrl(platform)} name={platform.name} size="lg" />
+            <div>
+              <div className="flex items-center gap-2">
+                <DropdownSwitcher
+                  currentId={platform.id}
+                  items={dropdownItems}
+                  sections={dropdownSections}
+                  onSelect={handleSelectPlatform}
+                  overviewHref="/investment"
+                  overviewLabel="Portfolio Overview"
+                  onEditItem={(id) => setEditPlatformId(id)}
+                />
+                {staleness && <StalenessIndicator severity={staleness} />}
+              </div>
+              <div className="text-xs text-base-400 mt-0.5">
+                {platform.type === 'investment' ? 'Investment' : 'Cash'} &middot; {platform.currency}{updatedText ? ` · Updated ${updatedText}` : ''}
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* Action buttons */}
         <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
@@ -328,11 +435,7 @@ function PlatformDetail() {
 
       {/* Stat cards */}
       <PlatformDetailHeader
-        platformName={platform.name}
-        platformIconUrl={platformService.getPlatformIconUrl(platform)}
         currency={platform.currency}
-        staleness={staleness}
-        lastUpdated={latestDpDate ? formatRecentUpdate(latestDpDate) : undefined}
         currentValue={currentValue}
         currentValueDkk={currentValueDkk}
         monthEarnings={monthEarnings}
@@ -342,7 +445,6 @@ function PlatformDetail() {
         ytdGainLoss={ytdGainLoss?.gain ?? 0}
         ytdGainLossPercent={ytdGainLoss?.gainPercent ?? 0}
         ytdXirr={null}
-        onBack={() => navigate('/investment')}
       />
 
       {/* Performance chart */}
@@ -416,25 +518,28 @@ function PlatformDetail() {
 
       {/* Dialogs */}
       <PlatformDialog
-        isOpen={showEditPlatform}
-        onClose={() => setShowEditPlatform(false)}
+        isOpen={editPlatformId !== null}
+        onClose={() => setEditPlatformId(null)}
         onSave={async (data) => {
-          await platformService.update(platform.id, { name: data.name } as Parameters<typeof platformService.update>[1])
+          const targetId = editPlatformId ?? platform.id
+          await platformService.update(targetId, { name: data.name } as Parameters<typeof platformService.update>[1])
           queryClient.invalidateQueries({ queryKey: ['platforms'] })
-          setShowEditPlatform(false)
+          setEditPlatformId(null)
         }}
         onClosePlatform={async (data) => {
-          await platformService.closePlatform(platform.id, data.closedDate, data.closureNote)
+          const targetId = editPlatformId ?? platform.id
+          await platformService.closePlatform(targetId, data.closedDate, data.closureNote)
           queryClient.invalidateQueries({ queryKey: ['platforms'] })
-          setShowEditPlatform(false)
-          navigate('/investment')
+          setEditPlatformId(null)
+          if (targetId === platform.id) navigate('/investment')
         }}
         onReopenPlatform={async () => {
-          await platformService.reopenPlatform(platform.id)
+          const targetId = editPlatformId ?? platform.id
+          await platformService.reopenPlatform(targetId)
           queryClient.invalidateQueries({ queryKey: ['platforms'] })
-          setShowEditPlatform(false)
+          setEditPlatformId(null)
         }}
-        platform={platform}
+        platform={allPlatforms.find((p) => p.id === editPlatformId) ?? platform}
       />
       <DataPointDialog
         isOpen={showAddDataPoint || editDataPoint !== null}

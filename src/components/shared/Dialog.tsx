@@ -2,6 +2,7 @@ import { useEffect, useRef, useCallback, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
 import { Button } from '@/components/shared/Button'
+import { useDragToDismiss } from '@/hooks/useDragToDismiss'
 
 interface DialogProps {
   isOpen: boolean
@@ -28,6 +29,8 @@ function Dialog({
 }: DialogProps) {
   const dialogRef = useRef<HTMLDivElement>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
+  const mobilePanelRef = useRef<HTMLDivElement>(null)
+  const mobileHandleRef = useRef<HTMLDivElement>(null)
   const titleId = 'dialog-title'
 
   // Store the previously focused element when opening
@@ -97,6 +100,15 @@ function Dialog({
     },
     [],
   )
+
+  // Drag-to-dismiss for mobile bottom sheet
+  useDragToDismiss({
+    direction: 'down',
+    onDismiss: onClose,
+    panelRef: mobilePanelRef,
+    handleRef: mobileHandleRef,
+    isOpen,
+  })
 
   if (!isOpen) return null
 
@@ -170,13 +182,18 @@ function Dialog({
       {/* Mobile bottom sheet */}
       <div className="sm:hidden fixed inset-x-0 bottom-0 z-50">
         <div
+          ref={mobilePanelRef}
           className="bg-white dark:bg-base-800 rounded-t-2xl shadow-xl max-h-[92vh] overflow-y-auto"
           style={{ animation: 'var(--animate-dialog-mobile-in)' }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Drag handle */}
-          <div className="flex justify-center pt-3 pb-2">
-            <div className="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600" data-testid="drag-handle" />
+          <div
+            ref={mobileHandleRef}
+            className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing touch-none"
+            data-testid="drag-handle"
+          >
+            <div className="w-10 h-1 rounded-full bg-base-200 dark:bg-base-600" />
           </div>
 
           {/* Header */}
@@ -238,3 +255,4 @@ function Dialog({
 }
 
 export { Dialog }
+export type { DialogProps }

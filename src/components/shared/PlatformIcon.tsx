@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface PlatformIconProps {
   name: string
@@ -44,6 +44,12 @@ export function PlatformIcon({
   color,
 }: PlatformIconProps) {
   const [imageError, setImageError] = useState(false)
+
+  // Reset error state when URL changes
+  useEffect(() => {
+    setImageError(false)
+  }, [imageUrl])
+
   const showImage = imageUrl && !imageError
   const bgColor = color ?? hashColor(name)
 

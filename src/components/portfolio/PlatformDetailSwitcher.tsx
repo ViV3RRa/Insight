@@ -22,13 +22,12 @@ export interface PlatformDetailSwitcherProps {
   totalPortfolioValue?: number
   onSelect: (platformId: string) => void
   onOverviewClick: () => void
-  onEditPlatform?: () => void
+  onEditPlatform?: (platformId: string) => void
 }
 
 const SECTIONS = [
   { key: 'investment', label: 'Active Platforms' },
   { key: 'cash', label: 'Cash Accounts' },
-  { key: 'closed', label: 'Closed' },
 ] as const
 
 export function PlatformDetailSwitcher({
@@ -77,77 +76,81 @@ export function PlatformDetailSwitcher({
     close()
   }
 
-  function handleEditPlatform() {
-    onEditPlatform?.()
-    close()
-  }
 
   function renderItem(item: PlatformSwitcherItem) {
     const isActive = item.id === currentPlatformId
-    const isClosed = item.type === 'closed'
     const showCurrencySuffix = item.currency !== 'DKK'
 
     return (
-      <button
+      <div
         key={item.id}
-        type="button"
-        onClick={() => handleSelect(item.id)}
         data-testid={`platform-item-${item.id}`}
         className={[
-          'w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors',
+          'flex items-center gap-3 px-4 py-2.5 transition-colors',
           isActive
             ? 'bg-accent-50/50 dark:bg-accent-900/15 border-l-2 border-accent-600 dark:border-accent-400'
             : 'hover:bg-base-50 dark:hover:bg-base-700 border-l-2 border-transparent',
-          isClosed && !isActive && 'opacity-50',
-        ]
-          .filter(Boolean)
-          .join(' ')}
+        ].join(' ')}
       >
-        <PlatformIcon name={item.name} imageUrl={item.iconUrl} size="sm" />
-        <div className="flex-1 min-w-0">
-          <div
-            className={[
-              'text-sm truncate',
-              isActive ? 'font-medium' : '',
-              isClosed
-                ? 'text-base-400 dark:text-base-500'
-                : 'text-base-900 dark:text-white',
-            ]
-              .filter(Boolean)
-              .join(' ')}
-          >
-            {item.name}
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs text-base-400">{item.currency}</span>
-            {item.staleness && (
-              <StalenessIndicator severity={item.staleness} size="sm" />
-            )}
-          </div>
-        </div>
-        <div className="text-right shrink-0">
-          <div className="font-mono-data text-sm">
-            {formatNumber(item.currentValue, 0)}
-            {showCurrencySuffix && (
-              <span className="text-xs text-base-300 dark:text-base-500 ml-1">
-                {item.currency}
-              </span>
-            )}
-          </div>
-          {item.type === 'investment' && item.returnPercent != null && (
+        <button
+          type="button"
+          onClick={() => handleSelect(item.id)}
+          className="flex items-center gap-3 flex-1 min-w-0 text-left"
+        >
+          <PlatformIcon name={item.name} imageUrl={item.iconUrl} size="sm" />
+          <div className="flex-1 min-w-0">
             <div
               className={[
-                'font-mono-data text-xs',
-                item.returnPercent >= 0
-                  ? 'text-emerald-600 dark:text-emerald-400'
-                  : 'text-rose-500 dark:text-rose-400',
-              ].join(' ')}
+                'text-sm truncate',
+                isActive ? 'font-medium' : '',
+                'text-base-900 dark:text-white',
+              ]
+                .filter(Boolean)
+                .join(' ')}
             >
-              {formatSignedNumber(item.returnPercent, 1)}%
+              {item.name}
             </div>
-          )}
-        </div>
-      </button>
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs text-base-400">{item.currency}</span>
+              {item.staleness && (
+                <StalenessIndicator severity={item.staleness} size="sm" />
+              )}
+            </div>
+          </div>
+          <div className="text-right shrink-0">
+            <div className="font-mono-data text-sm">
+              {formatNumber(item.currentValue, 0)}
+              {showCurrencySuffix && (
+                <span className="text-xs text-base-300 dark:text-base-500 ml-1">
+                  {item.currency}
+                </span>
+              )}
+            </div>
+            {item.type === 'investment' && item.returnPercent != null && (
+              <div
+                className={[
+                  'font-mono-data text-xs',
+                  item.returnPercent >= 0
+                    ? 'text-emerald-600 dark:text-emerald-400'
+                    : 'text-rose-500 dark:text-rose-400',
+                ].join(' ')}
+              >
+                {formatSignedNumber(item.returnPercent, 1)}%
+              </div>
+            )}
+          </div>
+        </button>
+        {onEditPlatform && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onEditPlatform(item.id); close(); }}
+            className="p-1.5 text-base-300 hover:text-base-600 dark:hover:text-base-300 shrink-0"
+            title="Edit"
+          >
+            <Pencil className="w-3.5 h-3.5" />
+          </button>
+        )}
+      </div>
     )
   }
 
@@ -188,19 +191,6 @@ export function PlatformDetailSwitcher({
       </button>
 
       <div className="py-1">{renderSections()}</div>
-
-      {onEditPlatform && (
-        <div className="border-t border-base-100 dark:border-base-700 mt-1 pt-1">
-          <button
-            type="button"
-            onClick={handleEditPlatform}
-            className="w-full px-4 py-2.5 flex items-center gap-2 text-sm text-base-400 hover:text-base-600 dark:hover:text-base-300 hover:bg-base-50 dark:hover:bg-base-700/50 transition-colors"
-          >
-            <Pencil className="w-3.5 h-3.5" aria-hidden="true" />
-            Edit Platform
-          </button>
-        </div>
-      )}
     </>
   )
 
