@@ -5,11 +5,14 @@ interface MobileColumnCyclerHeaderProps {
   columns: Array<{ label: string }>
   activeIndex: number
   onCycle: () => void
+  /** Breakpoint above which this column hides. Default 'sm' (640px). Use 'lg' for tables with many columns. */
+  hideAbove?: 'sm' | 'lg'
 }
 
-function MobileColumnCyclerHeader({ columns, activeIndex, onCycle }: MobileColumnCyclerHeaderProps) {
+function MobileColumnCyclerHeader({ columns, activeIndex, onCycle, hideAbove = 'sm' }: MobileColumnCyclerHeaderProps) {
+  const hiddenClass = hideAbove === 'lg' ? 'lg:hidden' : 'sm:hidden'
   return (
-    <th className="sm:hidden px-4 py-2.5 text-right">
+    <th className={`${hiddenClass} px-4 py-2.5 text-right`}>
       <button
         className="inline-flex flex-col items-end gap-0.5 text-xs font-medium text-base-300 dark:text-base-400"
         onClick={onCycle}
@@ -34,11 +37,14 @@ function MobileColumnCyclerHeader({ columns, activeIndex, onCycle }: MobileColum
 interface MobileColumnCyclerCellProps {
   values: Array<ReactNode>
   activeIndex: number
+  /** Breakpoint above which this cell hides. Default 'sm'. Use 'lg' for tables with many columns. */
+  hideAbove?: 'sm' | 'lg'
 }
 
-function MobileColumnCyclerCell({ values, activeIndex }: MobileColumnCyclerCellProps) {
+function MobileColumnCyclerCell({ values, activeIndex, hideAbove = 'sm' }: MobileColumnCyclerCellProps) {
+  const hiddenClass = hideAbove === 'lg' ? 'lg:hidden' : 'sm:hidden'
   return (
-    <td className="sm:hidden px-4 py-3 text-right">
+    <td className={`${hiddenClass} px-4 py-3 text-right`}>
       <div className="grid">
         {values.map((value, i) => (
           <span
