@@ -61,7 +61,7 @@ function ChartCard({
   return (
     <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark p-4 sm:p-6">
       {/* Row 1: Title + controls */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <h3 className="text-sm font-semibold text-base-900 dark:text-white">
           {title}
         </h3>
