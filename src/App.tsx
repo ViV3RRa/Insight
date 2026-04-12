@@ -4,6 +4,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Login from '@/components/layout/Login'
 import ProtectedRoute from '@/components/layout/ProtectedRoute'
 import AppShell from '@/components/layout/AppShell'
+import { PWAUpdatePrompt } from '@/components/shared/PWAUpdatePrompt'
+import { PWAInstallPrompt } from '@/components/shared/PWAInstallPrompt'
 
 // Lazy-load page components for code splitting
 const PortfolioOverview = lazy(() =>
@@ -41,6 +43,8 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <PWAUpdatePrompt />
+      <PWAInstallPrompt />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route element={<ProtectedRoute />}>
