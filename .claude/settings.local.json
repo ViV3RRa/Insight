@@ -38,7 +38,8 @@
       "mcp__playwright__browser_console_messages",
       "Bash(grep -n \"return \\($\\\\|return \\(\" /Users/sKrogh/Projects/privat/Insight/src/components/portfolio/PortfolioOverview.tsx)",
       "Bash(grep -n \"useMobileDetailNav\\\\|return \\($\\\\|if.*Loading\\\\|if.*!platform\" /Users/sKrogh/Projects/privat/Insight/src/components/portfolio/PlatformDetail.tsx)",
-      "Bash(find /Users/sKrogh/Projects/privat/Insight/src -type f \\\\\\( -name \"*.tsx\" -o -name \"*.ts\" \\\\\\) -exec grep -l \"transform.*translateY\\\\|slide.*animation\\\\|bottom.*drawer\" {} \\\\;)"
+      "Bash(find /Users/sKrogh/Projects/privat/Insight/src -type f \\\\\\( -name \"*.tsx\" -o -name \"*.ts\" \\\\\\) -exec grep -l \"transform.*translateY\\\\|slide.*animation\\\\|bottom.*drawer\" {} \\\\;)",
+      "mcp__playwright__browser_network_requests"
     ]
   },
   "teammateMode": "tmux"
