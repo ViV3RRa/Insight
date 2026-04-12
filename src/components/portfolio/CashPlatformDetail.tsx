@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   AreaChart,
@@ -10,7 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts'
-import { ArrowLeft, ArrowDownUp, Database, Paperclip } from 'lucide-react'
+import { ArrowLeft, ArrowDownUp, Database, Paperclip, LayoutGrid, Pencil } from 'lucide-react'
 import * as platformService from '@/services/platforms'
 import * as dataPointService from '@/services/dataPoints'
 import * as transactionService from '@/services/transactions'
@@ -23,10 +23,13 @@ import { PlatformIcon } from '@/components/shared/PlatformIcon'
 import { Button } from '@/components/shared/Button'
 import { EmptyState } from '@/components/shared/EmptyState'
 import { DeleteConfirmDialog } from '@/components/shared/DeleteConfirmDialog'
+import { PlatformDialog } from './dialogs/PlatformDialog'
+import { DropdownSwitcher, type DropdownItem, type DropdownSection } from '@/components/shared/DropdownSwitcher'
+import { useMobileDetailNav } from '@/components/layout/useMobileDetailNav'
 import { DataPointDialog } from './dialogs/DataPointDialog'
 import { TransactionDialog } from './dialogs/TransactionDialog'
 import { useInvestmentUIStore } from '@/stores/investmentUIStore'
-import { formatCurrency, formatNumber } from '@/utils/formatters'
+import { formatCurrency, formatNumber, formatRecentUpdate } from '@/utils/formatters'
 import type { DataPoint, Transaction } from '@/types/investment'
 import type { TimeSpan } from '@/utils/timeSpan'
 
@@ -289,6 +292,127 @@ function CashPlatformDetail() {
     icon: platformService.getPlatformIconUrl(p),
   }))
 
+  // Edit platform state
+  const [editPlatformId, setEditPlatformId] = useState<string | null>(null)
+
+  // Desktop dropdown items (active only, no closed)
+  const dropdownSections: DropdownSection[] = [
+    { key: 'investment', label: 'Active Platforms' },
+    { key: 'cash', label: 'Cash Accounts' },
+  ]
+
+  const dropdownItems: DropdownItem[] = useMemo(
+    () =>
+      allPlatforms
+        .filter((p) => p.status === 'active')
+        .map((p) => ({
+          id: p.id,
+          name: p.name,
+          icon: <PlatformIcon imageUrl={platformService.getPlatformIconUrl(p)} name={p.name} size="sm" />,
+          section: p.type === 'cash' ? 'cash' : 'investment',
+        })),
+    [allPlatforms],
+  )
+
+  const handleSelectPlatform = (id: string) => {
+    const p = allPlatforms.find((pl) => pl.id === id)
+    if (p?.type === 'cash') {
+      navigate(`/investment/cash/${id}`)
+    } else {
+      navigate(`/investment/platform/${id}`)
+    }
+  }
+
+  // Mobile nav + dropdown
+  const latestDpDate = dataPoints.length > 0 ? dataPoints[0]!.timestamp : null
+  const updatedText = latestDpDate ? formatRecentUpdate(latestDpDate) : undefined
+
+  const mobileDropdownContent = useMemo(() => {
+    if (!platform) return null
+    const investmentPlatforms = allPlatforms.filter((p) => p.type === 'investment' && p.status === 'active')
+    const cashPlatforms = allPlatforms.filter((p) => p.type === 'cash' && p.status === 'active')
+
+    const renderPlatform = (p: typeof allPlatforms[0]) => {
+      const isActive = p.id === platform.id
+      const href = p.type === 'cash' ? `/investment/cash/${p.id}` : `/investment/platform/${p.id}`
+      return (
+        <div
+          key={p.id}
+          className={[
+            'flex items-center gap-3 px-4 py-2.5',
+            isActive
+              ? 'bg-accent-50/50 dark:bg-accent-900/20 border-l-2 border-accent-600'
+              : 'hover:bg-base-50 dark:hover:bg-base-700 border-l-2 border-transparent',
+          ].join(' ')}
+        >
+          <button
+            type="button"
+            onClick={() => navigate(href)}
+            className="flex items-center gap-3 flex-1 min-w-0 text-left"
+          >
+            <PlatformIcon imageUrl={platformService.getPlatformIconUrl(p)} name={p.name} size="sm" />
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-medium">{p.name}</div>
+              <div className="text-xs text-base-400">{p.currency}</div>
+            </div>
+          </button>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setEditPlatformId(p.id); }}
+            className="p-1.5 text-base-300 hover:text-base-600 dark:hover:text-base-300 shrink-0"
+            title="Edit"
+          >
+            <Pencil className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )
+    }
+
+    const renderSection = (label: string, platforms: typeof allPlatforms) => {
+      if (platforms.length === 0) return null
+      return (
+        <div className="py-1">
+          <div className="px-4 py-1.5">
+            <span className="text-[10px] font-medium uppercase tracking-wider text-base-300 dark:text-base-500">{label}</span>
+          </div>
+          {platforms.map(renderPlatform)}
+        </div>
+      )
+    }
+
+    return (
+      <div className="py-1">
+        <Link
+          to="/investment"
+          className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-base-500 hover:bg-base-50 dark:hover:bg-base-700 border-b border-base-100 dark:border-base-700"
+        >
+          <LayoutGrid className="w-4 h-4" />
+          <span className="font-medium">Portfolio Overview</span>
+        </Link>
+        {renderSection('Active Platforms', investmentPlatforms)}
+        {cashPlatforms.length > 0 && (
+          <>
+            <div className="border-t border-base-100 dark:border-base-700 my-1" />
+            {renderSection('Cash Accounts', cashPlatforms)}
+          </>
+        )}
+      </div>
+    )
+  }, [allPlatforms, platform, navigate])
+
+  useMobileDetailNav(
+    platform
+      ? {
+          backTo: '/investment',
+          icon: <PlatformIcon imageUrl={platformService.getPlatformIconUrl(platform)} name={platform.name} size="md" />,
+          name: platform.name,
+          subtitle: `Cash · ${platform.currency}${updatedText ? ` · Updated ${updatedText}` : ''}`,
+          dropdown: mobileDropdownContent,
+        }
+      : null,
+    `platforms-${allPlatforms.length}`,
+  )
+
   // Loading state
   if (platformLoading || !platform) {
     return (
@@ -303,36 +427,57 @@ function CashPlatformDetail() {
 
   return (
     <div>
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-2">
-        <button
-          type="button"
-          onClick={() => navigate('/investment')}
-          aria-label="Back to portfolio overview"
-          className="w-11 h-11 sm:w-8 sm:h-8 rounded-xl bg-base-50 dark:bg-base-700 flex items-center justify-center text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-        </button>
+      {/* Header with switcher */}
+      <div className="hidden lg:flex lg:items-center lg:justify-between gap-4 mb-8">
+        {/* Desktop switcher bar */}
+        <div className="hidden lg:flex items-center gap-3">
+          <button
+            onClick={() => navigate('/investment')}
+            className="w-9 h-9 rounded-xl bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 flex items-center justify-center text-base-400 hover:text-base-600 dark:hover:text-base-300 hover:border-base-300 dark:hover:border-base-500 transition-colors shadow-sm"
+            title="Back to Portfolio"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </button>
 
-        <PlatformIcon name={platform.name} imageUrl={platformService.getPlatformIconUrl(platform)} size="md" />
+          <div className="flex items-center gap-3">
+            <PlatformIcon imageUrl={platformService.getPlatformIconUrl(platform)} name={platform.name} size="lg" />
+            <div>
+              <div className="flex items-center gap-2">
+                <DropdownSwitcher
+                  currentId={platform.id}
+                  items={dropdownItems}
+                  sections={dropdownSections}
+                  onSelect={handleSelectPlatform}
+                  overviewHref="/investment"
+                  overviewLabel="Portfolio Overview"
+                  onEditItem={(id) => setEditPlatformId(id)}
+                />
+              </div>
+              <div className="text-xs text-base-400 mt-0.5">
+                Cash &middot; {currency}{updatedText ? ` · Updated ${updatedText}` : ''}
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <div className="flex items-center gap-2 flex-1">
-          <h1 className="text-2xl font-bold tracking-tight text-base-900 dark:text-white">
-            {platform.name}
-          </h1>
-          <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-base-100 dark:bg-base-700 text-base-500 dark:text-base-400">
-            {currency}
-          </span>
+        {/* Desktop action buttons */}
+        <div className="hidden lg:flex items-center gap-3">
+          <Button variant="secondary" size="sm" onClick={() => setShowAddTransaction(true)}>
+            + Add Transaction
+          </Button>
+          <Button variant="primary" size="sm" onClick={() => setShowAddDataPoint(true)}>
+            + Add Data Point
+          </Button>
         </div>
       </div>
 
-      {/* Action buttons */}
-      <div className="flex flex-col sm:flex-row sm:justify-end gap-2 mb-6 lg:mb-8">
-        <Button variant="secondary" size="sm" onClick={() => setShowAddDataPoint(true)}>
-          + Add Data Point
-        </Button>
-        <Button variant="primary" size="sm" onClick={() => setShowAddTransaction(true)}>
+      {/* Mobile action buttons */}
+      <div className="flex gap-2 mb-4 lg:hidden">
+        <Button variant="secondary" fullWidth onClick={() => setShowAddTransaction(true)}>
           + Add Transaction
+        </Button>
+        <Button variant="primary" fullWidth onClick={() => setShowAddDataPoint(true)}>
+          + Add Data Point
         </Button>
       </div>
 
@@ -544,6 +689,17 @@ function CashPlatformDetail() {
         title="Delete Transaction"
         description="This transaction will be permanently deleted. This action cannot be undone."
         loading={deleteTransactionMutation.isPending}
+      />
+      <PlatformDialog
+        isOpen={editPlatformId !== null}
+        onClose={() => setEditPlatformId(null)}
+        onSave={async (data) => {
+          const targetId = editPlatformId ?? platform.id
+          await platformService.update(targetId, { name: data.name } as Parameters<typeof platformService.update>[1])
+          queryClient.invalidateQueries({ queryKey: ['platforms'] })
+          setEditPlatformId(null)
+        }}
+        platform={allPlatforms.find((p) => p.id === editPlatformId) ?? platform}
       />
     </div>
   )

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
+import { getVehiclePhotoUrl } from '@/services/vehicles'
 import { Button } from '@/components/shared/Button'
 import { FuelTypeBadge } from '@/components/shared/FuelTypeBadge'
 import { DropdownSwitcher } from '@/components/shared/DropdownSwitcher'
@@ -74,11 +75,12 @@ function VehicleDetailHeader({
 
   const gradient = (vehicle.type ? vehicleGradients[vehicle.type] : undefined) ?? defaultGradient!
   const isMotorcycle = vehicle.type === 'Motorcycle'
+  const photoUrl = getVehiclePhotoUrl(vehicle)
 
   return (
     <>
       {/* Desktop switcher bar + action buttons */}
-      <div className="hidden lg:flex items-center justify-between gap-4 mb-6 lg:mb-8">
+      <div className="hidden lg:flex items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/vehicles')}
@@ -97,22 +99,22 @@ function VehicleDetailHeader({
           />
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="secondary" size="sm" onClick={onAddRefueling}>
-            + Add Refueling
-          </Button>
-          <Button variant="primary" size="sm" onClick={onAddMaintenance}>
+          <Button variant="secondary" size="sm" onClick={onAddMaintenance}>
             + Add Maintenance
+          </Button>
+          <Button variant="primary" size="sm" onClick={onAddRefueling}>
+            + Add Refueling
           </Button>
         </div>
       </div>
 
       {/* Mobile action buttons */}
       <div className="flex gap-2 mb-4 lg:hidden">
-        <Button variant="secondary" size="sm" onClick={onAddRefueling} className="flex-1">
-          + Add Refueling
-        </Button>
-        <Button variant="primary" size="sm" onClick={onAddMaintenance} className="flex-1">
+        <Button variant="secondary" fullWidth onClick={onAddMaintenance}>
           + Add Maintenance
+        </Button>
+        <Button variant="primary" fullWidth onClick={onAddRefueling}>
+          + Add Refueling
         </Button>
       </div>
 
@@ -121,9 +123,11 @@ function VehicleDetailHeader({
         <div className="flex flex-col sm:flex-row">
           {/* Photo area */}
           <div
-            className={`h-36 sm:w-48 sm:h-auto lg:w-56 bg-gradient-to-br ${gradient.bg} flex items-center justify-center shrink-0`}
+            className={`h-36 sm:w-48 sm:h-auto lg:w-56 bg-gradient-to-br ${gradient.bg} flex items-center justify-center shrink-0 overflow-hidden`}
           >
-            {isMotorcycle ? (
+            {photoUrl ? (
+              <img src={photoUrl} alt={vehicle.name} className="w-full h-full object-cover" />
+            ) : isMotorcycle ? (
               <MotorcycleSilhouette className={`w-20 h-20 ${gradient.silhouette}`} />
             ) : (
               <CarSilhouette className={`w-20 h-20 ${gradient.silhouette}`} />

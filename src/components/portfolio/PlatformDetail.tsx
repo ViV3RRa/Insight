@@ -21,6 +21,7 @@ import { PlatformDetailPerfChart } from './PlatformDetailPerfChart'
 import { PlatformDetailPerfTabs } from './PlatformDetailPerfTabs'
 import { PlatformDetailDataPoints } from './PlatformDetailDataPoints'
 import { PlatformDetailTransactions } from './PlatformDetailTransactions'
+import { Button } from '@/components/shared/Button'
 import { DropdownSwitcher, type DropdownItem, type DropdownSection } from '@/components/shared/DropdownSwitcher'
 import { ArrowLeft } from 'lucide-react'
 import { PlatformDialog } from './dialogs/PlatformDialog'
@@ -371,7 +372,7 @@ function PlatformDetail() {
   return (
     <div>
       {/* Header with switcher */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 lg:mb-8">
+      <div className="hidden lg:flex lg:items-center lg:justify-between gap-4 mb-8">
         {/* Desktop switcher bar */}
         <div className="hidden lg:flex items-center gap-3">
           <button
@@ -404,21 +405,25 @@ function PlatformDetail() {
           </div>
         </div>
 
-        {/* Action buttons */}
-        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-          <button
-            onClick={() => setShowAddDataPoint(true)}
-            className="flex-1 sm:flex-none px-4 py-2 text-sm text-base-600 dark:text-base-300 bg-white dark:bg-base-800 border border-base-200 dark:border-base-600 rounded-lg hover:border-base-300 dark:hover:border-base-500 transition-colors"
-          >
-            + Add Data Point
-          </button>
-          <button
-            onClick={() => setShowAddTransaction(true)}
-            className="flex-1 sm:flex-none px-4 py-2 text-sm font-medium text-white bg-base-900 dark:bg-accent-600 rounded-lg shadow-sm hover:bg-base-800 dark:hover:bg-accent-700 transition-colors"
-          >
+        {/* Desktop action buttons */}
+        <div className="hidden lg:flex items-center gap-3">
+          <Button variant="secondary" size="sm" onClick={() => setShowAddTransaction(true)}>
             + Add Transaction
-          </button>
+          </Button>
+          <Button variant="primary" size="sm" onClick={() => setShowAddDataPoint(true)}>
+            + Add Data Point
+          </Button>
         </div>
+      </div>
+
+      {/* Mobile action buttons */}
+      <div className="flex gap-2 mb-4 lg:hidden">
+        <Button variant="secondary" fullWidth onClick={() => setShowAddTransaction(true)}>
+          + Add Transaction
+        </Button>
+        <Button variant="primary" fullWidth onClick={() => setShowAddDataPoint(true)}>
+          + Add Data Point
+        </Button>
       </div>
 
       {/* Closure info banner */}

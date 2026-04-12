@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { Plus } from 'lucide-react'
 import { useMobileDetailNav } from '@/components/layout/useMobileDetailNav'
 import { useQuery, useQueries } from '@tanstack/react-query'
 import * as vehicleService from '@/services/vehicles'
@@ -119,16 +120,15 @@ function VehiclesOverview() {
           <p className="text-sm text-base-400">{subtitle}</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="secondary" size="sm" onClick={() => setShowAddRefueling(true)}>+ Add Refueling</Button>
           <Button variant="secondary" size="sm" onClick={() => setShowAddMaintenance(true)}>+ Add Maintenance</Button>
-          <Button variant="primary" size="sm" onClick={() => setShowAddVehicle(true)}>+ Add Vehicle</Button>
+          <Button variant="primary" size="sm" onClick={() => setShowAddRefueling(true)}>+ Add Refueling</Button>
         </div>
       </div>
 
       {/* Mobile action buttons */}
       <div className="flex gap-2 mb-4 lg:hidden">
-        <Button variant="secondary" size="sm" onClick={() => setShowAddRefueling(true)} className="flex-1">+ Add Refueling</Button>
-        <Button variant="primary" size="sm" onClick={() => setShowAddVehicle(true)} className="flex-1">+ Add Vehicle</Button>
+        <Button variant="secondary" fullWidth onClick={() => setShowAddMaintenance(true)}>+ Add Maintenance</Button>
+        <Button variant="primary" fullWidth onClick={() => setShowAddRefueling(true)}>+ Add Refueling</Button>
       </div>
 
       {/* Active vehicles grid */}
@@ -164,6 +164,15 @@ function VehiclesOverview() {
           </CollapsibleSection>
         </div>
       )}
+
+      {/* Add Vehicle */}
+      <button
+        onClick={() => setShowAddVehicle(true)}
+        className="w-full py-3 text-sm font-medium text-base-400 hover:text-base-600 dark:hover:text-base-300 transition-colors flex items-center justify-center gap-1.5 mt-2 mb-2"
+      >
+        <Plus className="w-4 h-4" />
+        Add Vehicle
+      </button>
 
       {/* Dialogs */}
       <VehicleDialog isOpen={showAddVehicle} onClose={() => setShowAddVehicle(false)} />

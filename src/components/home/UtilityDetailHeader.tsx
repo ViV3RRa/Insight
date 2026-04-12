@@ -156,7 +156,7 @@ function UtilityDetailHeader({
   return (
     <>
       {/* Switcher bar + action buttons */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 lg:mb-8">
+      <div className="hidden lg:flex lg:items-center lg:justify-between gap-4 mb-8">
         {/* Desktop switcher bar */}
         <div className="hidden lg:flex items-center gap-3">
           <button
@@ -188,23 +188,25 @@ function UtilityDetailHeader({
           </div>
         </div>
 
-        {/* Action buttons */}
-        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-          <Button
-            variant="secondary"
-            onClick={onAddReading}
-            className="flex-1 sm:flex-none"
-          >
-            + Add Reading
-          </Button>
-          <Button
-            variant="primary"
-            onClick={onAddBill}
-            className="flex-1 sm:flex-none"
-          >
+        {/* Desktop action buttons */}
+        <div className="hidden lg:flex items-center gap-3">
+          <Button variant="secondary" size="sm" onClick={onAddBill}>
             + Add Bill
           </Button>
+          <Button variant="primary" size="sm" onClick={onAddReading}>
+            + Add Reading
+          </Button>
         </div>
+      </div>
+
+      {/* Mobile action buttons */}
+      <div className="flex gap-2 mb-4 lg:hidden">
+        <Button variant="secondary" fullWidth onClick={onAddBill}>
+          + Add Bill
+        </Button>
+        <Button variant="primary" fullWidth onClick={onAddReading}>
+          + Add Reading
+        </Button>
       </div>
 
       {/* Summary KPI Cards */}

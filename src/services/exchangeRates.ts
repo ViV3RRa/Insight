@@ -9,6 +9,18 @@ import { isNotFoundError } from './errors'
 
 const COLLECTION = 'exchange_rates'
 
+/** PocketBase stores dates as full datetimes. Normalize a YYYY-MM-DD date for filter matching. */
+function dateFilter(field: string, op: string, date: string): string {
+  // If already has time component, use as-is
+  if (date.includes(' ') || date.includes('T')) return `${field} ${op} "${date}"`
+  // For equality, use a range to match any time on that date
+  if (op === '=') return `${field} >= "${date} 00:00:00.000Z" && ${field} < "${date} 23:59:59.999Z"`
+  // For <= or >=, append appropriate time
+  if (op === '<=') return `${field} <= "${date} 23:59:59.999Z"`
+  if (op === '>=') return `${field} >= "${date} 00:00:00.000Z"`
+  return `${field} ${op} "${date}"`
+}
+
 function getUserId(): string {
   const userId = pb.authStore.model?.id
   if (!userId) throw new Error('Not authenticated')
@@ -31,7 +43,7 @@ export async function getByDateRange(
 ): Promise<ExchangeRate[]> {
   const userId = getUserId()
   const records = await pb.collection(COLLECTION).getFullList({
-    filter: `ownerId = "${userId}" && fromCurrency = "${fromCurrency}" && toCurrency = "DKK" && date >= "${start}" && date <= "${end}"`,
+    filter: `ownerId = "${userId}" && fromCurrency = "${fromCurrency}" && toCurrency = "DKK" && ${dateFilter('date', '>=', start)} && ${dateFilter('date', '<=', end)}`,
     sort: '-date',
   })
   return z.array(exchangeRateSchema).parse(records)
@@ -83,22 +95,46 @@ export async function remove(id: string): Promise<void> {
   await pb.collection(COLLECTION).delete(id)
 }
 
-export async function getRate(
+// In-memory cache to avoid repeated network calls for the same rate.
+// Stores resolved values AND in-flight promises to deduplicate concurrent requests.
+const rateCache = new Map<string, number | null>()
+const inflightRequests = new Map<string, Promise<number | null>>()
+
+export function getRate(
   fromCurrency: string,
   toCurrency: string,
   date: string,
 ): Promise<number | null> {
-  // DKK-to-DKK (or any same-currency): no lookup needed
-  if (fromCurrency === toCurrency) return 1.0
+  if (fromCurrency === toCurrency) return Promise.resolve(1.0)
+
+  const cacheKey = `${fromCurrency}|${toCurrency}|${date}`
+  if (rateCache.has(cacheKey)) return Promise.resolve(rateCache.get(cacheKey)!)
+
+  // Deduplicate concurrent requests for the same rate
+  if (inflightRequests.has(cacheKey)) return inflightRequests.get(cacheKey)!
+
+  const promise = getRateInternal(fromCurrency, toCurrency, date, cacheKey)
+    .finally(() => inflightRequests.delete(cacheKey))
+  inflightRequests.set(cacheKey, promise)
+  return promise
+}
+
+async function getRateInternal(
+  fromCurrency: string,
+  toCurrency: string,
+  date: string,
+  cacheKey: string,
+): Promise<number | null> {
 
   const userId = getUserId()
 
   // Exact date match
   try {
     const record = await pb.collection(COLLECTION).getFirstListItem(
-      `ownerId = "${userId}" && fromCurrency = "${fromCurrency}" && toCurrency = "${toCurrency}" && date = "${date}"`,
+      `ownerId = "${userId}" && fromCurrency = "${fromCurrency}" && toCurrency = "${toCurrency}" && ${dateFilter('date', '=', date)}`,
     )
     const parsed = exchangeRateSchema.parse(record)
+    rateCache.set(cacheKey, parsed.rate)
     return parsed.rate
   } catch (error: unknown) {
     if (!isNotFoundError(error)) {
@@ -110,10 +146,11 @@ export async function getRate(
   // Nearest prior date
   try {
     const record = await pb.collection(COLLECTION).getFirstListItem(
-      `ownerId = "${userId}" && fromCurrency = "${fromCurrency}" && toCurrency = "${toCurrency}" && date <= "${date}"`,
+      `ownerId = "${userId}" && fromCurrency = "${fromCurrency}" && toCurrency = "${toCurrency}" && ${dateFilter('date', '<=', date)}`,
       { sort: '-date' },
     )
     const parsed = exchangeRateSchema.parse(record)
+    rateCache.set(cacheKey, parsed.rate)
     return parsed.rate
   } catch (error: unknown) {
     if (!isNotFoundError(error)) {
@@ -122,17 +159,25 @@ export async function getRate(
     // No stored rate — try auto-fetch
   }
 
-  // Auto-fetch from frankfurter.app
-  return fetchRate(fromCurrency, date)
+  // Auto-fetch from frankfurter API
+  const result = await fetchRate(fromCurrency, date)
+  if (result) {
+    await storeRate(fromCurrency, result.rate, result.date)
+    rateCache.set(cacheKey, result.rate)
+    return result.rate
+  }
+  rateCache.set(cacheKey, null)
+  return null
 }
 
+/** Fetch a rate from the frankfurter API. Does NOT store it — callers handle persistence. */
 export async function fetchRate(
   fromCurrency: string,
   date: string,
-): Promise<number | null> {
+): Promise<{ rate: number; date: string } | null> {
   try {
     const response = await fetch(
-      `https://api.frankfurter.app/${date}?from=${fromCurrency}&to=DKK`,
+      `https://api.frankfurter.dev/v1/${date}?from=${fromCurrency}&to=DKK`,
     )
     if (!response.ok) {
       console.warn(`Failed to fetch exchange rate: ${response.status}`)
@@ -146,23 +191,41 @@ export async function fetchRate(
       return null
     }
 
-    // Store the auto-fetched rate
-    const userId = pb.authStore.model?.id
-    if (userId) {
-      await pb.collection(COLLECTION).create({
-        fromCurrency,
-        toCurrency: 'DKK',
-        rate,
-        date: data.date ?? date,
-        source: 'auto',
-        ownerId: userId,
-      })
-    }
-
-    return rate
+    return { rate, date: data.date ?? date }
   } catch (error) {
     console.warn('Exchange rate fetch failed:', error)
     return null
+  }
+}
+
+/** Store a rate in PocketBase. Returns false if it already exists. */
+async function storeRate(
+  fromCurrency: string,
+  rate: number,
+  date: string,
+): Promise<boolean> {
+  const userId = pb.authStore.model?.id
+  if (!userId) return false
+
+  // Check existence using getList (avoids SDK throwing on empty results)
+  const existing = await pb.collection(COLLECTION).getList(1, 1, {
+    filter: `ownerId = "${userId}" && fromCurrency = "${fromCurrency}" && toCurrency = "DKK" && ${dateFilter('date', '=', date)}`,
+    skipTotal: true,
+  })
+  if (existing.items.length > 0) return false
+
+  try {
+    await pb.collection(COLLECTION).create({
+      fromCurrency,
+      toCurrency: 'DKK',
+      rate,
+      date,
+      source: 'auto',
+      ownerId: userId,
+    })
+    return true
+  } catch {
+    return false
   }
 }
 
@@ -177,18 +240,17 @@ export async function fetchMonthlyRates(fromCurrency: string): Promise<void> {
   // Check if rate already exists
   try {
     await pb.collection(COLLECTION).getFirstListItem(
-      `ownerId = "${userId}" && fromCurrency = "${fromCurrency}" && toCurrency = "DKK" && date = "${firstOfMonth}"`,
+      `ownerId = "${userId}" && fromCurrency = "${fromCurrency}" && toCurrency = "DKK" && ${dateFilter('date', '=', firstOfMonth)}`,
     )
-    // Rate exists, nothing to do
     return
   } catch (error: unknown) {
     if (!isNotFoundError(error)) {
       throw error
     }
-    // Rate doesn't exist — fetch it
   }
 
-  await fetchRate(fromCurrency, firstOfMonth)
+  const result = await fetchRate(fromCurrency, firstOfMonth)
+  if (result) await storeRate(fromCurrency, result.rate, result.date)
 }
 
 export async function fetchTransactionDayRate(
@@ -202,7 +264,7 @@ export async function fetchTransactionDayRate(
   // Check if rate already exists
   try {
     await pb.collection(COLLECTION).getFirstListItem(
-      `ownerId = "${userId}" && fromCurrency = "${fromCurrency}" && toCurrency = "DKK" && date = "${date}"`,
+      `ownerId = "${userId}" && fromCurrency = "${fromCurrency}" && toCurrency = "DKK" && ${dateFilter('date', '=', date)}`,
     )
     // Rate exists, nothing to do
     return
@@ -213,5 +275,6 @@ export async function fetchTransactionDayRate(
     // Rate doesn't exist — fetch it
   }
 
-  await fetchRate(fromCurrency, date)
+  const result = await fetchRate(fromCurrency, date)
+  if (result) await storeRate(fromCurrency, result.rate, result.date)
 }

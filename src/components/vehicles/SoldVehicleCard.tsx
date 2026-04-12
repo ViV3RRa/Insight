@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { ChevronRight } from 'lucide-react'
 import { FuelTypeBadge } from '@/components/shared/FuelTypeBadge'
 import { formatNumber, formatHumanDate } from '@/utils/formatters'
+import { getVehiclePhotoUrl } from '@/services/vehicles'
 import type { Vehicle, TotalCostOfOwnership } from '@/types/vehicles'
 
 interface SoldVehicleCardProps {
@@ -39,6 +40,7 @@ function MotorcycleSilhouette({ className }: { className: string }) {
 
 function SoldVehicleCard({ vehicle, totalCostOfOwnership, allTimeEfficiency, totalKmDriven }: SoldVehicleCardProps) {
   const vehicleType = vehicle.type === 'Motorcycle' ? 'Motorcycle' : 'Car'
+  const photoUrl = getVehiclePhotoUrl(vehicle)
   const efficiencyUnit = vehicle.fuelType === 'Electric' ? 'km/kWh' : 'km/l'
 
   return (
@@ -46,8 +48,10 @@ function SoldVehicleCard({ vehicle, totalCostOfOwnership, allTimeEfficiency, tot
       to={`/vehicles/${vehicle.id}`}
       className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark block hover:shadow-md dark:hover:shadow-card-dark transition-all cursor-pointer group overflow-hidden opacity-60 hover:opacity-90"
     >
-      <div className="h-40 bg-gradient-to-br from-base-100 to-base-150 dark:from-base-800 dark:to-base-750 relative flex items-center justify-center">
-        {vehicleType === 'Car' ? (
+      <div className="h-40 bg-gradient-to-br from-base-100 to-base-150 dark:from-base-800 dark:to-base-750 relative flex items-center justify-center overflow-hidden">
+        {photoUrl ? (
+          <img src={photoUrl} alt={vehicle.name} className="w-full h-full object-cover" />
+        ) : vehicleType === 'Car' ? (
           <CarSilhouette className="w-24 h-24 text-base-200 dark:text-base-700" />
         ) : (
           <MotorcycleSilhouette className="w-24 h-24 text-base-200 dark:text-base-700" />

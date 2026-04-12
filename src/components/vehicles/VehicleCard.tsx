@@ -3,6 +3,7 @@ import { ChevronRight } from 'lucide-react'
 import { FuelTypeBadge } from '@/components/shared/FuelTypeBadge'
 import { ChangeIndicator } from '@/components/shared/ChangeIndicator'
 import { formatNumber, formatRecentUpdate } from '@/utils/formatters'
+import { getVehiclePhotoUrl } from '@/services/vehicles'
 import type { Vehicle, VehicleMetrics } from '@/types/vehicles'
 
 interface VehicleCardProps {
@@ -55,6 +56,7 @@ function VehicleCard({ vehicle, metrics, priorYearEfficiency, lastRefuelingDate 
 
   const gradient = gradientClasses[vehicleType]
   const silhouetteColor = silhouetteClasses[vehicleType]
+  const photoUrl = getVehiclePhotoUrl(vehicle)
 
   const changePercent =
     priorYearEfficiency != null && metrics.currentYearEfficiency != null
@@ -71,8 +73,10 @@ function VehicleCard({ vehicle, metrics, priorYearEfficiency, lastRefuelingDate 
       to={`/vehicles/${vehicle.id}`}
       className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark block hover:shadow-lg dark:hover:shadow-[0_1px_3px_rgba(0,0,0,0.4),0_8px_24px_rgba(0,0,0,0.3)] transition-shadow cursor-pointer group overflow-hidden"
     >
-      <div className={`h-40 bg-gradient-to-br ${gradient} relative flex items-center justify-center`}>
-        {vehicleType === 'Car' ? (
+      <div className={`h-40 bg-gradient-to-br ${gradient} relative flex items-center justify-center overflow-hidden`}>
+        {photoUrl ? (
+          <img src={photoUrl} alt={vehicle.name} className="w-full h-full object-cover" />
+        ) : vehicleType === 'Car' ? (
           <CarSilhouette className={`w-24 h-24 ${silhouetteColor}`} />
         ) : (
           <MotorcycleSilhouette className={`w-24 h-24 ${silhouetteColor}`} />

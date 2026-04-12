@@ -8,11 +8,11 @@ interface HomeQuickActionsProps {
 function HomeQuickActionsDesktop({ onAddReading, onAddBill }: HomeQuickActionsProps) {
   return (
     <div className="hidden lg:flex items-center gap-2" data-testid="quick-actions-desktop">
-      <Button variant="secondary" onClick={onAddReading}>
-        + Add Reading
-      </Button>
-      <Button variant="primary" onClick={onAddBill}>
+      <Button variant="secondary" onClick={onAddBill}>
         + Add Bill
+      </Button>
+      <Button variant="primary" onClick={onAddReading}>
+        + Add Reading
       </Button>
     </div>
   )
@@ -21,11 +21,11 @@ function HomeQuickActionsDesktop({ onAddReading, onAddBill }: HomeQuickActionsPr
 function HomeQuickActionsMobile({ onAddReading, onAddBill }: HomeQuickActionsProps) {
   return (
     <div className="flex gap-2 mb-4 lg:hidden" data-testid="quick-actions-mobile">
-      <Button variant="secondary" fullWidth onClick={onAddReading}>
-        + Add Reading
-      </Button>
-      <Button variant="primary" fullWidth onClick={onAddBill}>
+      <Button variant="secondary" fullWidth onClick={onAddBill}>
         + Add Bill
+      </Button>
+      <Button variant="primary" fullWidth onClick={onAddReading}>
+        + Add Reading
       </Button>
     </div>
   )
