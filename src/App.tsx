@@ -20,9 +20,6 @@ const UtilityDetail = lazy(() =>
 const PlatformDetail = lazy(() =>
   import('@/components/portfolio/PlatformDetail').then((m) => ({ default: m.PlatformDetail }))
 )
-const CashPlatformDetail = lazy(() =>
-  import('@/components/portfolio/CashPlatformDetail').then((m) => ({ default: m.CashPlatformDetail }))
-)
 const VehiclesOverview = lazy(() =>
   import('@/components/vehicles/VehiclesOverview').then((m) => ({ default: m.VehiclesOverview }))
 )
@@ -54,7 +51,7 @@ function App() {
             <Route path="/home/utility/:utilityId" element={<Suspense fallback={<div className="p-8 text-center text-base-400">Loading...</div>}><UtilityDetail /></Suspense>} />
             <Route path="/investment" element={<Suspense fallback={<div className="p-8 text-center text-base-400">Loading...</div>}><PortfolioOverview /></Suspense>} />
             <Route path="/investment/platform/:platformId" element={<Suspense fallback={<div className="p-8 text-center text-base-400">Loading...</div>}><PlatformDetail /></Suspense>} />
-            <Route path="/investment/cash/:platformId" element={<Suspense fallback={<div className="p-8 text-center text-base-400">Loading...</div>}><CashPlatformDetail /></Suspense>} />
+            <Route path="/investment/cash/:platformId" element={<Suspense fallback={<div className="p-8 text-center text-base-400">Loading...</div>}><PlatformDetail /></Suspense>} />
             <Route path="/vehicles" element={<Suspense fallback={<div className="p-8 text-center text-base-400">Loading...</div>}><VehiclesOverview /></Suspense>} />
             <Route path="/vehicles/:vehicleId" element={<Suspense fallback={<div className="p-8 text-center text-base-400">Loading...</div>}><VehicleDetail /></Suspense>} />
             <Route path="/settings" element={<Suspense fallback={<div className="p-8 text-center text-base-400">Loading...</div>}><Settings /></Suspense>} />

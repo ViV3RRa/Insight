@@ -3,6 +3,15 @@ import { useMobileDetailNav } from '@/components/layout/useMobileDetailNav'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { startOfYear, format } from 'date-fns'
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts'
 import * as platformService from '@/services/platforms'
 import * as dataPointService from '@/services/dataPoints'
 import * as transactionService from '@/services/transactions'
@@ -11,9 +20,11 @@ import {
   computeMonthlyEarningsForPlatform,
   computeMonthlyXIRRForPlatform,
 } from '@/utils/calculations'
-import { formatRecentUpdate, formatHumanDate } from '@/utils/formatters'
+import { formatRecentUpdate, formatHumanDate, formatCurrency } from '@/utils/formatters'
 import { PlatformIcon } from '@/components/shared/PlatformIcon'
 import { StalenessIndicator } from '@/components/shared/StalenessIndicator'
+import { StatCard } from '@/components/shared/StatCard'
+import { ChartCard } from '@/components/shared/ChartCard'
 import { Link } from 'react-router-dom'
 import { LayoutGrid, Pencil } from 'lucide-react'
 import { PlatformDetailHeader } from './PlatformDetailHeader'
@@ -35,6 +46,7 @@ import type { DataPointRow } from './PlatformDetailDataPoints'
 import type { TransactionRow } from './PlatformDetailTransactions'
 
 const EPOCH_START = new Date(2000, 0, 1)
+const BALANCE_COLOR = '#3b82f6'
 
 function PlatformDetail() {
   const { platformId } = useParams<{ platformId: string }>()
@@ -62,7 +74,7 @@ function PlatformDetail() {
     enabled: !!platformId,
   })
 
-  // Fetch all platforms for switcher — use portfolioId from the loaded platform, falling back to store
+  // Fetch all platforms for switcher
   const portfolioId = platform?.portfolioId ?? selectedPortfolioId
   const { data: allPlatforms = [] } = useQuery({
     queryKey: ['platforms', portfolioId],
@@ -84,30 +96,33 @@ function PlatformDetail() {
     enabled: !!platformId,
   })
 
-  // Computed metrics
+  const isCash = platform?.type === 'cash'
+
+  // Investment-only computed metrics (hooks must run unconditionally)
   const now = new Date()
   const ytdStart = startOfYear(now)
 
   const allTimeGainLoss = useMemo(
-    () => computePlatformGainLoss(dataPoints, transactions, EPOCH_START, now),
-    [dataPoints, transactions],
+    () => isCash ? null : computePlatformGainLoss(dataPoints, transactions, EPOCH_START, now),
+    [dataPoints, transactions, isCash],
   )
 
   const ytdGainLoss = useMemo(
-    () => computePlatformGainLoss(dataPoints, transactions, ytdStart, now),
-    [dataPoints, transactions, ytdStart],
+    () => isCash ? null : computePlatformGainLoss(dataPoints, transactions, ytdStart, now),
+    [dataPoints, transactions, ytdStart, isCash],
   )
 
   const monthEntry = useMemo(
-    () => computeMonthlyEarningsForPlatform(dataPoints, transactions, now.getFullYear(), now.getMonth() + 1),
-    [dataPoints, transactions],
+    () => isCash ? null : computeMonthlyEarningsForPlatform(dataPoints, transactions, now.getFullYear(), now.getMonth() + 1),
+    [dataPoints, transactions, isCash],
   )
   const monthEarnings = monthEntry?.earnings ?? 0
 
-  // Latest data point for staleness
+  // Latest data point for staleness (investment only)
   const latestDpDate = dataPoints.length > 0 ? dataPoints[0]!.timestamp : null
 
   const staleness = useMemo(() => {
+    if (isCash) return undefined
     if (!latestDpDate) return 'critical' as const
     const daysDiff = Math.floor(
       (Date.now() - new Date(latestDpDate).getTime()) / (1000 * 60 * 60 * 24),
@@ -115,7 +130,18 @@ function PlatformDetail() {
     if (daysDiff > 7) return 'critical' as const
     if (daysDiff > 2) return 'warning' as const
     return undefined
-  }, [latestDpDate])
+  }, [latestDpDate, isCash])
+
+  // Cash-only: balance history for chart
+  const balanceHistory = useMemo(
+    () =>
+      isCash
+        ? [...dataPoints]
+            .sort((a, b) => (a.timestamp < b.timestamp ? -1 : 1))
+            .map((dp) => ({ timestamp: dp.timestamp, value: dp.value }))
+        : [],
+    [dataPoints, isCash],
+  )
 
   // Mobile nav header + dropdown
   const updatedText = latestDpDate ? formatRecentUpdate(new Date(latestDpDate)) : undefined
@@ -260,8 +286,9 @@ function PlatformDetail() {
     [transactions, platform],
   )
 
-  // Monthly perf data for chart
+  // Investment-only: chart data
   const earningsChartData = useMemo(() => {
+    if (isCash) return []
     const months: { month: string; earnings: number }[] = []
     for (let m = 0; m < 12; m++) {
       const d = new Date(now.getFullYear(), m, 1)
@@ -270,10 +297,10 @@ function PlatformDetail() {
       months.push({ month: format(d, 'MMM yyyy'), earnings: entry?.earnings ?? 0 })
     }
     return months
-  }, [dataPoints, transactions])
+  }, [dataPoints, transactions, isCash])
 
-  // Monthly XIRR data for chart
   const xirrChartData = useMemo(() => {
+    if (isCash) return []
     const months: { month: string; xirr: number }[] = []
     for (let m = 0; m < 12; m++) {
       const d = new Date(now.getFullYear(), m, 1)
@@ -284,10 +311,11 @@ function PlatformDetail() {
       }
     }
     return months
-  }, [dataPoints, transactions])
+  }, [dataPoints, transactions, isCash])
 
-  // Yearly/monthly perf data for tabs
+  // Investment-only: yearly/monthly perf data
   const yearlyPerfData = useMemo(() => {
+    if (isCash) return []
     const currentYear = now.getFullYear()
     return [
       {
@@ -300,9 +328,10 @@ function PlatformDetail() {
         xirr: null as number | null,
       },
     ]
-  }, [allTimeGainLoss, now])
+  }, [allTimeGainLoss, isCash])
 
   const monthlyPerfData = useMemo(() => {
+    if (isCash) return []
     return earningsChartData.map((m) => ({
       period: m.month,
       startingValue: 0,
@@ -311,7 +340,7 @@ function PlatformDetail() {
       earnings: m.earnings,
       monthlyXirr: null as number | null,
     }))
-  }, [earningsChartData])
+  }, [earningsChartData, isCash])
 
   // Delete mutations
   const deleteDataPointMutation = useMutation({
@@ -345,11 +374,13 @@ function PlatformDetail() {
       <div>
         <div className="animate-pulse space-y-6">
           <div className="h-8 w-48 bg-base-200 dark:bg-base-700 rounded" />
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="h-24 bg-base-200 dark:bg-base-700 rounded-2xl" />
-            ))}
-          </div>
+          {!isCash && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="h-24 bg-base-200 dark:bg-base-700 rounded-2xl" />
+              ))}
+            </div>
+          )}
           <div className="h-64 bg-base-200 dark:bg-base-700 rounded-2xl" />
         </div>
       </div>
@@ -359,6 +390,7 @@ function PlatformDetail() {
   const showExchangeRate = platform.currency !== 'DKK'
   const currentValue = dataPoints.length > 0 ? dataPoints[0]!.value : 0
   const currentValueDkk = showExchangeRate ? undefined : undefined
+  const currency = platform.currency
 
   // Platform options for dialogs
   const platformOptions = allPlatforms.map((p) => ({
@@ -371,9 +403,8 @@ function PlatformDetail() {
 
   return (
     <div>
-      {/* Header with switcher */}
+      {/* Desktop header with switcher */}
       <div className="hidden lg:flex lg:items-center lg:justify-between gap-4 mb-8">
-        {/* Desktop switcher bar */}
         <div className="hidden lg:flex items-center gap-3">
           <button
             onClick={() => navigate('/investment')}
@@ -399,13 +430,12 @@ function PlatformDetail() {
                 {staleness && <StalenessIndicator severity={staleness} />}
               </div>
               <div className="text-xs text-base-400 mt-0.5">
-                {platform.type === 'investment' ? 'Investment' : 'Cash'} &middot; {platform.currency}{updatedText ? ` · Updated ${updatedText}` : ''}
+                {platform.type === 'investment' ? 'Investment' : 'Cash'} &middot; {currency}{updatedText ? ` · Updated ${updatedText}` : ''}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Desktop action buttons */}
         <div className="hidden lg:flex items-center gap-3">
           <Button variant="secondary" size="sm" onClick={() => setShowAddTransaction(true)}>
             + Add Transaction
@@ -426,8 +456,8 @@ function PlatformDetail() {
         </Button>
       </div>
 
-      {/* Closure info banner */}
-      {platform.status === 'closed' && platform.closedDate && (
+      {/* Investment only: Closure info banner */}
+      {!isCash && platform.status === 'closed' && platform.closedDate && (
         <div className="mb-6 lg:mb-8 px-4 py-3 bg-base-100 dark:bg-base-700/50 border border-base-200 dark:border-base-600 rounded-xl">
           <div className="text-sm text-base-600 dark:text-base-300">
             <span className="font-medium">Closed on {formatHumanDate(platform.closedDate)}</span>
@@ -438,59 +468,117 @@ function PlatformDetail() {
         </div>
       )}
 
-      {/* Stat cards */}
-      <PlatformDetailHeader
-        currency={platform.currency}
-        currentValue={currentValue}
-        currentValueDkk={currentValueDkk}
-        monthEarnings={monthEarnings}
-        allTimeGainLoss={allTimeGainLoss?.gain ?? 0}
-        allTimeGainLossPercent={allTimeGainLoss?.gainPercent ?? 0}
-        allTimeXirr={null}
-        ytdGainLoss={ytdGainLoss?.gain ?? 0}
-        ytdGainLossPercent={ytdGainLoss?.gainPercent ?? 0}
-        ytdXirr={null}
-      />
-
-      {/* Performance chart */}
-      <div className="mb-6 lg:mb-8">
-        <PlatformDetailPerfChart
-          earningsData={earningsChartData.map((m) => ({
-            month: m.month,
-            earnings: m.earnings,
-          }))}
-          xirrData={xirrChartData}
-          currency={platform.currency}
-          timeSpan={chartTimeSpan}
-          onTimeSpanChange={setChartTimeSpan}
-          yoyActive={chartYoY}
-          onYoYChange={setChartYoY}
+      {/* Stat cards: investment gets 6, cash gets 1 */}
+      {isCash ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4 mb-6 lg:mb-8">
+          <StatCard
+            label="Current Balance"
+            value={formatCurrency(currentValue, currency)}
+            variant="simple"
+          />
+        </div>
+      ) : (
+        <PlatformDetailHeader
+          currency={currency}
+          currentValue={currentValue}
+          currentValueDkk={currentValueDkk}
+          monthEarnings={monthEarnings}
+          allTimeGainLoss={allTimeGainLoss?.gain ?? 0}
+          allTimeGainLossPercent={allTimeGainLoss?.gainPercent ?? 0}
+          allTimeXirr={null}
+          ytdGainLoss={ytdGainLoss?.gain ?? 0}
+          ytdGainLossPercent={ytdGainLoss?.gainPercent ?? 0}
+          ytdXirr={null}
         />
-      </div>
+      )}
 
-      {/* Performance tabs */}
-      <div className="mb-6 lg:mb-8">
-        <PlatformDetailPerfTabs
-          yearlyData={yearlyPerfData}
-          monthlyData={monthlyPerfData}
-          yearlyTotals={{
-            period: 'All Time',
-            startingValue: allTimeGainLoss?.startingValue ?? 0,
-            endingValue: allTimeGainLoss?.endingValue ?? 0,
-            netDeposits: allTimeGainLoss ? allTimeGainLoss.deposits - allTimeGainLoss.withdrawals : 0,
-            earnings: allTimeGainLoss?.gain ?? 0,
-            earningsPercent: allTimeGainLoss?.gainPercent ?? 0,
-            xirr: null,
-          }}
-          currency={platform.currency}
-        />
-      </div>
+      {/* Charts: investment gets perf chart + tabs, cash gets balance history */}
+      {isCash ? (
+        <div className="mb-6 lg:mb-8">
+          <ChartCard
+            title="Balance History"
+            timeSpan={chartTimeSpan}
+            onTimeSpanChange={setChartTimeSpan}
+            hideYoY
+          >
+            {balanceHistory.length === 0 ? (
+              <div className="flex items-center justify-center h-56 text-base-400 dark:text-base-500 text-sm">
+                No data available
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height={224}>
+                <AreaChart data={balanceHistory}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-base-200 dark:stroke-base-700" />
+                  <XAxis dataKey="timestamp" tick={{ fontSize: 11 }} className="text-base-400" />
+                  <YAxis
+                    tick={{ fontSize: 11 }}
+                    className="text-base-400"
+                    tickFormatter={(value: number) => formatCurrency(value, currency)}
+                  />
+                  <Tooltip
+                    formatter={(value: number) => formatCurrency(value, currency)}
+                    contentStyle={{
+                      backgroundColor: 'var(--color-base-800, #1f2937)',
+                      border: 'none',
+                      borderRadius: '0.5rem',
+                      color: '#fff',
+                      fontSize: '0.75rem',
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="value"
+                    stroke={BALANCE_COLOR}
+                    fill={BALANCE_COLOR}
+                    fillOpacity={0.15}
+                    strokeWidth={2}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            )}
+          </ChartCard>
+        </div>
+      ) : (
+        <>
+          <div className="mb-6 lg:mb-8">
+            <PlatformDetailPerfChart
+              earningsData={earningsChartData.map((m) => ({
+                month: m.month,
+                earnings: m.earnings,
+              }))}
+              xirrData={xirrChartData}
+              currency={currency}
+              timeSpan={chartTimeSpan}
+              onTimeSpanChange={setChartTimeSpan}
+              yoyActive={chartYoY}
+              onYoYChange={setChartYoY}
+            />
+          </div>
+
+          <div className="mb-6 lg:mb-8">
+            <PlatformDetailPerfTabs
+              yearlyData={yearlyPerfData}
+              monthlyData={monthlyPerfData}
+              yearlyTotals={{
+                period: 'All Time',
+                startingValue: allTimeGainLoss?.startingValue ?? 0,
+                endingValue: allTimeGainLoss?.endingValue ?? 0,
+                netDeposits: allTimeGainLoss ? allTimeGainLoss.deposits - allTimeGainLoss.withdrawals : 0,
+                earnings: allTimeGainLoss?.gain ?? 0,
+                earningsPercent: allTimeGainLoss?.gainPercent ?? 0,
+                xirr: null,
+              }}
+              currency={currency}
+            />
+          </div>
+        </>
+      )}
 
       {/* Transactions table */}
       <div className="mb-6 lg:mb-8" data-testid="transactions-section">
         <PlatformDetailTransactions
           transactions={transactionRows}
-          currency={platform.currency}
+          currency={currency}
           showExchangeRate={showExchangeRate}
           onEdit={(row) => {
             const tx = transactions.find((t) => t.id === row.id)
@@ -508,7 +596,7 @@ function PlatformDetail() {
       <div data-testid="datapoints-section">
         <PlatformDetailDataPoints
           dataPoints={dataPointRows}
-          currency={platform.currency}
+          currency={currency}
           onEdit={(row) => {
             const dp = dataPoints.find((d) => d.id === row.id)
             if (dp) setEditDataPoint(dp)
