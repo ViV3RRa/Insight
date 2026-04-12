@@ -22,6 +22,7 @@ const mockGetUrl = vi.fn()
 
 vi.mock('./pb', () => ({
   default: {
+    baseUrl: 'http://localhost:8090',
     authStore: {
       model: { id: 'user_001' },
     },
@@ -36,6 +37,8 @@ vi.mock('./pb', () => ({
       getUrl: (...args: unknown[]) => mockGetUrl(...args),
     },
   },
+  getFileUrl: (collection: string, recordId: string, filename: string) =>
+    `http://localhost:8090/api/files/${collection}/${recordId}/${filename}`,
 }))
 
 describe('vehicles service', () => {
@@ -363,20 +366,16 @@ describe('vehicles service', () => {
   describe('getVehiclePhotoUrl', () => {
     it('returns the file URL when photo exists', () => {
       const vehicle = buildVehicle({ photo: 'car.jpg' })
-      mockGetUrl.mockReturnValueOnce('http://localhost:8090/api/files/vehicles/abc/car.jpg')
 
       const url = getVehiclePhotoUrl(vehicle)
 
-      expect(mockGetUrl).toHaveBeenCalledWith(vehicle, 'car.jpg')
-      expect(url).toBe('http://localhost:8090/api/files/vehicles/abc/car.jpg')
+      expect(url).toBe(`http://localhost:8090/api/files/vehicles/${vehicle.id}/car.jpg`)
     })
 
     it('returns null when photo is null', () => {
       const vehicle = buildVehicle({ photo: null })
 
       const url = getVehiclePhotoUrl(vehicle)
-
-      expect(mockGetUrl).not.toHaveBeenCalled()
       expect(url).toBeNull()
     })
   })

@@ -37,17 +37,26 @@ export function PWAInstallPrompt() {
     window.addEventListener('beforeinstallprompt', handler)
 
     // Hide on successful install
-    window.addEventListener('appinstalled', () => setShowPrompt(false))
+    const appInstalledHandler = () => setShowPrompt(false)
+    window.addEventListener('appinstalled', appInstalledHandler)
 
-    return () => window.removeEventListener('beforeinstallprompt', handler)
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler)
+      window.removeEventListener('appinstalled', appInstalledHandler)
+    }
   }, [])
 
   const handleInstall = async () => {
     if (deferredPrompt) {
-      await deferredPrompt.prompt()
-      const { outcome } = await deferredPrompt.userChoice
-      if (outcome === 'accepted') setShowPrompt(false)
-      setDeferredPrompt(null)
+      try {
+        await deferredPrompt.prompt()
+        const { outcome } = await deferredPrompt.userChoice
+        if (outcome === 'accepted') setShowPrompt(false)
+      } catch (error) {
+        console.warn('PWA install prompt failed:', error)
+      } finally {
+        setDeferredPrompt(null)
+      }
     }
   }
 

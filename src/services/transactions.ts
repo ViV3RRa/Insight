@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import pb from './pb'
+import pb, { getFileUrl } from './pb'
 import {
   transactionSchema,
   type Transaction,
@@ -170,5 +170,5 @@ export async function getByPortfolioInRange(
 
 export function getAttachmentUrl(transaction: Transaction): string | null {
   if (!transaction.attachment) return null
-  return `${pb.baseUrl}/api/files/transactions/${transaction.id}/${transaction.attachment}`
+  return getFileUrl('transactions', transaction.id, transaction.attachment)
 }

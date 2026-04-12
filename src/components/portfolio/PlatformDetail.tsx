@@ -21,6 +21,7 @@ import {
   computeMonthlyXIRRForPlatform,
 } from '@/utils/calculations'
 import { formatRecentUpdate, formatHumanDate, formatCurrency } from '@/utils/formatters'
+import { getDaysStaleness } from '@/utils/staleness'
 import { PlatformIcon } from '@/components/shared/PlatformIcon'
 import { StalenessIndicator } from '@/components/shared/StalenessIndicator'
 import { StatCard } from '@/components/shared/StatCard'
@@ -121,16 +122,7 @@ function PlatformDetail() {
   // Latest data point for staleness (investment only)
   const latestDpDate = dataPoints.length > 0 ? dataPoints[0]!.timestamp : null
 
-  const staleness = useMemo(() => {
-    if (isCash) return undefined
-    if (!latestDpDate) return 'critical' as const
-    const daysDiff = Math.floor(
-      (Date.now() - new Date(latestDpDate).getTime()) / (1000 * 60 * 60 * 24),
-    )
-    if (daysDiff > 7) return 'critical' as const
-    if (daysDiff > 2) return 'warning' as const
-    return undefined
-  }, [latestDpDate, isCash])
+  const staleness = isCash ? null : getDaysStaleness(latestDpDate)
 
   // Cash-only: balance history for chart
   const balanceHistory = useMemo(

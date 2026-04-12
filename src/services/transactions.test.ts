@@ -25,6 +25,7 @@ const mockGetUrl = vi.fn()
 
 vi.mock('./pb', () => ({
   default: {
+    baseUrl: 'http://localhost:8090',
     authStore: {
       model: { id: 'user_001' },
     },
@@ -40,6 +41,8 @@ vi.mock('./pb', () => ({
       getUrl: (...args: unknown[]) => mockGetUrl(...args),
     },
   },
+  getFileUrl: (collection: string, recordId: string, filename: string) =>
+    `http://localhost:8090/api/files/${collection}/${recordId}/${filename}`,
 }))
 
 const PLATFORM_ID = 'plat_001'
@@ -466,12 +469,10 @@ describe('transactions service', () => {
       const t = buildTransaction({
         attachment: 'receipt.pdf',
       }) as Transaction
-      mockGetUrl.mockReturnValueOnce('http://localhost:8090/api/files/transactions/123/receipt.pdf')
 
       const result = getAttachmentUrl(t)
 
-      expect(mockGetUrl).toHaveBeenCalledWith(t, 'receipt.pdf')
-      expect(result).toBe('http://localhost:8090/api/files/transactions/123/receipt.pdf')
+      expect(result).toBe(`http://localhost:8090/api/files/transactions/${t.id}/receipt.pdf`)
     })
 
     it('returns null when no attachment', () => {
@@ -479,7 +480,6 @@ describe('transactions service', () => {
 
       const result = getAttachmentUrl(t)
 
-      expect(mockGetUrl).not.toHaveBeenCalled()
       expect(result).toBeNull()
     })
   })

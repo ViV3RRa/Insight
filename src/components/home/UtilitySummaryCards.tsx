@@ -1,26 +1,16 @@
 import { Link } from 'react-router-dom'
 import { ChevronRight } from 'lucide-react'
-import { differenceInDays } from 'date-fns'
 import { UtilityIcon } from '@/components/shared/UtilityIcon'
 import { ChangeIndicator } from '@/components/shared/ChangeIndicator'
 import { StalenessIndicator } from '@/components/shared/StalenessIndicator'
 import { formatNumber, formatRecentUpdate } from '@/utils/formatters'
+import { getDaysStaleness } from '@/utils/staleness'
 import type { Utility, UtilityMetrics } from '@/types/home'
 
 export interface UtilitySummaryCardsProps {
   utilities: Utility[]
   metricsMap: Map<string, UtilityMetrics>
   latestReadingDates: Map<string, Date | null>
-}
-
-function getStaleness(
-  latestDate: Date | null | undefined,
-): 'warning' | 'critical' | null {
-  if (latestDate === null || latestDate === undefined) return 'critical'
-  const days = differenceInDays(new Date(), latestDate)
-  if (days > 7) return 'critical'
-  if (days > 2) return 'warning'
-  return null
 }
 
 function getConsumptionChange(metrics: UtilityMetrics): number | null {
@@ -42,7 +32,7 @@ export function UtilitySummaryCards({
       {utilities.map((utility) => {
         const metrics = metricsMap.get(utility.id)
         const latestDate = latestReadingDates.get(utility.id)
-        const staleness = getStaleness(latestDate)
+        const staleness = getDaysStaleness(latestDate)
         const consumptionChange = metrics ? getConsumptionChange(metrics) : null
 
         const consumption = metrics?.currentMonthConsumption

@@ -33,6 +33,8 @@ export function PWAUpdatePrompt() {
             setShowUpdatePrompt(true)
           }
         }
+      }).catch((error) => {
+        console.warn('Failed to get service worker registration:', error)
       })
     }
   }, [])
@@ -48,7 +50,8 @@ export function PWAUpdatePrompt() {
       } else {
         window.location.reload()
       }
-    } catch {
+    } catch (error) {
+      console.warn('Service worker update failed:', error)
       setIsUpdating(false)
     }
   }

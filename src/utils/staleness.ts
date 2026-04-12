@@ -1,4 +1,4 @@
-import { parseISO, getMonth, getYear, getDate } from 'date-fns'
+import { differenceInDays, parseISO, getMonth, getYear, getDate } from 'date-fns'
 
 export type StalenessLevel = 'none' | 'warning' | 'critical'
 
@@ -29,4 +29,19 @@ export function getStalenessLevel(
   if (dayOfMonth > 7) return 'critical'
   if (dayOfMonth > 2) return 'warning'
   return 'none'
+}
+
+/**
+ * Simple days-since-last-entry staleness check.
+ * Returns 'critical' if >7 days (or no date), 'warning' if >2 days, null if fresh.
+ */
+export function getDaysStaleness(
+  lastEntryDate: Date | string | null | undefined,
+): 'critical' | 'warning' | null {
+  if (lastEntryDate == null) return 'critical'
+  const date = typeof lastEntryDate === 'string' ? new Date(lastEntryDate) : lastEntryDate
+  const days = differenceInDays(new Date(), date)
+  if (days > 7) return 'critical'
+  if (days > 2) return 'warning'
+  return null
 }

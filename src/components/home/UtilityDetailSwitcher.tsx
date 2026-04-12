@@ -2,6 +2,7 @@ import { UtilityIcon } from '@/components/shared/UtilityIcon'
 import { DropdownSwitcher } from '@/components/shared/DropdownSwitcher'
 import { StalenessIndicator } from '@/components/shared/StalenessIndicator'
 import { formatRecentUpdate } from '@/utils/formatters'
+import { getDaysStaleness } from '@/utils/staleness'
 import type { Utility, UtilityMetrics } from '@/types/home'
 
 interface UtilityDetailSwitcherProps {
@@ -13,23 +14,13 @@ interface UtilityDetailSwitcherProps {
   onEditUtility: () => void
 }
 
-function getStaleness(latestReadingDate: Date | null): 'critical' | 'warning' | null {
-  if (!latestReadingDate) return 'critical'
-  const daysDiff = Math.floor(
-    (Date.now() - latestReadingDate.getTime()) / (1000 * 60 * 60 * 24),
-  )
-  if (daysDiff > 7) return 'critical'
-  if (daysDiff > 2) return 'warning'
-  return null
-}
-
 function UtilityDetailSwitcher({
   utility,
   allUtilities,
   latestReadingDates,
   onSelectUtility,
 }: UtilityDetailSwitcherProps) {
-  const staleness = getStaleness(latestReadingDates.get(utility.id) ?? null)
+  const staleness = getDaysStaleness(latestReadingDates.get(utility.id) ?? null)
   const latestDate = latestReadingDates.get(utility.id)
   const updatedText = latestDate ? formatRecentUpdate(latestDate) : '\u2014'
 

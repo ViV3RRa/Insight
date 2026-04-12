@@ -166,7 +166,7 @@ async function getRateInternal(
     rateCache.set(cacheKey, result.rate)
     return result.rate
   }
-  rateCache.set(cacheKey, null)
+  // Don't cache null — allows retry on next request after transient API failures
   return null
 }
 
@@ -180,20 +180,20 @@ export async function fetchRate(
       `https://api.frankfurter.dev/v1/${date}?from=${fromCurrency}&to=DKK`,
     )
     if (!response.ok) {
-      console.warn(`Failed to fetch exchange rate: ${response.status}`)
+      console.warn(`Failed to fetch exchange rate for ${fromCurrency}/DKK on ${date}: HTTP ${response.status}`)
       return null
     }
 
     const data = await response.json()
     const rate = data.rates?.DKK
     if (typeof rate !== 'number') {
-      console.warn('Unexpected exchange rate response format')
+      console.warn(`Unexpected exchange rate response format for ${fromCurrency}/DKK on ${date}:`, data)
       return null
     }
 
     return { rate, date: data.date ?? date }
   } catch (error) {
-    console.warn('Exchange rate fetch failed:', error)
+    console.warn(`Exchange rate fetch failed for ${fromCurrency}/DKK on ${date}:`, error)
     return null
   }
 }
@@ -204,8 +204,7 @@ async function storeRate(
   rate: number,
   date: string,
 ): Promise<boolean> {
-  const userId = pb.authStore.model?.id
-  if (!userId) return false
+  const userId = getUserId()
 
   // Check existence using getList (avoids SDK throwing on empty results)
   const existing = await pb.collection(COLLECTION).getList(1, 1, {
@@ -224,7 +223,12 @@ async function storeRate(
       ownerId: userId,
     })
     return true
-  } catch {
+  } catch (error: unknown) {
+    // Race condition: another concurrent request stored this rate first
+    if (error != null && typeof error === 'object' && 'status' in error && (error as { status: number }).status === 400) {
+      return false
+    }
+    console.warn(`Failed to store exchange rate ${fromCurrency}/DKK on ${date}:`, error)
     return false
   }
 }

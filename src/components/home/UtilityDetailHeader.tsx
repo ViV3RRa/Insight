@@ -8,6 +8,7 @@ import { DropdownSwitcher } from '@/components/shared/DropdownSwitcher'
 import { StalenessIndicator } from '@/components/shared/StalenessIndicator'
 import { useMobileDetailNav } from '@/components/layout/useMobileDetailNav'
 import { formatNumber, formatRecentUpdate } from '@/utils/formatters'
+import { getDaysStaleness } from '@/utils/staleness'
 import type { Utility, UtilityMetrics } from '@/types/home'
 
 interface UtilityDetailHeaderProps {
@@ -21,16 +22,6 @@ interface UtilityDetailHeaderProps {
   onEdit: (utilityId: string) => void
 }
 
-function getStaleness(latestReadingDate: Date | null): 'critical' | 'warning' | null {
-  if (!latestReadingDate) return 'critical'
-  const daysDiff = Math.floor(
-    (Date.now() - latestReadingDate.getTime()) / (1000 * 60 * 60 * 24),
-  )
-  if (daysDiff > 7) return 'critical'
-  if (daysDiff > 2) return 'warning'
-  return null
-}
-
 function UtilityDetailHeader({
   utility,
   allUtilities,
@@ -42,7 +33,7 @@ function UtilityDetailHeader({
   onEdit,
 }: UtilityDetailHeaderProps) {
   const navigate = useNavigate()
-  const staleness = getStaleness(latestReadingDate)
+  const staleness = getDaysStaleness(latestReadingDate)
 
   const dropdownItems = allUtilities.map((u) => ({
     id: u.id,

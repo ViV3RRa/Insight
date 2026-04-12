@@ -25,6 +25,7 @@ const mockGetUrl = vi.fn()
 
 vi.mock('./pb', () => ({
   default: {
+    baseUrl: 'http://localhost:8090',
     authStore: {
       model: { id: 'user_001' },
     },
@@ -39,6 +40,8 @@ vi.mock('./pb', () => ({
       getUrl: (...args: unknown[]) => mockGetUrl(...args),
     },
   },
+  getFileUrl: (collection: string, recordId: string, filename: string) =>
+    `http://localhost:8090/api/files/${collection}/${recordId}/${filename}`,
 }))
 
 const portfolioId = 'portfolio_001'
@@ -384,12 +387,10 @@ describe('platforms service', () => {
   describe('getPlatformIconUrl', () => {
     it('returns the file URL for the platform icon', () => {
       const platform = buildPlatform({ icon: 'nordnet.png' })
-      mockGetUrl.mockReturnValueOnce('http://localhost:8090/api/files/platforms/abc/nordnet.png')
 
       const url = getPlatformIconUrl(platform)
 
-      expect(mockGetUrl).toHaveBeenCalledWith(platform, 'nordnet.png')
-      expect(url).toBe('http://localhost:8090/api/files/platforms/abc/nordnet.png')
+      expect(url).toBe(`http://localhost:8090/api/files/platforms/${platform.id}/nordnet.png`)
     })
   })
 })

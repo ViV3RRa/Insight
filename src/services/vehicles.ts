@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import pb from './pb'
+import pb, { getFileUrl } from './pb'
 import { vehicleSchema, type Vehicle, type VehicleCreate } from '@/types/vehicles'
 
 const COLLECTION = 'vehicles'
@@ -108,8 +108,7 @@ export async function reactivateVehicle(id: string): Promise<Vehicle> {
 
 export function getVehiclePhotoUrl(vehicle: Vehicle): string | null {
   if (!vehicle.photo) return null
-  // Construct URL manually because Zod-parsed records lack collectionId
-  return `${pb.baseUrl}/api/files/${COLLECTION}/${vehicle.id}/${vehicle.photo}`
+  return getFileUrl(COLLECTION, vehicle.id, vehicle.photo)
 }
 
 export async function getActiveVehicles(): Promise<Vehicle[]> {

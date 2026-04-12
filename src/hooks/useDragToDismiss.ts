@@ -43,7 +43,11 @@ export function useDragToDismiss({
     function onPointerDown(e: PointerEvent) {
       startY.current = e.clientY
       dragging.current = true
-      handle!.setPointerCapture(e.pointerId)
+      try {
+        handle!.setPointerCapture(e.pointerId)
+      } catch {
+        // Pointer may have already been released on some mobile browsers
+      }
       panel!.style.transition = 'none'
     }
 
