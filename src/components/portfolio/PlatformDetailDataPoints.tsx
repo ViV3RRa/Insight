@@ -1,10 +1,12 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Database } from 'lucide-react'
 import { DataTable, type ColumnDef } from '@/components/shared/DataTable'
 import { CurrencyDisplay } from '@/components/shared/CurrencyDisplay'
 import { Button } from '@/components/shared/Button'
 import { EmptyState } from '@/components/shared/EmptyState'
+import { MobileDrawer } from '@/components/shared/MobileDrawer'
 import { SkeletonTableRows } from '@/components/shared/Skeleton'
+import { formatCurrency, formatRecordDate } from '@/utils/formatters'
 
 interface DataPointRow {
   id: string
@@ -21,7 +23,6 @@ interface PlatformDetailDataPointsProps {
   currency: string
   onEdit?: (row: DataPointRow) => void
   onDelete?: (row: DataPointRow) => void
-  onRowClick?: (row: DataPointRow) => void
   onAdd?: () => void
   isLoading?: boolean
 }
@@ -47,6 +48,7 @@ const columns: Array<ColumnDef<DataPointRow>> = [
     key: 'date',
     label: 'Date',
     align: 'left',
+    format: (_value: unknown, row: DataPointRow) => formatRecordDate(row.date, 'MMM d, yyyy'),
   },
   {
     key: 'value',
@@ -82,14 +84,28 @@ function PlatformDetailDataPoints({
   currency: _currency,
   onEdit,
   onDelete,
-  onRowClick,
   onAdd,
   isLoading = false,
 }: PlatformDetailDataPointsProps) {
+  const [selectedRow, setSelectedRow] = useState<DataPointRow | null>(null)
+
   const sortedDataPoints = useMemo(
     () => [...dataPoints].sort((a, b) => (a.date > b.date ? -1 : a.date < b.date ? 1 : 0)),
     [dataPoints],
   )
+
+  const selectedIndex = selectedRow
+    ? sortedDataPoints.findIndex((dp) => dp.id === selectedRow.id)
+    : -1
+
+  const drawerFields = selectedRow
+    ? [
+        { label: 'Date', value: formatRecordDate(selectedRow.date, 'MMM d, yyyy HH:mm') },
+        { label: 'Value', value: formatCurrency(selectedRow.value, selectedRow.currency) },
+        { label: 'Source', value: selectedRow.isInterpolated ? 'Estimated' : 'Manual' },
+        { label: 'Note', value: selectedRow.note ?? '—' },
+      ]
+    : []
 
   return (
     <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden mb-6 lg:mb-8">
@@ -103,7 +119,7 @@ function PlatformDetailDataPoints({
             </span>
           </div>
           {onAdd && (
-            <Button variant="ghost" size="sm" onClick={onAdd}>
+            <Button variant="primary" size="sm" onClick={onAdd}>
               + Add Data Point
             </Button>
           )}
@@ -125,10 +141,23 @@ function PlatformDetailDataPoints({
           showMoreThreshold={5}
           onEdit={onEdit}
           onDelete={onDelete}
-          onRowClick={onRowClick}
+          onRowClick={(row) => setSelectedRow(row)}
           keyExtractor={(row) => row.id}
         />
       )}
+
+      <MobileDrawer
+        isOpen={selectedRow !== null}
+        onClose={() => setSelectedRow(null)}
+        title="Data Point"
+        fields={drawerFields}
+        onEdit={onEdit ? () => { onEdit(selectedRow!); setSelectedRow(null) } : undefined}
+        onDelete={onDelete ? () => { onDelete(selectedRow!); setSelectedRow(null) } : undefined}
+        onPrev={selectedIndex > 0 ? () => setSelectedRow(sortedDataPoints[selectedIndex - 1]!) : undefined}
+        onNext={selectedIndex < sortedDataPoints.length - 1 ? () => setSelectedRow(sortedDataPoints[selectedIndex + 1]!) : undefined}
+        hasPrev={selectedIndex > 0}
+        hasNext={selectedIndex < sortedDataPoints.length - 1}
+      />
     </div>
   )
 }

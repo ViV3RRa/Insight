@@ -566,8 +566,25 @@ function PlatformDetail() {
         </>
       )}
 
+      {/* Data points table */}
+      <div className="mb-6 lg:mb-8" data-testid="datapoints-section">
+        <PlatformDetailDataPoints
+          dataPoints={dataPointRows}
+          currency={currency}
+          onEdit={(row) => {
+            const dp = dataPoints.find((d) => d.id === row.id)
+            if (dp) setEditDataPoint(dp)
+          }}
+          onDelete={(row) => {
+            const dp = dataPoints.find((d) => d.id === row.id)
+            if (dp) setDeleteDataPoint(dp)
+          }}
+          onAdd={() => setShowAddDataPoint(true)}
+        />
+      </div>
+
       {/* Transactions table */}
-      <div className="mb-6 lg:mb-8" data-testid="transactions-section">
+      <div data-testid="transactions-section">
         <PlatformDetailTransactions
           transactions={transactionRows}
           currency={currency}
@@ -581,23 +598,6 @@ function PlatformDetail() {
             if (tx) setDeleteTransaction(tx)
           }}
           onAdd={() => setShowAddTransaction(true)}
-        />
-      </div>
-
-      {/* Data points table */}
-      <div data-testid="datapoints-section">
-        <PlatformDetailDataPoints
-          dataPoints={dataPointRows}
-          currency={currency}
-          onEdit={(row) => {
-            const dp = dataPoints.find((d) => d.id === row.id)
-            if (dp) setEditDataPoint(dp)
-          }}
-          onDelete={(row) => {
-            const dp = dataPoints.find((d) => d.id === row.id)
-            if (dp) setDeleteDataPoint(dp)
-          }}
-          onAdd={() => setShowAddDataPoint(true)}
         />
       </div>
 

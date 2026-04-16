@@ -35,9 +35,9 @@ describe('VehicleMaintenanceTable', () => {
     onAdd: vi.fn(),
   }
 
-  it('renders CollapsibleSection with "Maintenance Log" title', () => {
+  it('renders CollapsibleSection with "Maintenance" title', () => {
     renderWithProviders(<VehicleMaintenanceTable {...defaultProps} />)
-    expect(screen.getByText('Maintenance Log')).toBeInTheDocument()
+    expect(screen.getByText('Maintenance')).toBeInTheDocument()
   })
 
   it('shows event count badge', () => {

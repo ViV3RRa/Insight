@@ -1,3 +1,4 @@
+import { useState, type ReactNode } from 'react'
 import { formatNumber, formatPercent } from '@/utils/formatters'
 
 interface ProportionalBarSegment {
@@ -6,6 +7,7 @@ interface ProportionalBarSegment {
   formattedValue?: string
   color: string
   isCash?: boolean
+  icon?: ReactNode
 }
 
 interface ProportionalBarProps {
@@ -57,6 +59,8 @@ export function ProportionalBar({
   segments,
   showLegend = true,
 }: ProportionalBarProps) {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+
   if (segments.length === 0) return null
 
   const total = segments.reduce((sum, s) => sum + s.value, 0)
@@ -68,10 +72,11 @@ export function ProportionalBar({
         {segments.map((segment, index) => (
           <div
             key={segment.label}
-            className="h-full transition-all duration-300"
+            className="h-full transition-all duration-200"
             style={{
               width: `${widths[index]}%`,
               backgroundColor: segment.color,
+              opacity: hoveredIndex != null && hoveredIndex !== index ? 0.3 : 1,
               ...(segment.isCash
                 ? {
                     backgroundImage:
@@ -85,24 +90,27 @@ export function ProportionalBar({
 
       {showLegend && (
         <div className="space-y-2.5 mt-5">
-          {segments.map((segment) => {
+          {segments.map((segment, index) => {
             const percentage = total > 0 ? (segment.value / total) * 100 : 0
 
             return (
               <div
                 key={segment.label}
-                className="flex items-center justify-between"
+                className="flex items-center justify-between rounded-lg px-1 -mx-1 py-0.5 transition-colors duration-150 hover:bg-base-50 dark:hover:bg-base-700/50 cursor-default"
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
               >
                 <div className="flex items-center gap-2">
-                  <div
-                    className="w-2.5 h-2.5 rounded-sm"
-                    style={{ backgroundColor: segment.color }}
-                  />
+                  {segment.icon}
                   <span
                     className={`text-sm ${segment.isCash ? 'text-base-500 dark:text-base-400' : ''}`}
                   >
                     {segment.label}
                   </span>
+                  <div
+                    className="w-2.5 h-2.5 rounded-sm"
+                    style={{ backgroundColor: segment.color }}
+                  />
                   {segment.isCash && (
                     <span className="text-xs text-base-300 dark:text-base-500 bg-base-100 dark:bg-base-700 px-1.5 py-0.5 rounded">
                       Cash

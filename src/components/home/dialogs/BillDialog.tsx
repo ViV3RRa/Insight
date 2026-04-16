@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Dialog } from '@/components/shared/Dialog'
 import { FormField } from '@/components/shared/FormField'
 import { FileUpload } from '@/components/shared/FileUpload'
+import { DateTimeInput } from '@/components/shared/DateTimeInput'
 import * as utilityBillService from '@/services/utilityBills'
 import type { UtilityBill, Utility } from '@/types/home'
 import { format } from 'date-fns'
@@ -227,12 +228,10 @@ function BillDialog({ isOpen, onClose, bill, utilityId, utilities }: BillDialogP
 
       {/* Date received */}
       <FormField label="Date Received" htmlFor="bill-timestamp">
-        <input
+        <DateTimeInput
           id="bill-timestamp"
-          type="datetime-local"
           value={timestamp}
-          onChange={(e) => setTimestamp(e.target.value)}
-          className={inputClass}
+          onChange={(v) => setTimestamp(v)}
         />
       </FormField>
 

@@ -51,9 +51,9 @@ function renderTable(overrides?: { refuelings?: Refueling[]; fuelType?: FuelType
 }
 
 describe('VehicleRefuelingTable', () => {
-  it('renders CollapsibleSection with "Refueling Log" title', () => {
+  it('renders CollapsibleSection with "Refueling" title', () => {
     renderTable()
-    expect(screen.getByText('Refueling Log')).toBeInTheDocument()
+    expect(screen.getByText('Refueling')).toBeInTheDocument()
   })
 
   it('shows refueling count badge', () => {

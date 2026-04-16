@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { PieChart } from 'lucide-react'
 import { ProportionalBar } from '@/components/shared/ProportionalBar'
 import { EmptyState } from '@/components/shared/EmptyState'
@@ -9,6 +10,7 @@ interface AllocationSegment {
   formattedValue: string
   color: string
   isCash: boolean
+  icon?: ReactNode
 }
 
 interface PortfolioOverviewAllocationProps {

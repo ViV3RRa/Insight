@@ -4,6 +4,7 @@ import { Dialog } from '@/components/shared/Dialog'
 import { FormField } from '@/components/shared/FormField'
 import { TextInput, NumberInput, SelectInput } from '@/components/shared/inputs'
 import { FileUpload } from '@/components/shared/FileUpload'
+import { DateTimeInput } from '@/components/shared/DateTimeInput'
 import * as refuelingService from '@/services/refuelings'
 import type { Refueling, Vehicle, FuelType } from '@/types/vehicles'
 
@@ -16,12 +17,17 @@ interface RefuelingDialogProps {
   vehicleFuelType?: FuelType
 }
 
-function getTodayDate(): string {
-  const d = new Date()
+function formatDatetimeLocal(d: Date): string {
   const y = d.getFullYear()
   const m = String(d.getMonth() + 1).padStart(2, '0')
   const day = String(d.getDate()).padStart(2, '0')
-  return `${y}-${m}-${day}`
+  const h = String(d.getHours()).padStart(2, '0')
+  const min = String(d.getMinutes()).padStart(2, '0')
+  return `${y}-${m}-${day}T${h}:${min}`
+}
+
+function getNowDatetimeLocal(): string {
+  return formatDatetimeLocal(new Date())
 }
 
 interface FormErrors {
@@ -73,7 +79,7 @@ function RefuelingDialog({
     if (isOpen) {
       if (refueling) {
         setSelectedVehicleId(refueling.vehicleId)
-        setDate(refueling.date)
+        setDate(formatDatetimeLocal(new Date(refueling.date)))
         setFuelAmount(String(refueling.fuelAmount))
         setCostPerUnit(String(refueling.costPerUnit))
         setTotalCost(String(refueling.totalCost))
@@ -88,7 +94,7 @@ function RefuelingDialog({
         )
       } else {
         setSelectedVehicleId(vehicleId ?? '')
-        setDate(getTodayDate())
+        setDate(getNowDatetimeLocal())
         setFuelAmount('')
         setCostPerUnit('')
         setTotalCost('')
@@ -144,7 +150,7 @@ function RefuelingDialog({
   const buildFormData = (): FormData => {
     const formData = new FormData()
     formData.set('vehicleId', effectiveVehicleId)
-    formData.set('date', date)
+    formData.set('date', new Date(date).toISOString())
     formData.set('fuelAmount', fuelAmount)
     formData.set('costPerUnit', costPerUnit)
     formData.set('totalCost', totalCost)
@@ -188,7 +194,7 @@ function RefuelingDialog({
     }
     mutation.mutate(buildFormData(), {
       onSuccess: () => {
-        setDate(getTodayDate())
+        setDate(getNowDatetimeLocal())
         setFuelAmount('')
         setCostPerUnit('')
         setTotalCost('')
@@ -237,17 +243,15 @@ function RefuelingDialog({
         </FormField>
       )}
 
-      {/* Date */}
-      <FormField label="Date" required error={errors.date} htmlFor="refueling-date">
-        <input
+      {/* Date & Time */}
+      <FormField label="Date & Time" required error={errors.date} htmlFor="refueling-date">
+        <DateTimeInput
           id="refueling-date"
-          type="date"
           value={date}
-          onChange={(e) => {
-            setDate(e.target.value)
+          onChange={(v) => {
+            setDate(v)
             if (errors.date) setErrors((prev) => ({ ...prev, date: undefined }))
           }}
-          className="w-full px-3 py-2.5 border rounded-lg bg-white dark:bg-base-900 text-sm text-base-900 dark:text-white border-base-200 dark:border-base-600 focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 dark:focus:ring-accent-400/30 dark:focus:border-accent-400 outline-none transition-colors duration-150"
         />
       </FormField>
 

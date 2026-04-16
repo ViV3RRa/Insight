@@ -144,7 +144,7 @@ function UtilityBillsTable({
         {
           label: 'Date received',
           value: selectedBill.timestamp
-            ? formatRecordDate(selectedBill.timestamp, 'MMM d, yyyy')
+            ? formatRecordDate(selectedBill.timestamp, 'MMM d, yyyy HH:mm')
             : '—',
         },
         {
@@ -169,7 +169,7 @@ function UtilityBillsTable({
                 0
               </span>
             </div>
-            <Button variant="primary" size="sm" onClick={onAddBill}>
+            <Button variant="secondary" size="sm" onClick={onAddBill}>
               + Add Bill
             </Button>
           </div>
@@ -191,7 +191,7 @@ function UtilityBillsTable({
               {bills.length}
             </span>
           </div>
-          <Button variant="primary" size="sm" onClick={onAddBill}>
+          <Button variant="secondary" size="sm" onClick={onAddBill}>
             + Add Bill
           </Button>
         </div>

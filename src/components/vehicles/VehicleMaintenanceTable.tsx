@@ -1,7 +1,9 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Wrench } from 'lucide-react'
 import { DataTable, type ColumnDef } from '@/components/shared/DataTable'
-import { formatHumanDate, formatNumber } from '@/utils/formatters'
+import { Button } from '@/components/shared/Button'
+import { MobileDrawer } from '@/components/shared/MobileDrawer'
+import { formatHumanDate, formatNumber, formatRecordDate } from '@/utils/formatters'
 import type { MaintenanceEvent } from '@/types/vehicles'
 
 interface VehicleMaintenanceTableProps {
@@ -45,10 +47,25 @@ const columns: Array<ColumnDef<MaintenanceEvent>> = [
 ]
 
 function VehicleMaintenanceTable({ events, onEdit, onDelete, onAdd }: VehicleMaintenanceTableProps) {
+  const [selectedRow, setSelectedRow] = useState<MaintenanceEvent | null>(null)
+
   const sortedEvents = useMemo(
     () => [...events].sort((a, b) => b.date.localeCompare(a.date)),
     [events],
   )
+
+  const selectedIndex = selectedRow
+    ? sortedEvents.findIndex((e) => e.id === selectedRow.id)
+    : -1
+
+  const drawerFields = selectedRow
+    ? [
+        { label: 'Date', value: formatRecordDate(selectedRow.date, 'MMM d, yyyy HH:mm') },
+        { label: 'Description', value: selectedRow.description },
+        { label: 'Cost', value: `${formatNumber(selectedRow.cost, 0)} DKK` },
+        { label: 'Note', value: selectedRow.note ?? '—' },
+      ]
+    : []
 
   return (
     <div className="bg-white dark:bg-base-800 rounded-2xl shadow-card dark:shadow-card-dark overflow-hidden">
@@ -56,17 +73,14 @@ function VehicleMaintenanceTable({ events, onEdit, onDelete, onAdd }: VehicleMai
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Wrench className="w-4 h-4 text-base-400 flex-shrink-0" />
-            <h3 className="text-sm font-semibold text-base-900 dark:text-white">Maintenance Log</h3>
+            <h3 className="text-sm font-semibold text-base-900 dark:text-white">Maintenance</h3>
             <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-base-100 dark:bg-base-700 text-base-400">
               {events.length}
             </span>
           </div>
-          <button
-            onClick={onAdd}
-            className="px-3 py-1.5 text-xs font-medium text-base-600 dark:text-base-300 bg-base-50 dark:bg-base-700 rounded-lg hover:bg-base-100 dark:hover:bg-base-600 transition-colors"
-          >
+          <Button variant="secondary" size="sm" onClick={onAdd}>
             + Add Maintenance
-          </button>
+          </Button>
         </div>
       </div>
       <DataTable<MaintenanceEvent>
@@ -74,10 +88,24 @@ function VehicleMaintenanceTable({ events, onEdit, onDelete, onAdd }: VehicleMai
         data={sortedEvents}
         onEdit={onEdit}
         onDelete={onDelete}
+        onRowClick={(row) => setSelectedRow(row)}
         keyExtractor={(e) => e.id}
         sortable={true}
         defaultSort={{ key: 'date', direction: 'desc' }}
         showMoreThreshold={5}
+      />
+
+      <MobileDrawer
+        isOpen={selectedRow !== null}
+        onClose={() => setSelectedRow(null)}
+        title="Maintenance"
+        fields={drawerFields}
+        onEdit={() => { if (selectedRow) { onEdit(selectedRow); setSelectedRow(null) } }}
+        onDelete={() => { if (selectedRow) { onDelete(selectedRow); setSelectedRow(null) } }}
+        onPrev={selectedIndex > 0 ? () => setSelectedRow(sortedEvents[selectedIndex - 1]!) : undefined}
+        onNext={selectedIndex < sortedEvents.length - 1 ? () => setSelectedRow(sortedEvents[selectedIndex + 1]!) : undefined}
+        hasPrev={selectedIndex > 0}
+        hasNext={selectedIndex < sortedEvents.length - 1}
       />
     </div>
   )

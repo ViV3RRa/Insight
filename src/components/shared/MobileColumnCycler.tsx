@@ -40,16 +40,20 @@ interface MobileColumnCyclerCellProps {
 function MobileColumnCyclerCell({ values, activeIndex, hideAbove = 'sm' }: MobileColumnCyclerCellProps) {
   const hiddenClass = hideAbove === 'lg' ? 'lg:hidden' : 'sm:hidden'
   return (
-    <td className={`${hiddenClass} px-4 py-3 text-right`}>
-      <div className="grid">
+    <td className={`${hiddenClass} px-4 py-3 text-right align-middle`}>
+      <div className="relative">
         {values.map((value, i) => (
-          <span
+          <div
             key={i}
-            className="col-start-1 row-start-1 font-mono-data text-sm text-base-900 dark:text-white transition-opacity duration-150"
+            className={[
+              'font-mono-data text-sm text-base-900 dark:text-white transition-opacity duration-150 text-right',
+              i !== activeIndex && 'absolute top-0 right-0 pointer-events-none',
+            ].filter(Boolean).join(' ')}
             style={{ opacity: i === activeIndex ? 1 : 0 }}
+            aria-hidden={i !== activeIndex}
           >
             {value}
-          </span>
+          </div>
         ))}
       </div>
     </td>

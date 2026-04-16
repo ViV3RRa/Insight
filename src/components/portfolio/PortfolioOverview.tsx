@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useMobileDetailNav } from '@/components/layout/useMobileDetailNav'
 import { useNavigate } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -40,6 +40,7 @@ import type { CashPlatformRow } from './PortfolioOverviewCashTable'
 import { PortfolioOverviewClosed } from './PortfolioOverviewClosed'
 import type { ClosedPlatformRow } from './PortfolioOverviewClosed'
 import { PortfolioOverviewAllocation } from './PortfolioOverviewAllocation'
+import { PlatformIcon } from '@/components/shared/PlatformIcon'
 import { PortfolioDialog } from './dialogs/PortfolioDialog'
 import { PlatformDialog } from './dialogs/PlatformDialog'
 import { DataPointDialog } from './dialogs/DataPointDialog'
@@ -187,6 +188,13 @@ function PortfolioOverview() {
     queryKey: ['portfolios'],
     queryFn: portfolioService.getAll,
   })
+
+  // Auto-select first portfolio when none is selected
+  useEffect(() => {
+    if (!selectedPortfolioId && portfolios && portfolios.length > 0) {
+      setSelectedPortfolioId(portfolios[0]!.id)
+    }
+  }, [portfolios, selectedPortfolioId, setSelectedPortfolioId])
 
   const { data: platforms, isLoading } = useQuery({
     queryKey: ['platforms', selectedPortfolioId],
@@ -422,14 +430,18 @@ function PortfolioOverview() {
   // Allocation segments
   const allocationSegments = useMemo(
     () =>
-      (aggregatedData?.allocation ?? []).map((a, i) => ({
-        label: a.platformName,
-        value: a.allocationPercent ?? 0,
-        formattedValue: formatCurrency(a.valueDKK, 'DKK'),
-        color: PLATFORM_COLORS[i % PLATFORM_COLORS.length]!,
-        isCash: a.type === 'cash',
-      })),
-    [aggregatedData?.allocation],
+      (aggregatedData?.allocation ?? []).map((a, i) => {
+        const p = (platforms ?? []).find((pl) => pl.id === a.platformId)
+        return {
+          label: a.platformName,
+          value: a.allocationPercent ?? 0,
+          formattedValue: formatCurrency(a.valueDKK, 'DKK'),
+          color: PLATFORM_COLORS[i % PLATFORM_COLORS.length]!,
+          isCash: a.type === 'cash',
+          icon: p ? <PlatformIcon imageUrl={platformService.getPlatformIconUrl(p)} name={a.platformName} size="sm" /> : undefined,
+        }
+      }),
+    [aggregatedData?.allocation, platforms],
   )
 
   const platformOptions = (platforms ?? [])

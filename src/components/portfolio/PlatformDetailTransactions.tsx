@@ -1,12 +1,13 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { ArrowDownUp, Paperclip } from 'lucide-react'
 import { DataTable, type ColumnDef } from '@/components/shared/DataTable'
 import { TransactionTypeBadge } from '@/components/shared/TransactionTypeBadge'
 import { CurrencyDisplay } from '@/components/shared/CurrencyDisplay'
 import { Button } from '@/components/shared/Button'
 import { EmptyState } from '@/components/shared/EmptyState'
+import { MobileDrawer } from '@/components/shared/MobileDrawer'
 import { SkeletonTableRows } from '@/components/shared/Skeleton'
-import { formatNumber } from '@/utils/formatters'
+import { formatNumber, formatCurrency, formatRecordDate } from '@/utils/formatters'
 
 interface TransactionRow {
   id: string
@@ -26,7 +27,6 @@ interface PlatformDetailTransactionsProps {
   showExchangeRate: boolean
   onEdit?: (row: TransactionRow) => void
   onDelete?: (row: TransactionRow) => void
-  onRowClick?: (row: TransactionRow) => void
   onAdd?: () => void
   isLoading?: boolean
 }
@@ -37,14 +37,32 @@ function PlatformDetailTransactions(props: PlatformDetailTransactionsProps) {
     showExchangeRate,
     onEdit,
     onDelete,
-    onRowClick,
     onAdd,
     isLoading = false,
   } = props
+
+  const [selectedRow, setSelectedRow] = useState<TransactionRow | null>(null)
+
   const sortedTransactions = useMemo(
     () => [...transactions].sort((a, b) => (a.date > b.date ? -1 : a.date < b.date ? 1 : 0)),
     [transactions],
   )
+
+  const selectedIndex = selectedRow
+    ? sortedTransactions.findIndex((tx) => tx.id === selectedRow.id)
+    : -1
+
+  const drawerFields = selectedRow
+    ? [
+        { label: 'Date', value: formatRecordDate(selectedRow.date, 'MMM d, yyyy HH:mm') },
+        { label: 'Type', value: selectedRow.type === 'deposit' ? 'Deposit' : 'Withdrawal' },
+        { label: 'Amount', value: formatCurrency(selectedRow.amount, selectedRow.currency) },
+        ...(selectedRow.amountDkk != null ? [{ label: 'Amount (DKK)', value: formatCurrency(selectedRow.amountDkk, 'DKK') }] : []),
+        ...(selectedRow.exchangeRate != null ? [{ label: 'Exchange Rate', value: formatNumber(selectedRow.exchangeRate, 4) }] : []),
+        { label: 'Note', value: selectedRow.note ?? '—' },
+        { label: 'Attachment', value: selectedRow.attachmentUrl ? 'Yes' : '—' },
+      ]
+    : []
 
   const columns = useMemo<Array<ColumnDef<TransactionRow>>>(() => {
     const cols: Array<ColumnDef<TransactionRow>> = [
@@ -53,7 +71,7 @@ function PlatformDetailTransactions(props: PlatformDetailTransactionsProps) {
         label: 'Date',
         align: 'left',
         format: (value) => (
-          <span className="text-base-900 dark:text-white">{String(value)}</span>
+          <span className="text-base-900 dark:text-white">{formatRecordDate(String(value), 'MMM d, yyyy')}</span>
         ),
       },
       {
@@ -174,10 +192,23 @@ function PlatformDetailTransactions(props: PlatformDetailTransactionsProps) {
           keyExtractor={(row) => row.id}
           onEdit={onEdit}
           onDelete={onDelete}
-          onRowClick={onRowClick}
+          onRowClick={(row) => setSelectedRow(row)}
           showMoreThreshold={5}
         />
       )}
+
+      <MobileDrawer
+        isOpen={selectedRow !== null}
+        onClose={() => setSelectedRow(null)}
+        title="Transaction"
+        fields={drawerFields}
+        onEdit={onEdit ? () => { onEdit(selectedRow!); setSelectedRow(null) } : undefined}
+        onDelete={onDelete ? () => { onDelete(selectedRow!); setSelectedRow(null) } : undefined}
+        onPrev={selectedIndex > 0 ? () => setSelectedRow(sortedTransactions[selectedIndex - 1]!) : undefined}
+        onNext={selectedIndex < sortedTransactions.length - 1 ? () => setSelectedRow(sortedTransactions[selectedIndex + 1]!) : undefined}
+        hasPrev={selectedIndex > 0}
+        hasNext={selectedIndex < sortedTransactions.length - 1}
+      />
     </div>
   )
 }

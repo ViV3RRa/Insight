@@ -4,10 +4,9 @@ import { Dialog } from '@/components/shared/Dialog'
 import { FormField } from '@/components/shared/FormField'
 import { TextInput, NumberInput, SelectInput } from '@/components/shared/inputs'
 import { FileUpload } from '@/components/shared/FileUpload'
+import { DateTimeInput } from '@/components/shared/DateTimeInput'
 import * as maintenanceEventService from '@/services/maintenanceEvents'
 import type { MaintenanceEvent, Vehicle } from '@/types/vehicles'
-import { format } from 'date-fns'
-
 interface MaintenanceDialogProps {
   isOpen: boolean
   onClose: () => void
@@ -16,8 +15,17 @@ interface MaintenanceDialogProps {
   vehicles?: Vehicle[]
 }
 
-function todayString(): string {
-  return format(new Date(), 'yyyy-MM-dd')
+function formatDatetimeLocal(d: Date): string {
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  const h = String(d.getHours()).padStart(2, '0')
+  const min = String(d.getMinutes()).padStart(2, '0')
+  return `${y}-${m}-${day}T${h}:${min}`
+}
+
+function getNowDatetimeLocal(): string {
+  return formatDatetimeLocal(new Date())
 }
 
 function MaintenanceDialog({
@@ -44,14 +52,14 @@ function MaintenanceDialog({
     if (isOpen) {
       if (event) {
         setSelectedVehicleId(event.vehicleId)
-        setDate(event.date)
+        setDate(formatDatetimeLocal(new Date(event.date)))
         setDescription(event.description)
         setCost(String(event.cost))
         setNote(event.note ?? '')
         setReceipt(event.receipt ?? null)
       } else {
         setSelectedVehicleId('')
-        setDate(todayString())
+        setDate(getNowDatetimeLocal())
         setDescription('')
         setCost('')
         setNote('')
@@ -93,7 +101,7 @@ function MaintenanceDialog({
   function buildFormData(): FormData {
     const fd = new FormData()
     fd.set('vehicleId', effectiveVehicleId)
-    fd.set('date', date)
+    fd.set('date', new Date(date).toISOString())
     fd.set('description', description.trim())
     fd.set('cost', cost)
     if (note.trim()) fd.set('note', note.trim())
@@ -102,7 +110,7 @@ function MaintenanceDialog({
   }
 
   function resetForAnother() {
-    setDate(todayString())
+    setDate(getNowDatetimeLocal())
     setDescription('')
     setCost('')
     setNote('')
@@ -169,17 +177,15 @@ function MaintenanceDialog({
         </FormField>
       )}
 
-      {/* Date */}
-      <FormField label="Date" required htmlFor="maintenance-date" error={errors.date}>
-        <TextInput
+      {/* Date & Time */}
+      <FormField label="Date & Time" required htmlFor="maintenance-date" error={errors.date}>
+        <DateTimeInput
           id="maintenance-date"
-          type="date"
           value={date}
-          onChange={(e) => {
-            setDate(e.target.value)
+          onChange={(v) => {
+            setDate(v)
             if (errors.date) setErrors((prev) => ({ ...prev, date: undefined as never }))
           }}
-          error={!!errors.date}
         />
       </FormField>
 

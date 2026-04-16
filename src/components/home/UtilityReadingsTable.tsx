@@ -116,7 +116,7 @@ function UtilityReadingsTable({
     ? [
         {
           label: 'Date',
-          value: formatRecordDate(selectedReading.timestamp, 'MMM d, yyyy'),
+          value: formatRecordDate(selectedReading.timestamp, 'MMM d, yyyy HH:mm'),
         },
         {
           label: 'Reading',
@@ -144,7 +144,7 @@ function UtilityReadingsTable({
                 0
               </span>
             </div>
-            <Button variant="secondary" size="sm" onClick={onAddReading}>
+            <Button variant="primary" size="sm" onClick={onAddReading}>
               + Add Reading
             </Button>
           </div>
@@ -166,7 +166,7 @@ function UtilityReadingsTable({
               {readings.length}
             </span>
           </div>
-          <Button variant="secondary" size="sm" onClick={onAddReading}>
+          <Button variant="primary" size="sm" onClick={onAddReading}>
             + Add Reading
           </Button>
         </div>

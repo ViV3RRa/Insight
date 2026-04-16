@@ -3,6 +3,7 @@ import { ArrowDownLeft, ArrowUpRight } from 'lucide-react'
 import { Dialog } from '@/components/shared/Dialog'
 import { FormField } from '@/components/shared/FormField'
 import { TextInput, NumberInput, SelectInput } from '@/components/shared/inputs'
+import { DateTimeInput } from '@/components/shared/DateTimeInput'
 import { FileUpload } from '@/components/shared/FileUpload'
 import { formatCurrency } from '@/utils/formatters'
 import type { Transaction } from '@/types/investment'
@@ -310,15 +311,13 @@ function TransactionDialog({
 
       {/* Timestamp */}
       <FormField label="Date & Time" required error={errors.timestamp} htmlFor="tx-timestamp">
-        <input
+        <DateTimeInput
           id="tx-timestamp"
-          type="datetime-local"
           value={timestamp}
-          onChange={(e) => {
-            setTimestamp(e.target.value)
+          onChange={(v) => {
+            setTimestamp(v)
             if (errors.timestamp) setErrors((prev) => ({ ...prev, timestamp: undefined }))
           }}
-          className="w-full px-3 py-2.5 border rounded-lg bg-white dark:bg-base-900 text-sm text-base-900 dark:text-white border-base-200 dark:border-base-600 focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500 dark:focus:ring-accent-400/30 dark:focus:border-accent-400 outline-none transition-colors duration-150"
         />
       </FormField>
 

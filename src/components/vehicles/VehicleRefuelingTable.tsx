@@ -1,7 +1,9 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Fuel, Home } from 'lucide-react'
 import { DataTable, type ColumnDef } from '@/components/shared/DataTable'
-import { formatNumber, formatHumanDate } from '@/utils/formatters'
+import { Button } from '@/components/shared/Button'
+import { MobileDrawer } from '@/components/shared/MobileDrawer'
+import { formatNumber, formatHumanDate, formatRecordDate } from '@/utils/formatters'
 import type { Refueling, FuelType } from '@/types/vehicles'
 
 interface VehicleRefuelingTableProps {
@@ -22,6 +24,7 @@ function VehicleRefuelingTable({
   onAdd,
 }: VehicleRefuelingTableProps) {
   const fuelUnit = fuelType === 'Electric' ? 'kWh' : 'L'
+  const [selectedRow, setSelectedRow] = useState<RefuelingWithEfficiency | null>(null)
 
   const refuelingsWithEfficiency = useMemo(() => {
     const sorted = [...refuelings].sort((a, b) => a.date.localeCompare(b.date))
@@ -35,6 +38,23 @@ function VehicleRefuelingTable({
       })
       .reverse()
   }, [refuelings])
+
+  const selectedIndex = selectedRow
+    ? refuelingsWithEfficiency.findIndex((r) => r.id === selectedRow.id)
+    : -1
+
+  const drawerFields = selectedRow
+    ? [
+        { label: 'Date', value: formatRecordDate(selectedRow.date, 'MMM d, yyyy HH:mm') },
+        { label: fuelUnit === 'kWh' ? 'Energy' : 'Fuel', value: `${formatNumber(selectedRow.fuelAmount, 1)} ${fuelUnit}` },
+        { label: `Price per ${fuelUnit}`, value: `${formatNumber(selectedRow.costPerUnit, 2)} DKK/${fuelUnit}` },
+        { label: 'Total Cost', value: `${formatNumber(selectedRow.totalCost, 0)} DKK` },
+        { label: 'Odometer', value: `${formatNumber(selectedRow.odometerReading, 0)} km` },
+        { label: 'Efficiency', value: selectedRow.efficiency != null ? `${formatNumber(selectedRow.efficiency, 1)} km/${fuelUnit}` : '—' },
+        { label: 'Station', value: (fuelType === 'Electric' && selectedRow.chargedAtHome) ? 'Home' : (selectedRow.station ?? '—') },
+        { label: 'Note', value: selectedRow.note ?? '—' },
+      ]
+    : []
 
   const columns: Array<ColumnDef<RefuelingWithEfficiency>> = [
     {
@@ -116,17 +136,14 @@ function VehicleRefuelingTable({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Fuel className="w-4 h-4 text-base-400 flex-shrink-0" />
-            <h3 className="text-sm font-semibold text-base-900 dark:text-white">Refueling Log</h3>
+            <h3 className="text-sm font-semibold text-base-900 dark:text-white">Refueling</h3>
             <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-base-100 dark:bg-base-700 text-base-400">
               {refuelings.length}
             </span>
           </div>
-          <button
-            onClick={onAdd}
-            className="px-3 py-1.5 text-xs font-medium text-base-600 dark:text-base-300 bg-base-50 dark:bg-base-700 rounded-lg hover:bg-base-100 dark:hover:bg-base-600 transition-colors"
-          >
+          <Button variant="primary" size="sm" onClick={onAdd}>
             + Add Refueling
-          </button>
+          </Button>
         </div>
       </div>
       <DataTable<RefuelingWithEfficiency>
@@ -134,10 +151,24 @@ function VehicleRefuelingTable({
         data={refuelingsWithEfficiency}
         onEdit={onEdit}
         onDelete={onDelete}
+        onRowClick={(row) => setSelectedRow(row)}
         keyExtractor={(r) => r.id}
         sortable={true}
         defaultSort={{ key: 'date', direction: 'desc' }}
         showMoreThreshold={5}
+      />
+
+      <MobileDrawer
+        isOpen={selectedRow !== null}
+        onClose={() => setSelectedRow(null)}
+        title="Refueling"
+        fields={drawerFields}
+        onEdit={() => { if (selectedRow) { onEdit(selectedRow); setSelectedRow(null) } }}
+        onDelete={() => { if (selectedRow) { onDelete(selectedRow); setSelectedRow(null) } }}
+        onPrev={selectedIndex > 0 ? () => setSelectedRow(refuelingsWithEfficiency[selectedIndex - 1]!) : undefined}
+        onNext={selectedIndex < refuelingsWithEfficiency.length - 1 ? () => setSelectedRow(refuelingsWithEfficiency[selectedIndex + 1]!) : undefined}
+        hasPrev={selectedIndex > 0}
+        hasNext={selectedIndex < refuelingsWithEfficiency.length - 1}
       />
     </div>
   )
