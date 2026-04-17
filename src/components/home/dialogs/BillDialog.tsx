@@ -112,7 +112,6 @@ function BillDialog({ isOpen, onClose, bill, utilityId, utilities }: BillDialogP
     setAmount('')
     setPeriodStart('')
     setPeriodEnd('')
-    setTimestamp(nowTimestamp())
     setNote('')
     setAttachment(null)
     setErrors({})

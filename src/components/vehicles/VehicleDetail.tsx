@@ -77,8 +77,9 @@ function VehicleDetail() {
   })
 
   // Mobile nav header + dropdown content
+  const isSold = vehicle?.status === 'sold'
   const mobileDropdownContent = useMemo(() => {
-    const activeVehicles = vehicles.filter((v) => v.status === 'active')
+    const filteredVehicles = vehicles.filter((v) => isSold ? v.status === 'sold' : v.status === 'active')
 
     return (
       <div className="py-1">
@@ -90,7 +91,7 @@ function VehicleDetail() {
           <span className="font-medium">All Vehicles</span>
         </Link>
         <div className="py-1">
-          {activeVehicles.map((v) => {
+          {filteredVehicles.map((v) => {
             const isActive = v.id === vehicleId
             return (
               <div
@@ -127,7 +128,7 @@ function VehicleDetail() {
         </div>
       </div>
     )
-  }, [vehicles, vehicleId, navigate])
+  }, [vehicles, vehicleId, navigate, isSold])
 
   const vehicleIcon = vehicle?.type === 'Motorcycle'
     ? <Bike className="w-4 h-4 text-base-500" />

@@ -16,7 +16,7 @@ migrate((app) => {
         name: "dateFormat",
         type: "select",
         required: true,
-        values: ["YYYY-MM-DD", "DD/MM/YYYY"],
+        values: ["yyyy-MM-dd", "dd/MM/yyyy"],
         maxSelect: 1,
       },
       {

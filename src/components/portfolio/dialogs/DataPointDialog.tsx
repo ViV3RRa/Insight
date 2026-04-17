@@ -134,10 +134,9 @@ function DataPointDialog({
       return
     }
     onSaveAndAddAnother?.(buildData())
-    // Reset value, note, timestamp but keep platform selection
+    // Reset value and note but keep platform selection and datetime
     setValue('')
     setNote('')
-    setTimestamp(getNowDatetimeLocal())
     setErrors({})
   }
 

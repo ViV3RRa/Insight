@@ -194,7 +194,6 @@ function RefuelingDialog({
     }
     mutation.mutate(buildFormData(), {
       onSuccess: () => {
-        setDate(getNowDatetimeLocal())
         setFuelAmount('')
         setCostPerUnit('')
         setTotalCost('')

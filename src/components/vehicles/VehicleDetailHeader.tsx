@@ -66,9 +66,10 @@ function VehicleDetailHeader({
 }: VehicleDetailHeaderProps) {
   const navigate = useNavigate()
 
-  const activeVehicles = allVehicles.filter((v) => v.status === 'active')
+  const isSold = vehicle.status === 'sold'
+  const filteredVehicles = allVehicles.filter((v) => isSold ? v.status === 'sold' : v.status === 'active')
 
-  const switcherItems: DropdownItem[] = activeVehicles.map((v) => ({
+  const switcherItems: DropdownItem[] = filteredVehicles.map((v) => ({
     id: v.id,
     name: v.name,
   }))

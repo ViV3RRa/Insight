@@ -168,11 +168,10 @@ function TransactionDialog({
       return
     }
     onSaveAndAddAnother?.(buildData())
-    // Reset amount, note, attachment, timestamp; reset type to deposit; keep platform & exchange rate
+    // Reset amount, note, attachment; reset type to deposit; keep platform, exchange rate & datetime
     setAmount('')
     setNote('')
     setAttachment(null)
-    setTimestamp(getNowDatetimeLocal())
     setType('deposit')
     setErrors({})
   }

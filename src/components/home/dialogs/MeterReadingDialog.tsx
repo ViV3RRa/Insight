@@ -142,7 +142,6 @@ function MeterReadingDialog({
       onSuccess: () => {
         setValue('')
         setNote('')
-        setTimestamp(getNowDatetimeLocal())
         setAttachment(null)
         setErrors({})
       },

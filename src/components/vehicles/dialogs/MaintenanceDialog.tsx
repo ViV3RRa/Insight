@@ -110,7 +110,6 @@ function MaintenanceDialog({
   }
 
   function resetForAnother() {
-    setDate(getNowDatetimeLocal())
     setDescription('')
     setCost('')
     setNote('')
